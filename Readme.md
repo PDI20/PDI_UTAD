@@ -14,7 +14,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 ## Conteúdo
 
 - [Recursos](#software-a-utilizar)
-- [Módulo 1 - Deteção da matrícula](#módulo-1)
+- [Módulo 1 - Deteção da matrícula](#módulo-1---detecao-da-matricula)
   - [Construção do dataset](#construir-dataset)
   - [Preparação do dataset (Roboflow)](#preparar-dataset)
     - [Criar projeto de deteção de objetos](#criar-projeto-roboflow)
@@ -85,8 +85,99 @@ Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
 ## Construção do dataset
 
 ### Preparação do dataset (Roboflow)
-#### Criar projeto de deteção de objetos
-#### Efetuar upload das imagens recolhidas
-#### Anotar as imagens
-#### Aplicar aumentações (opcional)
-#### Efetuar download do dataset no formato desejado
+
+### Criar projeto de deteção de objetos
+
+### Efetuar upload das imagens recolhidas
+
+### Anotar as imagens
+
+### Aplicar aumentações (opcional)
+
+### Efetuar download do dataset no formato desejado
+
+## Treino do dataset
+
+### Resultados do treino
+
+## Inferir sobre novas imagens
+
+## Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes
+
+## Organização do ficheiro com as bounding boxes
+
+## Obter os caminhos dos ficheiros
+
+## Abrir os ficheiros e ler os seus conteúdos
+
+### Reverter a normalização das coordenadas geradas
+
+## Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito
+
+## Efetuar o recorte da imagem com base nas coordenadas calculadas
+
+## Módulo 3 - Pipeline de processamento digital da imagem
+
+## Pré-processamento das imagens recortadas
+
+## Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)
+
+## Instalar a biblioteca PaddleOCR
+
+## Carregar o modelo responsável pelo reconhecimento de texto
+
+## Obter os caminhos das imagens recortadas
+  
+## Aplicar o OCR sobre as imagens
+
+## Guardar os resultados
+
+## Abordagem 2 - Aplicação do método de Otsu
+
+## Obter o caminho das imagens recortadas
+
+## Aplicar o algoritmo de Otsu
+
+## Verificar o número de píxeis pretos 
+
+## Calcular contours da imagem binarizada
+
+## Com base nos contours extrair os caracteres
+
+## Com base nos contours extrair os caracteres
+
+## Classificar os caracteres extraídos
+
+## Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)
+
+## Instalar bibliotecas Grounding Dino e Segmente Anythin Model (SAM)
+
+## Obter os caminhos das imagens recortadas
+
+## Aplicar do Grounding Dino sobre as imagens
+
+## Guardar as imagens geradas, com as bounding boxes
+
+## Aplicar o SAM sobre as imagens geradas pelo Grounding Dino
+
+## Obter as máscaras geradas
+
+## Inverter as cores das máscaras
+
+## Calcular contours da imagem binarizada
+
+## Com base nos contours extrair os caracteres
+
+## Classificar os caracteres extraídos
+
+## Módulo 4 - Análise de texto e correção de erros
+
+## Formato das matrículas portuguesas
+
+## Erros nos resultados obtidos pelo OCR e classificação de caracteres
+
+## Correção de erros
+
+## Guardar os resultados
+
+## Comparar resultados com as matrículas
