@@ -26,7 +26,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 
 Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
 
-- Google Colab (https://colab.research.google.com/): desenvolvimento do código e treino dos modelos;
+- [Google Colab] (https://colab.research.google.com/): desenvolvimento do código e treino dos modelos;
 **Google Drive**: guardar os datasets e os resultados do treino;
 **Roboflow**: preparar os dados para o dataset;
 **YOLO (You Only Look Once)**: treinar um modelo utilizando o dataset desenvolvido e inferir sobre novas imagens;
