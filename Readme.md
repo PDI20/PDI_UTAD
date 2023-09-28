@@ -15,8 +15,8 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 
 - [Software a Utilizar](#software-a-utilizar)
 - [Módulo 1](#módulo-1)
-- [Dataset](#dataset)
-- [Treino do Dataset](#treino-do-dataset)
+  - [Dataset](#dataset)
+  - [Treino do Dataset](#treino-do-dataset)
 - [Inferências](#inferências)
 - [Módulo 2](#módulo-2)
 - [Módulo 3](#módulo-3)
