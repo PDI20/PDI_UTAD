@@ -1,4 +1,4 @@
-## Introdução
+# Introdução
 
 Uma empresa de tecnologia procura o desenvolvimento de um algoritmo que faça a deteção de matrículas de veículos e extraia os seus caracteres, especificamente, de matrículas portuguesas, para gestão de entradas e saídas das instalações da empresa.
 O algoritmo deve ser constituído por quatro módulos:
@@ -11,7 +11,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 
 
 
-## Conteúdo
+# Conteúdo
 
 - [Recursos](#software-a-utilizar)
 - [Módulo 1 - Deteção da matrícula](#módulo-1---deteção-da-matrícula)
@@ -66,7 +66,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
   - [Comparar resultados com as matrículas](#comparar-resultados-com-as-matrículas)
 
 
-## Recursos
+# Recursos
 
 Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
 
@@ -80,7 +80,7 @@ Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
 - [Segment Anything Model](https://github.com/facebookresearch/segment-anything): segmentação automática de objetos (abordagem 3).
 
 
-## Módulo 1 - Deteção da matrícula
+# Módulo 1 - Deteção da matrícula
 
 ## Construção do dataset
 
@@ -102,7 +102,7 @@ Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
 
 ## Inferir sobre novas imagens
 
-## Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes
+# Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes
 
 ## Organização do ficheiro com as bounding boxes
 
@@ -116,7 +116,7 @@ Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
 
 ## Efetuar o recorte da imagem com base nas coordenadas calculadas
 
-## Módulo 3 - Pipeline de processamento digital da imagem
+# Módulo 3 - Pipeline de processamento digital da imagem
 
 ## Pré-processamento das imagens recortadas
 
@@ -170,7 +170,7 @@ Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
 
 ### Classificar os caracteres extraídos
 
-## Módulo 4 - Análise de texto e correção de erros
+# Módulo 4 - Análise de texto e correção de erros
 
 ### Formato das matrículas portuguesas
 
