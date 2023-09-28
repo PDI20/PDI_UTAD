@@ -1,11 +1,9 @@
 # Projeto de Deep Learning
 
 ## Introdução
-
-Este repositório contém um projeto em que utilizamos técnicas de Deep Learning para resolver um problema específico. Neste documento, você encontrará informações sobre o projeto, os softwares utilizados, detalhes sobre o conjunto de dados, o treinamento do modelo, as inferências e os diferentes módulos do projeto.
+Neste projeto, exploramos a aplicação de técnicas de deep learning para resolver um problema específico. Utilizamos diversas ferramentas e módulos para treinar modelos, realizar inferências e obter resultados relevantes.
 
 ## Conteúdo
-
 - [Software a Utilizar](#software-a-utilizar)
 - [Módulo 1](#módulo-1)
 - [Dataset](#dataset)
@@ -16,46 +14,33 @@ Este repositório contém um projeto em que utilizamos técnicas de Deep Learnin
 - [Módulo 4](#módulo-4)
 
 ## Software a Utilizar
-
-Neste projeto, utilizamos os seguintes softwares:
-
-1. **Google Colab**: Utilizamos o Google Colab para desenvolver e treinar nossos modelos de Deep Learning em um ambiente de notebook baseado na nuvem.
-
-2. **Google Drive**: Armazenamos nossos conjuntos de dados e modelos treinados no Google Drive para facilitar o compartilhamento e a colaboração.
-
-3. **Roboflow**: Utilizamos o Roboflow para pré-processar nossos dados e criar pipelines de treinamento eficientes.
-
-4. **Grounding Dino**: Este é um software importante para a etapa de pré-processamento de dados e aumento de dados.
-
-5. **Segment Anything Model**: Utilizamos este modelo para tarefas de segmentação de imagens em nosso projeto.
-
-6. **YOLO (You Only Look Once)**: Implementamos o YOLO para tarefas de detecção de objetos em nosso projeto.
+Neste projeto, utilizamos uma variedade de ferramentas de software para treinar e inferir modelos de deep learning:
+1. **Google Colab**: Plataforma de código aberto baseada em Jupyter Notebook que permite treinar modelos em GPUs ou TPUs na nuvem.
+2. **Google Drive**: Armazenamento na nuvem para compartilhamento de dados e modelos entre colaboradores.
+3. **Roboflow**: Plataforma de preparação de dados para visão computacional e aprendizado profundo.
+4. **Grounding Dino**: Uma biblioteca para treinamento de modelos de visão computacional.
+5. **Segment Anything Model**: Um modelo de segmentação de imagem de propósito geral.
+6. **YOLO (You Only Look Once)**: Framework para detecção de objetos em tempo real.
+7. **PaddleOCR**: Uma biblioteca de OCR (Optical Character Recognition) de código aberto.
 
 ## Módulo 1
-
-Nesta seção, discutimos o primeiro módulo de nosso projeto e descrevemos os objetivos e resultados alcançados.
+Este é o primeiro módulo do projeto, onde abordamos ...
 
 ## Dataset
-
-Explicamos o conjunto de dados que utilizamos em nosso projeto, incluindo sua origem, tamanho e estrutura.
+O conjunto de dados utilizado neste projeto é...
 
 ## Treino do Dataset
-
-Descrevemos como treinamos nossos modelos de Deep Learning usando o conjunto de dados mencionado anteriormente. Incluímos detalhes sobre arquiteturas de rede, hiperparâmetros e métricas de avaliação.
+Nesta seção, descrevemos o processo de treinamento do modelo usando o conjunto de dados mencionado acima.
 
 ## Inferências
-
-Mostramos os resultados das inferências realizadas com nosso modelo treinado e discutimos qualquer pós-processamento necessário.
+Aqui, discutimos os resultados das inferências feitas pelo modelo treinado.
 
 ## Módulo 2
-
-Apresentamos o segundo módulo de nosso projeto, incluindo seus objetivos e resultados.
+Este é o segundo módulo do projeto, onde exploramos...
 
 ## Módulo 3
-
-Descrevemos o terceiro módulo de nosso projeto, destacando suas contribuições e resultados.
+No terceiro módulo, abordamos...
 
 ## Módulo 4
-
-Nesta seção, discutimos o quarto e último módulo de nosso projeto, apresentando seus objetivos e resultados finais.
+O quarto módulo é dedicado a...
 
