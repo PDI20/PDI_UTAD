@@ -82,6 +82,8 @@ Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
 
 # Módulo 1 - Deteção da matrícula
 
+O dataset deve ser constituído por imagens diurnas (tiradas manualmente, obtidas da Internet, vídeo, etc..) de veículos (carros, carrinhas, camiões, motas...) com matrícula portuguesa frontais e traseiras sem muita angulação (vertical ou horizontal) em que os caracteres das da matrícula sejam bem visíveis. A condição de iluminação das imagens também deve ser variada. Quantas mais imagens melhor, embora o tempo de anotação seja maior (sugestão: 200 a 500 imagens). 
+
 ## Construção do dataset
 
 ### Preparação do dataset (Roboflow)
