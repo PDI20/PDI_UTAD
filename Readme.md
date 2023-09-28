@@ -80,24 +80,13 @@ Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
 - [Segment Anything Model](https://github.com/facebookresearch/segment-anything): segmentação automática de objetos (abordagem 3).
 
 
-## Módulo 1
-Este é o primeiro módulo do projeto, onde abordamos ...
+## Módulo 1 - Deteção da matrícula
 
-## Dataset
-O conjunto de dados utilizado neste projeto é...
+## Construção do dataset
 
-## Treino do Dataset
-Nesta seção, descrevemos o processo de treinamento do modelo usando o conjunto de dados mencionado acima.
-
-## Inferências
-Aqui, discutimos os resultados das inferências feitas pelo modelo treinado.
-
-## Módulo 2
-Este é o segundo módulo do projeto, onde exploramos...
-
-## Módulo 3
-No terceiro módulo, abordamos...
-
-## Módulo 4
-O quarto módulo é dedicado a...
-
+### Preparação do dataset (Roboflow)
+#### Criar projeto de deteção de objetos
+#### Efetuar upload das imagens recolhidas
+#### Anotar as imagens
+#### Aplicar aumentações (opcional)
+#### Efetuar download do dataset no formato desejado
