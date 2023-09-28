@@ -26,14 +26,14 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 
 Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
 
-- [Google Colab] (https://colab.research.google.com/): desenvolvimento do código e treino dos modelos;
-**Google Drive**: guardar os datasets e os resultados do treino;
-**Roboflow**: preparar os dados para o dataset;
-**YOLO (You Only Look Once)**: treinar um modelo utilizando o dataset desenvolvido e inferir sobre novas imagens;
-**Otsu**: segmentar imagens (abordagem 2);
-**PaddleOCR**: deteção automática de texto presente em imagens (abordagem 1);
-**Grounding Dino**: deteção automática de objetos, com base num prompt (abordagem 3);
-**Segment Anything Model**: segmentação automática de objetos (abordagem 3).
+- [Google Colab](https://colab.research.google.com/): desenvolvimento do código e treino dos modelos;
+- [Google Drive](https://www.google.com/drive/): guardar os datasets e os resultados do treino;
+- [Roboflow](https://roboflow.com/): preparar os dados para o dataset;
+- [YOLO (You Only Look Once)](https://github.com/ultralytics): treinar um modelo utilizando o dataset desenvolvido e inferir sobre novas imagens;
+- [Otsu](https://en.wikipedia.org/wiki/Otsu%27s_method): segmentar imagens (abordagem 2);
+- [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/README_en.md): deteção automática de texto presente em imagens (abordagem 1);
+- [Grounding Dino](https://github.com/IDEA-Research/GroundingDINO): deteção automática de objetos, com base num prompt (abordagem 3);
+- [Segment Anything Model](https://github.com/facebookresearch/segment-anything): segmentação automática de objetos (abordagem 3).
 
 
 ## Módulo 1
