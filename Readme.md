@@ -22,6 +22,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
     - [Anotar as imagens](#anotar-as-imagens)
     - [Aplicar aumentações (opcional)](#aplicar-aumentações-(opcional))
     - [Efetuar download do dataset no formato desejado](#efetuar-download-do-dataset-no-formato-desejado)
+  - [Acesso ao Google Drive](#acesso-ao-google-drive)
   - [Treino do dataset](#treino-do-dataset)
     - [Resultados do treino](#resultados-do-treino)
   - [Inferir sobre novas imagens](#inferir-sobre-novas-imagens)
@@ -129,9 +130,13 @@ Colocar video
 
 ### Efetuar download do dataset no formato desejado
 
-Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive
+Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive.
 
 Colocar video
+
+## Acesso ao Google Drive
+
+CODIGO
 
 ## Treino do dataset
 
