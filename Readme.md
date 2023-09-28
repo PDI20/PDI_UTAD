@@ -14,8 +14,8 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 ## Conteúdo
 
 - [Recursos](#software-a-utilizar)
-- [Módulo 1 - Deteção da matrícula](#módulo-1---detecao-da-matricula)
-  - [Construção do dataset](#construir-dataset)
+- [Módulo 1 - Deteção da matrícula](#módulo-1---deteção-da-matrícula)
+  - [Construção do dataset](#construção-do-dataset)
   - [Preparação do dataset (Roboflow)](#preparar-dataset)
     - [Criar projeto de deteção de objetos](#criar-projeto-roboflow)
     - [Efetuar upload das imagens recolhidas](#upload-imagens)
@@ -122,62 +122,62 @@ Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
 
 ## Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)
 
-## Instalar a biblioteca PaddleOCR
+### Instalar a biblioteca PaddleOCR
 
-## Carregar o modelo responsável pelo reconhecimento de texto
+### Carregar o modelo responsável pelo reconhecimento de texto
 
-## Obter os caminhos das imagens recortadas
+### Obter os caminhos das imagens recortadas
   
-## Aplicar o OCR sobre as imagens
+### Aplicar o OCR sobre as imagens
 
-## Guardar os resultados
+### Guardar os resultados
 
 ## Abordagem 2 - Aplicação do método de Otsu
 
-## Obter o caminho das imagens recortadas
+### Obter o caminho das imagens recortadas
 
-## Aplicar o algoritmo de Otsu
+### Aplicar o algoritmo de Otsu
 
-## Verificar o número de píxeis pretos 
+### Verificar o número de píxeis pretos 
 
-## Calcular contours da imagem binarizada
+### Calcular contours da imagem binarizada
 
-## Com base nos contours extrair os caracteres
+### Com base nos contours extrair os caracteres
 
-## Com base nos contours extrair os caracteres
+### Com base nos contours extrair os caracteres
 
-## Classificar os caracteres extraídos
+### Classificar os caracteres extraídos
 
 ## Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)
 
-## Instalar bibliotecas Grounding Dino e Segmente Anythin Model (SAM)
+### Instalar bibliotecas Grounding Dino e Segmente Anythin Model (SAM)
 
-## Obter os caminhos das imagens recortadas
+### Obter os caminhos das imagens recortadas
 
-## Aplicar do Grounding Dino sobre as imagens
+### Aplicar do Grounding Dino sobre as imagens
 
-## Guardar as imagens geradas, com as bounding boxes
+### Guardar as imagens geradas, com as bounding boxes
 
-## Aplicar o SAM sobre as imagens geradas pelo Grounding Dino
+### Aplicar o SAM sobre as imagens geradas pelo Grounding Dino
 
-## Obter as máscaras geradas
+### Obter as máscaras geradas
 
-## Inverter as cores das máscaras
+### Inverter as cores das máscaras
 
-## Calcular contours da imagem binarizada
+### Calcular contours da imagem binarizada
 
-## Com base nos contours extrair os caracteres
+### Com base nos contours extrair os caracteres
 
-## Classificar os caracteres extraídos
+### Classificar os caracteres extraídos
 
 ## Módulo 4 - Análise de texto e correção de erros
 
-## Formato das matrículas portuguesas
+### Formato das matrículas portuguesas
 
-## Erros nos resultados obtidos pelo OCR e classificação de caracteres
+### Erros nos resultados obtidos pelo OCR e classificação de caracteres
 
-## Correção de erros
+### Correção de erros
 
-## Guardar os resultados
+### Guardar os resultados
 
-## Comparar resultados com as matrículas
+### Comparar resultados com as matrículas
