@@ -1,9 +1,17 @@
-# Projeto de Deep Learning
-
 ## Introdução
-Neste projeto, exploramos a aplicação de técnicas de deep learning para resolver um problema específico. Utilizamos diversas ferramentas e módulos para treinar modelos, realizar inferências e obter resultados relevantes.
+
+Uma empresa de tecnologia procura o desenvolvimento de um algoritmo que faça a deteção de matrículas de veículos e extraia os seus caracteres, especificamente, de matrículas portuguesas, para gestão de entradas e saídas das instalações da empresa.
+O algoritmo deve ser constituído por quatro módulos:
+-	Deteção da matrícula: módulo responsável pela deteção das matrículas. Neste módulo serão recolhidas imagens de veículos com matrícula portuguesa, com as quais será criado um dataset utilizado para treinar um modelo de deep learning. Depois do treino, os pesos (um ficheiro do tipo .pt, por exemplo, “best.pt”), gerados durante o treino, serão utilizados para efetuar inferências sobre imagens nunca antes vistas. Por fim, guardar as imagens com as anotações feitas durante as inferências e os respetivos ficheiros (do tipo .txt) que contêm as coordenadas das bounding boxes, de forma a ser utilizado no próximo módulo. 
+-	Recorte da imagem com base nas coordenadas da bounding box: módulo responsável por pelo recorte da área onde foi detetada a matrícula. Com os valores presentes em cada ficheiro, calcular as coordenadas do canto superior esquerdo e o canto inferior direito da bouding box. Por fim, utilizar uma biblioteca que permita processar digitalmente imagens (OpenCV) para efetuar o recorte da área da bounding box e guardar as novas imagens que apenas contêm a matrícula.
+-	 Pipeline de processamento digital de imagem: módulo responsável por extrair os caracteres presentes nas imagens recortadas, obtidas no módulo anterior. De forma a atingir este objetivo existem várias abordagens que podem ser utilizadas:
+o	OCR (Optical Character Recognition) - processo que converte imagens com texto em texto capaz de ser compreendido por computadores.
+o	Pipeline de processamento digital de imagem - segmentação e extração dos caracteres utilizando técnicas de processamento de imagem.
+-	Análise de texto e correção de erros: módulo responsável pela análise do texto extraído, de todas as imagens, e correção de potenciais erros cometidos pela abordagem utilizado no módulo anterior.
+
 
 ## Conteúdo
+
 - [Software a Utilizar](#software-a-utilizar)
 - [Módulo 1](#módulo-1)
 - [Dataset](#dataset)
@@ -14,14 +22,17 @@ Neste projeto, exploramos a aplicação de técnicas de deep learning para resol
 - [Módulo 4](#módulo-4)
 
 ## Software a Utilizar
-Neste projeto, utilizamos uma variedade de ferramentas de software para treinar e inferir modelos de deep learning:
-1. **Google Colab**: Plataforma de código aberto baseada em Jupyter Notebook que permite treinar modelos em GPUs ou TPUs na nuvem.
-2. **Google Drive**: Armazenamento na nuvem para compartilhamento de dados e modelos entre colaboradores.
-3. **Roboflow**: Plataforma de preparação de dados para visão computacional e aprendizado profundo.
-4. **Grounding Dino**: Uma biblioteca para treinamento de modelos de visão computacional.
-5. **Segment Anything Model**: Um modelo de segmentação de imagem de propósito geral.
-6. **YOLO (You Only Look Once)**: Framework para detecção de objetos em tempo real.
-7. **PaddleOCR**: Uma biblioteca de OCR (Optical Character Recognition) de código aberto.
+
+Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
+
+**Google Colab**: desenvolvimento do código e treino dos modelos;
+**Google Drive**: guardar os datasets e os resultados do treino;
+**Roboflow**: preparar os dados para o dataset;
+**YOLO (You Only Look Once)**: treinar um modelo utilizando o dataset desenvolvido e inferir sobre novas imagens;
+**PaddleOCR**: deteção automática de texto presente em imagens;
+**Grounding Dino**: deteção automática de objetos, com base num prompt;
+**Segment Anything Model**: segmentação automática de objetos.
+
 
 ## Módulo 1
 Este é o primeiro módulo do projeto, onde abordamos ...
