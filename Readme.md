@@ -96,98 +96,215 @@ O dataset deve ser constituído por imagens diurnas (tiradas manualmente, obtida
 
 ### Preparação do dataset (Roboflow)
 
+Necessário ter uma conta Roboflow.
+
+Colocar video
+
 ### Criar projeto de deteção de objetos
+
+Colocar video
 
 ### Efetuar upload das imagens recolhidas
 
+Colocar video
+
 ### Anotar as imagens
+
+Colocar video
 
 ### Aplicar aumentações (opcional)
 
+As aumentações são opcionais, uma vez que os resultados do treino podem ser os pretendidos mesmo sem as efetuar.
+São úteis quando os dados são poucos.
+
+Caso sejam necessárias, as seguintes são as mais pertinentes:
+
+- Flip
+- Crop
+- Rotation
+- Brightness
+- Noise
+
+Colocar video
+
 ### Efetuar download do dataset no formato desejado
+
+Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive
+
+Colocar video
 
 ## Treino do dataset
 
+Parâmetros a ter em conta:
+
+- epochs -> número de iterações do treino
+- batch -> o número de imagens utilizadas em cada iteração - este número deve ter em conta o tamanho da imagem e a memória de vídeo da placa gráfica
+- img -> tamanho da imagem utilizado como input
+- patience -> o número de “epochs” necessárias em que não existe melhoria da loss de validação para parar o treino automaticamente
+- name -> o nome da diretoria onde são guardados os resultados do treino
+
+CODIGO
+
 ### Resultados do treino
 
+Colocar imagens do treino (metricas)
+
 ## Inferir sobre novas imagens
+
+A confiança mínima utilizada deve ser de 0.65.
+Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das bounding boxes detetadas. Caso não seja detetada nenhuma matrícula, o ficheiro não é gerado.
+
+Colocar imagem do ficheiro txt e da inferencia
 
 # Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes
 
 ## Organização do ficheiro com as bounding boxes
 
+Cada ficheiro tem pelo menos uma linha de texto constituído por cinco valores:
+
+- class -> não é relevante para o problema em questão;
+- x_center -> valor de x, do centro da bounding box;
+- y_center -> valor de y, do centro da bounding box;
+- width -> largura da bounding box;
+- height -> altura da bounding box.
+
 ## Obter os caminhos dos ficheiros
+
+CODIGO
 
 ## Abrir os ficheiros e ler os seus conteúdos
 
+CODIGO
+
 ### Reverter a normalização das coordenadas geradas
+
+CODIGO
 
 ## Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito
 
+CODIGO
+
 ## Efetuar o recorte da imagem com base nas coordenadas calculadas
+
+CODIGO
 
 # Módulo 3 - Pipeline de processamento digital da imagem
 
 ## Pré-processamento das imagens recortadas
 
+Pré-processamento efetuado para maximizar os resultados quando aplicadas as diferentes abordagens.
+
+CODIGO
+
 ## Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)
 
 ### Instalar a biblioteca PaddleOCR
 
+CODIGO
+
 ### Carregar o modelo responsável pelo reconhecimento de texto
 
+CODIGO
+
 ### Obter os caminhos das imagens recortadas
+
+CODIGO
   
 ### Aplicar o OCR sobre as imagens
 
+CODIGO
+
 ### Guardar os resultados
+
+CODIGO
+
+Apresentar resultados
 
 ## Abordagem 2 - Aplicação do método de Otsu
 
 ### Obter o caminho das imagens recortadas
 
+CODIGO
+
 ### Aplicar o algoritmo de Otsu
 
-### Verificar o número de píxeis pretos 
+CODIGO
+
+### Verificar o número de píxeis pretos
+
+CODIGO
 
 ### Calcular contours da imagem binarizada
 
-### Com base nos contours extrair os caracteres
+CODIGO
 
 ### Com base nos contours extrair os caracteres
+
+CODIGO
+
+### Com base nos contours extrair os caracteres
+
+CODIGo
 
 ### Classificar os caracteres extraídos
+
+CODIGO
 
 ## Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)
 
 ### Instalar bibliotecas Grounding Dino e Segment Anythin Model (SAM)
 
+CODIGO
+
 ### Obter os caminhos das imagens recortadas
+
+CODIGO
 
 ### Aplicar do Grounding Dino sobre as imagens
 
+CODIGO
+
 ### Guardar as imagens geradas
+
+CODIGO
 
 ### Aplicar o SAM sobre as imagens geradas pelo Grounding Dino
 
+CODIGO
+
 ### Obter as máscaras geradas
+
+CODIGO
 
 ### Inverter as cores das máscaras
 
+CODIGO
+
 ### Calcular contours da imagem binarizada
+
+CODIGO
 
 ### Com base nos contours extrair os caracteres
 
+CODIGO
+
 ### Classificar os caracteres extraídos
+
+CODIGO
 
 # Módulo 4 - Análise de texto e correção de erros
 
 ### Formato das matrículas portuguesas
 
+Tabela com
+Imagens das diferentes matriculas
+
 ### Erros nos resultados obtidos pelo OCR e classificação de caracteres
+
+Exemplos de erros
 
 ### Correção de erros
 
-### Guardar os resultados
+Como a correcao pode ser efetuada
 
 ### Comparar resultados com as matrículas
