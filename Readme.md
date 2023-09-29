@@ -403,7 +403,24 @@ CODIGO
 
 ### Instalar a biblioteca PaddleOCR
 
-CODIGO
+```bash
+
+# Instalar PaddleOCR
+!pip install paddlepaddle-gpu
+!pip install paddleocr
+!wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+!sudo dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+!git clone https://github.com/PaddlePaddle/PaddleOCR
+
+```
+
+Bibliotecas:
+
+```bash
+
+from paddleocr import PaddleOCR, draw_ocr # paddleOCR
+from PIL import Image # abrir imagem
+```
 
 ### Carregar o modelo responsável pelo reconhecimento de texto
 
@@ -411,11 +428,45 @@ CODIGO
 
 ### Obter os caminhos das imagens recortadas
 
-CODIGO
-  
-### Aplicar o OCR sobre as imagens
+```bash
 
-CODIGO
+# carregar o modelo
+# apenas é necessário fazer uma vez por runtime
+ocr = PaddleOCR(use_angle_cls = True, lang = 'en') # lang define a linguagem que o modelo deve reconhecer
+
+```
+  
+### Aplicar o OCR sobre uma imagem
+
+```bash
+
+imagem = '/content/caminho/imagens_recortadas/0.png'
+
+resultado = ocr.ocr(imagem, cls = True)
+
+# todos os resultados - coordenadas de cada deteção, texto detetado e confiança
+for idx in range(len(resultado)):
+
+    res = resultado[idx]
+
+    for linha in res:
+
+        print(linha)
+
+# mostrar os resultados na imagem original
+result = resultado[0]
+image = Image.open(imagem).convert('RGB')
+
+boxes = [line[0] for line in result] # coordenadas da bounding box
+txts = [line[1][0] for line in result] # texto detetado
+scores = [line[1][1] for line in result] # confiança das deteções
+
+im_show = draw_ocr(image, boxes, txts, scores, font_path='/content/PaddleOCR/StyleText/fonts/en_standard.ttf')
+
+im_show = Image.fromarray(im_show)
+
+im_show
+```
 
 ### Guardar os resultados
 
