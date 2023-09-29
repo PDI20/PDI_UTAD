@@ -39,11 +39,10 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
   - [Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)](#abordagem-1---Utilização-de-uma-biblioteca-OCR-(Optical-Character-recognition))
     - [Instalar a biblioteca PaddleOCR](#instalar-a-biblioteca-PaddleOCR)
     - [Carregar o modelo responsável pelo reconhecimento de texto](#carregar-o-modelo-responsável-pelo-reconhecimento-de-texto)
-    - [Obter os caminhos das imagens recortadas](#obter-os-caminhos-das-imagens-recortadas)
     - [Aplicar o OCR sobre as imagens](#aplicar-o-OCR-sobre-as-imagens)
     - [Guardar os resultados](#guardar-os-resultados)
   - [Abordagem 2 - Aplicação do método de Otsu](#abordagem-2---aplicação-do-método-de-otsu)
-    - [Obter o caminho das imagens recortadas](#obter-o-caminho-das-imagens-recortadas)
+    - [Pré-processamento das imagens](#pré-processamento-das-imagens)
     - [Aplicar o algoritmo de Otsu](#aplicar-o-algoritmo-de-Otsu)
     - [Verificar o número de píxeis pretos](#verificar-o-número-de-píxeis-pretos)
     - [Calcular contours da imagem binarizada](#calcular-contours-da-imagem-binarizada)
@@ -51,9 +50,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
     - [Classificar os caracteres extraídos](#classificar-os-caracteres-extraídos)
   - [Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)](#abordagem-3---utilização-da-biblioteca-grounding-dino-(deteção-de-caracteres)-e-segment-anything-model-(segmentação-de-caracteres))
     - [Instalar bibliotecas Grounding Dino e Segment Anythin Model (SAM)](#instalar-bibliotecas-grounding-dino-e-segment-anythin-model-(SAM))
-    - [Obter os caminhos das imagens recortadas](#obter-os-caminhos-das-imagens-recortadas)
     - [Aplicar do Grounding Dino sobre as imagens](#aplicar-do-grounding-dino-sobre-as-imagens)
-    - [Guardar as imagens geradas](#guardar-as-imagens-geradas)
     - [Aplicar o SAM sobre as imagens geradas pelo Grounding Dino](#aplicar-o-sam-sobre-as-imagens-geradas-pelo-grounding-dino)
     - [Obter as máscaras geradas](#obter-as-máscaras-geradas)
     - [Inverter as cores das máscaras](#inverter-as-cores-das-máscaras)
@@ -64,7 +61,6 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
   - [Formato das matrículas portuguesas](#formato-das-matrículas-portuguesas)
   - [Erros nos resultados obtidos pelo OCR e classificação de caracteres](#erros-nos-resultados-obtidos-pelo-ocr-e-classificação-de-caracteres)
   - [Correção de erros](#correção-de-erros)
-  - [Guardar os resultados](#guardar-os-resultados)
   - [Comparar resultados com as matrículas](#comparar-resultados-com-as-matrículas)
 
 
@@ -424,10 +420,6 @@ from PIL import Image # abrir imagem
 
 ### Carregar o modelo responsável pelo reconhecimento de texto
 
-CODIGO
-
-### Obter os caminhos das imagens recortadas
-
 ```bash
 
 # carregar o modelo
@@ -472,33 +464,120 @@ im_show
 
 CODIGO
 
-Apresentar resultados
+Imagem resultados
 
 ## Abordagem 2 - Aplicação do método de Otsu
 
-### Obter o caminho das imagens recortadas
+### Pré-processamento das imagens
 
-CODIGO
+Abrir imagem e converter para preto e branco:
+
+```bash
+
+img = "/content/caminho/imagens_recortadas/0.png"
+
+imagem = cv2.imread(img, cv2.IMREAD_GRAYSCALE) # carregar imagem e converter a imagem para preto e branco
+
+```
+
+Redimensionar imagem:
+
+```bash
+
+imagem_redimensionada = cv2.resize(imagem, (300, 75), interpolation=cv2.INTER_AREA) # redimensionar a imagem
+
+```
+
+Máscara dos contours:
+
+```bash
+
+mask = np.zeros(imagem_redimensionada.shape, dtype=np.uint8) # criar uma máscara
+
+```
 
 ### Aplicar o algoritmo de Otsu
 
-CODIGO
+```bash
+
+temp = imagem_redimensionada
+
+thresh = cv2.threshold(temp, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1] # aplicar o método
+
+```
 
 ### Verificar o número de píxeis pretos
 
-CODIGO
+O cálculo dos contours, próximo passo, apenas funciona se o fundo for preto e os caracteres brancos. 
+
+```bash
+
+w = imagem_redimensionada.shape[0] # largura da imagem
+h = imagem_redimensionada.shape[1] # altura da imagem
+
+non_zero = cv2.countNonZero(thresh) # obter o número de pixeis não pretos
+
+if non_zero > (w * h) / 2:
+
+  thresh = cv2.threshold(temp, 0, 255, cv2.THRESH_BINARY_INV)[1] # inverter a cor dos pixeis
+
+```
+
 
 ### Calcular contours da imagem binarizada
 
-CODIGO
+```bash
+
+cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) # encontrar contours
+cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+
+(cnts, _) = contours.sort_contours(cnts, method="left-to-right") # ordenar os contours
+
+```
 
 ### Com base nos contours extrair os caracteres
 
-CODIGO
+Definir os valores mínimos e máximos da área dos contours:
+
+```bash
+
+min_area = 150 # área mínima dos contours
+max_area = 2000 # área máxima dos contours
+
+lx = 0 # último valor x
+cx = 0 # atual valor x
+
+```
 
 ### Com base nos contours extrair os caracteres
 
-CODIGo
+```bash
+
+ROI_number = 0
+
+for c in cnts:
+
+    area = cv2.contourArea(c) # calcular a área do contour
+    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x, y , largura, altura)
+
+    cx = x
+
+    if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
+
+
+        ROI = 255 - thresh[y: y + h, x: x + w] # a área a recortar
+
+        cv2.drawContours(mask, [c], -1, (255, 255, 255), -1) # construir máscara
+
+        cv2.imwrite('/content/drive/MyDrive/Exemplo_Codigo/caracteres_recortados/' + str(ROI_number) + ".png", ROI) # guardar imagem recortada
+
+        ROI_number = ROI_number + 1
+
+        lx = cx
+
+```
+
+Máscara gerada:
 
 ### Classificar os caracteres extraídos
 
@@ -508,39 +587,302 @@ CODIGO
 
 ### Instalar bibliotecas Grounding Dino e Segment Anythin Model (SAM)
 
-CODIGO
+Instalar repositórios do Grounding Dino e SAM
 
-### Obter os caminhos das imagens recortadas
+```bash
 
-CODIGO
+!pip install git+https://github.com/facebookresearch/segment-anything.git
+!git clone https://github.com/IDEA-Research/GroundingDINO.git
+
+%cd /content/GroundingDINO/
+!pip install -e .
+
+```
+
+Bibliotecas:
+
+```bash
+
+# Geral
+import argparse
+import os
+import copy
+
+import numpy as np
+import torch
+from PIL import Image, ImageDraw, ImageFont
+from torchvision.ops import box_convert
+
+# Grounding DINO
+import GroundingDINO.groundingdino.datasets.transforms as T
+from GroundingDINO.groundingdino.models import build_model
+from GroundingDINO.groundingdino.util import box_ops
+from GroundingDINO.groundingdino.util.slconfig import SLConfig
+from GroundingDINO.groundingdino.util.utils import clean_state_dict, get_phrases_from_posmap
+from GroundingDINO.groundingdino.util.inference import annotate, load_image, predict
+
+import supervision as sv
+
+# segment anything
+from segment_anything import build_sam, SamPredictor
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Carregar modelos
+from huggingface_hub import hf_hub_download
+
+```
 
 ### Aplicar do Grounding Dino sobre as imagens
 
-CODIGO
+Função que carrega o modelo Grounding Dino
 
-### Guardar as imagens geradas
+```bash
 
-CODIGO
+# Carregar modelo GroundingDINO
+def load_model_hf(repo_id, filename, ckpt_config_filename, device='cpu'):
+    cache_config_file = hf_hub_download(repo_id=repo_id, filename=ckpt_config_filename)
+
+    args = SLConfig.fromfile(cache_config_file)
+    model = build_model(args)
+    args.device = device
+
+    cache_file = hf_hub_download(repo_id=repo_id, filename=filename)
+    checkpoint = torch.load(cache_file, map_location='cpu')
+    log = model.load_state_dict(clean_state_dict(checkpoint['model']), strict=False)
+    print("Model loaded from {} \n => {}".format(cache_file, log))
+    _ = model.eval()
+    return model
+
+```
+
+Caminhos dos pesos e modelo do a utilizar:
+
+```bash
+
+# Caminhos GroundingDINO
+ckpt_repo_id = "ShilongLiu/GroundingDINO"
+ckpt_filenmae = "groundingdino_swinb_cogcoor.pth"
+ckpt_config_filename = "GroundingDINO_SwinB.cfg.py"
+
+```
+
+Carregar o modelo Grounding Dino:
+
+```bash
+
+# Carregar modelo
+groundingdino_model = load_model_hf(ckpt_repo_id, ckpt_filenmae, ckpt_config_filename)
+
+```
+
+Aplicar Grounding Dino sobre imagens:
+
+```bash
+
+# Correr GroundingDINO
+
+local_image_path = "/content/caminho/imagem.png"
+
+TEXT_PROMPT = "letter" # prompt utilizado para detetar objetos
+BOX_TRESHOLD = 0.3 # similaridade de cada deteção
+TEXT_TRESHOLD = 0.25 # similaridade do texto em relação ao que foi detetado
+
+image_source, image = load_image(local_image_path)
+
+# a predição retorna todas as bounding boxes, logits (confiança) e a palavra/frase que deu origem à deteção
+boxes, logits, phrases = predict(
+    model=groundingdino_model,
+    image=image,
+    caption=TEXT_PROMPT,
+    box_threshold=BOX_TRESHOLD,
+    text_threshold=TEXT_TRESHOLD
+)
+
+# imagem com as anotações da deteção
+annotated_frame = annotate(image_source=image_source, boxes=boxes, logits=logits, phrases=phrases)
+annotated_frame = annotated_frame[...,::-1] # BGR to RGB
+
+```
+
 
 ### Aplicar o SAM sobre as imagens geradas pelo Grounding Dino
 
-CODIGO
+Carregar o modelo SAM:
+
+```bash
+
+# Carregar modelo Segment Anything Model
+! wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
+
+```
+
+Definir pesos e o obter o modelo:
+
+```bash
+
+sam_checkpoint = 'sam_vit_h_4b8939.pth'
+sam = build_sam(checkpoint=sam_checkpoint)
+sam.to(device = "cpu")
+sam_predictor = SamPredictor(sam)
+
+```
+
+Correr SAM sobre a imagem gerada pelo Grounding Dino:
+
+```bash
+
+# Correr Segment Anything Model
+sam_predictor.set_image(image_source)
+
+```
+
+Normalizar as bounding boxes:
+
+```bash 
+
+# normalizar as bounding boxes
+H, W, _ = image_source.shape
+boxes_xyxy = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H])
+
+```
+
+Obter as máscaras:
+
+```bash
+
+transformed_boxes = sam_predictor.transform.apply_boxes_torch(boxes_xyxy, image_source.shape[:2]).to("cpu")
+masks, _, _ = sam_predictor.predict_torch(
+            point_coords = None,
+            point_labels = None,
+            boxes = transformed_boxes,
+            multimask_output = False,
+        )
+
+```
+
+Colocar máscaras a preto e branco:
+
+```bash
+
+# Obter apenas as máscaras (preto e branco)
+def get_just_masks(mask):
+    color = np.array([255/255, 255/255, 255/255, 1])
+    h, w = mask.shape[-2:]
+    mask_image = mask.reshape(h, w, 1) * color.reshape(1, 1, -1)
+
+    just_mask = Image.fromarray((mask_image.cpu().numpy() * 255).astype(np.uint8)).convert("L")
+
+    return just_mask
+
+```
+
+```bash
+
+# Guardar as máscaras num array
+for i in range(0, len(masks)):
+
+  new_mask = get_just_masks(masks[i])
+  save_imgs.append(new_mask)
+
+```
 
 ### Obter as máscaras geradas
 
-CODIGO
+```bash
 
-### Inverter as cores das máscaras
+# Ordenar as máscaras e guardar as imagens
+def save_masks(masks):
 
-CODIGO
+  # order characters
+  xmin = []
+
+  # get all x min of the bounding boxes
+  for i in boxes:
+
+    xmin.append(i[0])
+
+  # sort the values
+  xmin.sort()
+
+  sorted_boxes = []
+
+
+  count = 0
+
+  for i in range(0, len(xmin)):
+
+    for j in range(0, len(xmin)):
+
+      if i != j:
+
+        if xmin[i] == boxes[j][0]:
+
+          if boxes[j][2] - boxes[j][0] < 100:
+
+            save_imgs[j] = save_imgs[j].resize((300, 75))
+
+            save_imgs[j].save("/content/"+ str(count) + ".png")
+
+            count = count + 1
+
+          break
+
+```
 
 ### Calcular contours da imagem binarizada
 
-CODIGO
+```bash
+
+cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) # encontrar contours
+cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+
+(cnts, _) = contours.sort_contours(cnts, method="left-to-right") # ordenar os contours
+
+```
 
 ### Com base nos contours extrair os caracteres
 
-CODIGO
+Definir os valores mínimos e máximos da área dos contours:
+
+```bash
+
+min_area = 150 # área mínima dos contours
+max_area = 2000 # área máxima dos contours
+
+lx = 0 # último valor x
+cx = 0 # atual valor x
+
+```
+
+### Com base nos contours extrair os caracteres
+
+```bash
+
+ROI_number = 0
+
+for c in cnts:
+
+    area = cv2.contourArea(c) # calcular a área do contour
+    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x, y , largura, altura)
+
+    cx = x
+
+    if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
+
+
+        ROI = 255 - thresh[y: y + h, x: x + w] # a área a recortar
+
+        cv2.drawContours(mask, [c], -1, (255, 255, 255), -1) # construir máscara
+
+        cv2.imwrite('/content/drive/MyDrive/Exemplo_Codigo/caracteres_recortados/' + str(ROI_number) + ".png", ROI) # guardar imagem recortada
+
+        ROI_number = ROI_number + 1
+
+        lx = cx
+
+```
 
 ### Classificar os caracteres extraídos
 
