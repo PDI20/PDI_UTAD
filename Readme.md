@@ -9,7 +9,9 @@ o	OCR (Optical Character Recognition) - processo que converte imagens com texto 
 o	Pipeline de processamento digital de imagem - segmentação e extração dos caracteres utilizando técnicas de processamento de imagem.
 -	**Análise de texto e correção de erros**: módulo responsável pela análise do texto extraído, de todas as imagens, e correção de potenciais erros cometidos pela abordagem utilizado no módulo anterior.
 
+Diagrama de funcionamento do algoritmo:
 
+![](./assets/imagens/diagrama.png)
 
 # Conteúdo
 
@@ -250,7 +252,7 @@ Cada ficheiro tem pelo menos uma linha de texto constituído por cinco valores:
 - width -> largura da bounding box;
 - height -> altura da bounding box.
 
-Colocar imagem do ficheiro
+![](./assets/imagens/label_inferencia.png)
 
 ## Bibliotecas a utilizar
 
@@ -272,8 +274,6 @@ coordenadas = []
 
 # sorted ordena alfabeticamente os nomes dos caminhos
 for item in sorted(glob.iglob(diretoria_labels)):
-
-  print(item)
 
   # executar as operações necessárias para a leitura dos ficheiros
 
@@ -482,6 +482,8 @@ img = "/content/caminho/imagens_recortadas/0.png"
 
 imagem = cv2.imread(img, cv2.IMREAD_GRAYSCALE) # carregar imagem e converter a imagem para preto e branco
 
+![](./assets/imagens/imagem_adequada_grayscale_scaled_no_grid.png)
+
 ```
 
 Redimensionar imagem:
@@ -492,6 +494,8 @@ imagem_redimensionada = cv2.resize(imagem, (300, 75), interpolation=cv2.INTER_AR
 
 ```
 
+![](./assets/imagens/imagem_adequada_grayscale_scaled.png)
+
 Máscara dos contours:
 
 ```bash
@@ -499,6 +503,8 @@ Máscara dos contours:
 mask = np.zeros(imagem_redimensionada.shape, dtype=np.uint8) # criar uma máscara
 
 ```
+
+![](./assets/imagens/mascara_contours.png)
 
 ### Aplicar o algoritmo de Otsu
 
@@ -509,6 +515,8 @@ temp = imagem_redimensionada
 thresh = cv2.threshold(temp, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1] # aplicar o método
 
 ```
+
+![](./assets/imagens/imagem_adequada_binarizada.png)
 
 ### Verificar o número de píxeis pretos
 
@@ -582,6 +590,12 @@ for c in cnts:
 ```
 
 Máscara gerada:
+
+![](./assets/imagens/imagem_adequada_mascara_contours.png)
+
+Caracteres extraídos:
+
+|![](./assets/imagens/ROI_0.png)|![](./assets/imagens/ROI_1.png)|![](./assets/imagens/ROI_2.png)|![](./assets/imagens/ROI_3.png)|![](./assets/imagens/ROI_4.png)|![](./assets/imagens/ROI_5.png)
 
 ### Classificar os caracteres extraídos
 
