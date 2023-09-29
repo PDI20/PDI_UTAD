@@ -28,7 +28,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
   - [Inferir sobre novas imagens](#inferir-sobre-novas-imagens)
 - [Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes](#módulo-2---Recorte-da-imagem-com-base-nas-coordenadas-da-bounding-boxes)
   - [Organização dos ficheiros com as bounding boxes](#organização-dos-ficheiros-com-as-bounding-boxes)
-  - [Obter os caminhos dos ficheiros](#obter-os-caminhos-dos-ficheiros)
+  - [Bibliotecas a utilizar](#bibliotecas-a-utilizar)
   - [Abrir os ficheiros e ler os seus conteúdos](#abrir-os-ficheiros-e-ler-os-seus-conteúdos)
     - [Reverter a normalização das coordenadas geradas](#reverter-a-normalização-das-coordenadas-geradas)
   - [Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito](#calcular-as-coordenadas-dos-ponto-superior-esquerdo-e-do-ponto-inferior-direito)
@@ -221,7 +221,21 @@ Colocar imagens do treino (metricas)
 A confiança mínima utilizada deve ser de 0.65.
 Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das bounding boxes detetadas. Caso não seja detetada nenhuma matrícula, o ficheiro não é gerado.
 
-Colocar imagem do ficheiro txt e da inferencia
+```bash
+
+# para inferir é necessário utilizar o script detect.py
+# basta indicar o caminho para os pesos do treino, o tamanho de input das imagens, a confiança mínima, caminho das imagens,
+# o caminho onde são guardadas os resultados e indicar que se pretende guardar as coordenadas das bounding boxes -> --save-txt
+
+!python detect.py --weights /content/drive/MyDrive/Exemplo_Codigo/weights/best.pt --img 512 --conf 0.65 --source /content/drive/MyDrive/Exemplo_Codigo/datasets/inferencias/exemplo_carros --name resultados --save-txt
+
+# na consola encontram-se os resultados das métricas
+
+# os resultados da inferência são guardados na pasta runs/detect, se apenas for indicado o nome da diretoria
+
+```
+
+Colocar imagem da inferencia
 
 # Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes
 
@@ -235,17 +249,106 @@ Cada ficheiro tem pelo menos uma linha de texto constituído por cinco valores:
 - width -> largura da bounding box;
 - height -> altura da bounding box.
 
-## Obter os caminhos dos ficheiros
+Colocar imagem do ficheiro
 
-CODIGO
+## Bibliotecas a utilizar
+
+```bash
+
+import cv2 # OpenCV, abrir e guardar imagens
+import glob # obtém os caminhos todos os ficheiros presentes na diretoria dada, pastas inclusive
+
+```
 
 ## Abrir os ficheiros e ler os seus conteúdos
 
-CODIGO
+```bash
+
+# alterar pasta onde se encontram as labels, se necessário
+diretoria_labels = "/content/caminho/labels/*" # caminho termina com *, indica todos os ficheiros presentes na diretoria
+
+coordenadas = []
+
+# sorted ordena alfabeticamente os nomes dos caminhos
+for item in sorted(glob.iglob(diretoria_labels)):
+
+  print(item)
+
+  # executar as operações necessárias para a leitura dos ficheiros
+
+  # abrir o ficheiro
+  f = open(item)
+
+  # ler todas as linhas do ficheiro
+  linhas = f.readlines()
+
+  for linha in linhas:
+
+    # remover parágrafos
+    l = linha.replace("\n", "")
+
+    # obter cada valor
+    temp = l.split(" ")
+
+    cc = [float(temp[1]), float(temp[2]), float(temp[3]), float(temp[4])]
+
+    coordenadas.append(cc)
+
+    #break
+
+  f.close()
+
+```
 
 ### Reverter a normalização das coordenadas geradas
 
-CODIGO
+```bash
+
+# alterar diretoria onde se encontram os resultados, se necessário
+diretoria_imagens = "/content/caminho/resultados_inferencias/*" # caminho termina com *, indica todos os ficheiros presentes na diretoria
+
+diretoria_guardar_imagens = "/content/caminho/imagens_recortadas" # caminho onde as imagens recortadas serão guardadas
+
+i = 0
+
+# sorted ordena alfabeticamente os nomes dos caminhos
+for item in sorted(glob.iglob(diretoria_imagens)):
+
+  # executar as operações necessárias para a leitura dos ficheiros
+
+  if not item.__contains__("labels"): # para não considerar a diretoria das labels
+
+    # abrir a imagem
+    imagem = cv2.imread(item)
+
+    # largura e altura da imagem aberta
+    largura_imagem = imagem.shape[1]
+    altura_imagem = imagem.shape[0]
+
+    # calcular coordenadas
+    # desnormalizar as coordenadas
+    des_x = coordenadas[i][0] * largura_imagem
+    des_y = coordenadas[i][1] * altura_imagem
+    des_width = coordenadas[i][2] * largura_imagem
+    des_height = coordenadas[i][3] * altura_imagem
+
+    bb_thickeness = 4 # para remover a bounding box
+
+    # cálculo do ponto superior esquerdo (xmin, ymax) e do ponto inferior direito (xmax, ymin)
+    xmin = des_x - des_width + des_width / 2 + bb_thickeness
+    xmax = des_x + des_width - des_width / 2 - bb_thickeness
+    ymin = des_y - des_height + des_height / 2 + bb_thickeness
+    ymax = des_y + des_height - des_height / 2 - bb_thickeness
+
+    # recorte da imagem
+    imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
+
+    # guardar imagem
+    cv2.imwrite("/content/caminho/imagens_recortadas/" + str(i) + ".png", imagem_crop)
+
+  i = i + 1
+
+```
 
 ## Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito
 
