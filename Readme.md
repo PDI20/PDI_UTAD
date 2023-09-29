@@ -239,7 +239,6 @@ Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das
 ```
 
 
-
 ![](./assets/imagens/inferencia.drawio.png)
 
 
@@ -479,11 +478,12 @@ im_show = Image.fromarray(im_show)
 im_show
 ```
 
+![](./assets/imagens/ocr_resultados.png)
+
+
 ### Guardar os resultados
 
 CODIGO
-
-Imagem resultados
 
 ## Abordagem 2 - Aplicação do método de Otsu
 
@@ -572,7 +572,7 @@ if non_zero > (w * h) / 2:
 cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) # encontrar contours
 cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
-(cnts, _) = contours.sort_contours(cnts, method="left-to-right") # ordenar os contours
+(cnts, _) = contours.sort_contours(cnts, method="left-to-right") # ordenar os contours da esquerda para a direita
 
 ```
 
@@ -610,7 +610,7 @@ for c in cnts:
 
         cv2.drawContours(mask, [c], -1, (255, 255, 255), -1) # construir máscara
 
-        cv2.imwrite('/content/drive/MyDrive/Exemplo_Codigo/caracteres_recortados/' + str(ROI_number) + ".png", ROI) # guardar imagem recortada
+        cv2.imwrite('/content/caminho/caracteres_recortados/' + str(ROI_number) + ".png", ROI) # guardar imagem recortada
 
         ROI_number = ROI_number + 1
 
@@ -723,7 +723,9 @@ ckpt_config_filename = "GroundingDINO_SwinB.cfg.py"
 
 ```
 
+
 Carregar o modelo Grounding Dino:
+
 
 ```bash
 
@@ -732,7 +734,9 @@ groundingdino_model = load_model_hf(ckpt_repo_id, ckpt_filenmae, ckpt_config_fil
 
 ```
 
+
 Aplicar Grounding Dino sobre imagens:
+
 
 ```bash
 
@@ -761,6 +765,12 @@ annotated_frame = annotated_frame[...,::-1] # BGR to RGB
 
 ```
 
+<div align="center">
+
+![](./assets/imagens/gd_results.png)
+
+</div>
+
 
 ### Aplicar o SAM sobre as imagens geradas pelo Grounding Dino
 
@@ -784,7 +794,9 @@ sam_predictor = SamPredictor(sam)
 
 ```
 
+
 Correr SAM sobre a imagem gerada pelo Grounding Dino:
+
 
 ```bash
 
@@ -793,7 +805,9 @@ sam_predictor.set_image(image_source)
 
 ```
 
+
 Normalizar as bounding boxes:
+
 
 ```bash 
 
@@ -803,7 +817,9 @@ boxes_xyxy = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H])
 
 ```
 
+
 Obter as máscaras:
+
 
 ```bash
 
@@ -817,7 +833,9 @@ masks, _, _ = sam_predictor.predict_torch(
 
 ```
 
+
 Colocar máscaras a preto e branco:
+
 
 ```bash
 
@@ -886,6 +904,18 @@ def save_masks(masks):
 
 ```
 
+<div align="center">
+
+  ![](./assets/imagens/0.png)
+  ![](./assets/imagens/1.png)
+  ![](./assets/imagens/2.png)
+  ![](./assets/imagens/3.png)
+  ![](./assets/imagens/4.png)
+  ![](./assets/imagens/5.png)
+
+</div>
+
+
 ### Calcular contours da imagem binarizada
 
 ```bash
@@ -938,6 +968,14 @@ for c in cnts:
         lx = cx
 
 ```
+
+
+<div align="center">
+
+![](./assets/imagens/ROI_0.png) ![](./assets/imagens/ROI_1.png) ![](./assets/imagens/ROI_2.png) ![](./assets/imagens/ROI_3.png) ![](./assets/imagens/ROI_4.png) ![](./assets/imagens/ROI_5.png)
+
+</div>
+
 
 ### Classificar os caracteres extraídos
 
