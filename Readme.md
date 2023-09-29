@@ -249,7 +249,7 @@ Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das
 
 Cada ficheiro tem pelo menos uma linha de texto constituído por cinco valores:
 
-- class -> não é relevante para o problema em questão;
+- class -> classe do objeto detetado, não é relevante para o problema em questão;
 - x_center -> valor de x, do centro da bounding box;
 - y_center -> valor de y, do centro da bounding box;
 - width -> largura da bounding box;
