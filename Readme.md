@@ -173,7 +173,7 @@ Parâmetros a ter em conta:
 - name -> o nome da diretoria onde são guardados os resultados do treino
 - cfg -> modelo a utilizar, por exemplo, yolov5s.yaml, yolov5m.yaml, yolov5l.yaml, yolov5x.yaml (substituir o número 5 por 3 ou 8, tendo em conta a versão do modelo utilizada)
 - weights -> utilizar um modelo pré-treinado ou YOLO (por exemplo, yolov5s.pt, yolov5m.pt, yolov5l.pt, yolov5x.pt - substituir o número 5 por 3 ou 8, tendo em conta a versão do modelo utilizada) ou personalizado (por exemplo, best.pt)
-- 
+
 
 ```bash
 
@@ -240,7 +240,7 @@ Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das
 
 <div align="center">
 
-![](./assets/imagens/imagem_adequada_inferencia.png.png)
+![](./assets/imagens/inferencia.drawio.png)
 
 </div>
 
