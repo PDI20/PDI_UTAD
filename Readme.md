@@ -238,11 +238,11 @@ Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das
 
 ```
 
-<div align="center">
+
 
 ![](./assets/imagens/inferencia.drawio.png)
 
-</div>
+
 
 # Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes
 
