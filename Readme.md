@@ -238,7 +238,11 @@ Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das
 
 ```
 
-Colocar imagem da inferencia
+<div align="center">
+
+![](./assets/imagens/imagem_adequada_inferencia.png.png)
+
+</div>
 
 # Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes
 
@@ -252,7 +256,12 @@ Cada ficheiro tem pelo menos uma linha de texto constituído por cinco valores:
 - width -> largura da bounding box;
 - height -> altura da bounding box.
 
+<div align="center">
+
 ![](./assets/imagens/label_inferencia.png)
+
+</div>
+
 
 ## Bibliotecas a utilizar
 
@@ -340,6 +349,12 @@ for item in sorted(glob.iglob(diretoria_labels)):
     imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
 
 ```
+
+<div align="center">
+
+![](./assets/imagens/imagem_adequada_cropped_sem_thickness.png.png)
+
+</div>
 
 ## Recorte da imagem (código completo)
 
@@ -482,9 +497,13 @@ img = "/content/caminho/imagens_recortadas/0.png"
 
 imagem = cv2.imread(img, cv2.IMREAD_GRAYSCALE) # carregar imagem e converter a imagem para preto e branco
 
+```
+
+<div align="center">
+
 ![](./assets/imagens/imagem_adequada_grayscale_scaled_no_grid.png)
 
-```
+</div>
 
 Redimensionar imagem:
 
@@ -494,7 +513,11 @@ imagem_redimensionada = cv2.resize(imagem, (300, 75), interpolation=cv2.INTER_AR
 
 ```
 
+<div align="center">
+
 ![](./assets/imagens/imagem_adequada_grayscale_scaled.png)
+
+</div>
 
 Máscara dos contours:
 
@@ -503,8 +526,11 @@ Máscara dos contours:
 mask = np.zeros(imagem_redimensionada.shape, dtype=np.uint8) # criar uma máscara
 
 ```
+<div align="center">
 
 ![](./assets/imagens/mascara_contours.png)
+
+</div>
 
 ### Aplicar o algoritmo de Otsu
 
@@ -515,8 +541,11 @@ temp = imagem_redimensionada
 thresh = cv2.threshold(temp, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1] # aplicar o método
 
 ```
+<div align="center">
 
 ![](./assets/imagens/imagem_adequada_binarizada.png)
+
+</div>
 
 ### Verificar o número de píxeis pretos
 
@@ -591,11 +620,19 @@ for c in cnts:
 
 Máscara gerada:
 
+<div align="center">
+
 ![](./assets/imagens/imagem_adequada_mascara_contours.png)
+
+</div>
 
 Caracteres extraídos:
 
-|![](./assets/imagens/ROI_0.png)|![](./assets/imagens/ROI_1.png)|![](./assets/imagens/ROI_2.png)|![](./assets/imagens/ROI_3.png)|![](./assets/imagens/ROI_4.png)|![](./assets/imagens/ROI_5.png)
+<div align="center">
+
+![](./assets/imagens/ROI_0.png) ![](./assets/imagens/ROI_1.png) ![](./assets/imagens/ROI_2.png) ![](./assets/imagens/ROI_3.png) ![](./assets/imagens/ROI_4.png) ![](./assets/imagens/ROI_5.png)
+
+</div>
 
 ### Classificar os caracteres extraídos
 
