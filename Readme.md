@@ -33,6 +33,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
     - [Reverter a normalização das coordenadas geradas](#reverter-a-normalização-das-coordenadas-geradas)
   - [Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito](#calcular-as-coordenadas-dos-ponto-superior-esquerdo-e-do-ponto-inferior-direito)
   - [Efetuar o recorte da imagem com base nas coordenadas calculadas](#efetuar-o-recorte-da-imagem-com-base-nas-coordenadas-calculadas)
+  -[Recorte da imagem (código completo)](#recorte-da-imagem-(código-completo))
 - [Módulo 3 - Pipeline de processamento digital da imagem](#módulo-3---pipeline-de-processamento-digital-da-imagem)
   - [Pré-processamento das imagens recortadas](#pré---processamento-das-imagens-recortadas)
   - [Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)](#abordagem-1---Utilização-de-uma-biblioteca-OCR-(Optical-Character-recognition))
@@ -155,7 +156,7 @@ Instalação de bibliotecas:
 # o ponto de exclamação antes do comando indica que se pretende utilizar um comando da linha de comandos
 
 # entrar na diretoria do YOLO
-%cd /content/drive/MyDrive/Exemplo_Codigo/yolov5/yolov5-master
+%cd /content/caminho/yolov5
 
 !pip install -qr requirements.txt  # instala as dependências listadas no ficheiro (apenas as que ainda não estão instaladas)
 
@@ -304,10 +305,50 @@ for item in sorted(glob.iglob(diretoria_labels)):
 
 ```bash
 
-# alterar diretoria onde se encontram os resultados, se necessário
-diretoria_imagens = "/content/caminho/resultados_inferencias/*" # caminho termina com *, indica todos os ficheiros presentes na diretoria
+    # largura e altura da imagem aberta
+    largura_imagem = imagem.shape[1]
+    altura_imagem = imagem.shape[0]
 
-diretoria_guardar_imagens = "/content/caminho/imagens_recortadas" # caminho onde as imagens recortadas serão guardadas
+    # calcular coordenadas
+    # desnormalizar as coordenadas
+    des_x = coordenadas[i][0] * largura_imagem
+    des_y = coordenadas[i][1] * altura_imagem
+    des_width = coordenadas[i][2] * largura_imagem
+    des_height = coordenadas[i][3] * altura_imagem
+
+```
+
+## Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito
+
+```bash
+
+    bb_thickeness = 4 # para remover a bounding box
+
+    # cálculo do ponto superior esquerdo (xmin, ymax) e do ponto inferior direito (xmax, ymin)
+    xmin = des_x - des_width + des_width / 2 + bb_thickeness 
+    xmax = des_x + des_width - des_width / 2 - bb_thickeness
+    ymin = des_y - des_height + des_height / 2 + bb_thickeness
+    ymax = des_y + des_height - des_height / 2 - bb_thickeness
+
+```
+
+## Efetuar o recorte da imagem com base nas coordenadas calculadas
+
+```bash
+
+    # recorte da imagem
+    imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
+
+```
+
+## Recorte da imagem (código completo)
+
+```bash
+
+# alterar diretoria onde se encontram os resultados, se necessário
+diretoria_imagens = "/content/drive/MyDrive/Exemplo_Codigo/yolov5/yolov5-master/runs/detect/resultados3/*" # caminho termina com *, indica todos os ficheiros presentes na diretoria
+
+diretoria_guardar_imagens = "/content/drive/MyDrive/Exemplo_Codigo/imagens_recortadas/" # caminho onde as imagens recortadas serão guardadas
 
 i = 0
 
@@ -335,7 +376,7 @@ for item in sorted(glob.iglob(diretoria_imagens)):
     bb_thickeness = 4 # para remover a bounding box
 
     # cálculo do ponto superior esquerdo (xmin, ymax) e do ponto inferior direito (xmax, ymin)
-    xmin = des_x - des_width + des_width / 2 + bb_thickeness
+    xmin = des_x - des_width + des_width / 2 + bb_thickeness 
     xmax = des_x + des_width - des_width / 2 - bb_thickeness
     ymin = des_y - des_height + des_height / 2 + bb_thickeness
     ymax = des_y + des_height - des_height / 2 - bb_thickeness
@@ -344,19 +385,11 @@ for item in sorted(glob.iglob(diretoria_imagens)):
     imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
 
     # guardar imagem
-    cv2.imwrite("/content/caminho/imagens_recortadas/" + str(i) + ".png", imagem_crop)
+    cv2.imwrite("/content/drive/MyDrive/Exemplo_Codigo/imagens_recortadas/" + str(i) + ".png", imagem_crop)
 
   i = i + 1
 
 ```
-
-## Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito
-
-CODIGO
-
-## Efetuar o recorte da imagem com base nas coordenadas calculadas
-
-CODIGO
 
 # Módulo 3 - Pipeline de processamento digital da imagem
 
