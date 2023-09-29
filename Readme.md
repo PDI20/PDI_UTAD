@@ -478,8 +478,11 @@ im_show = Image.fromarray(im_show)
 im_show
 ```
 
+<div align="center>
+
 ![](./assets/imagens/ocr_resultados.png)
 
+</div>
 
 ### Guardar os resultados
 
