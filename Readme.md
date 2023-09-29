@@ -132,19 +132,34 @@ Colocar video
 
 Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive.
 
+Colocar Video
+
+## Acesso ao Google Drive
+
 ```bash
 
 from google.colab import drive
 
-drive.mount('/content/drive/') # nome da pasta onde serão colocados os ficheiros do Google Drive -> /nome_da_pasta/MyDrive/
+drive.mount('/content/drive/') # nome da diretoria onde serão colocados os ficheiros do Google Drive -> /nome_da_pasta/MyDrive/
+
+# os conteúdos do Google Drive têm de estar numa diretoria vazia
 
 ```
-
-## Acesso ao Google Drive
-
-CODIGO
-
 ## Treino do dataset
+
+Instalação de bibliotecas:
+
+```bash
+
+# contém todos os scripts dos modelos, as bibliotecas nencessárias para o seu funcionamento
+# o ponto de exclamação antes do comando indica que se pretende utilizar um comando da linha de comandos
+
+# entrar na diretoria do YOLO
+%cd /content/drive/MyDrive/Exemplo_Codigo/yolov5/yolov5-master
+
+!pip install -qr requirements.txt  # instala as dependências listadas no ficheiro (apenas as que ainda não estão instaladas)
+
+```
 
 Parâmetros a ter em conta:
 
@@ -153,16 +168,51 @@ Parâmetros a ter em conta:
 - img -> tamanho da imagem utilizado como input
 - patience -> o número de “epochs” necessárias em que não existe melhoria da loss de validação para parar o treino automaticamente
 - name -> o nome da diretoria onde são guardados os resultados do treino
+- cfg -> modelo a utilizar, por exemplo, yolov5s.yaml, yolov5m.yaml, yolov5l.yaml, yolov5x.yaml (substituir o número 5 por 3 ou 8, tendo em conta a versão do modelo utilizada)
+- weights -> utilizar um modelo pré-treinado ou YOLO (por exemplo, yolov5s.pt, yolov5m.pt, yolov5l.pt, yolov5x.pt - substituir o número 5 por 3 ou 8, tendo em conta a versão do modelo utilizada) ou personalizado (por exemplo, best.pt)
+- 
 
-CODIGO
+```bash
+
+# exemplo de treino que utiliza o modelo yolov5l e os pesos pré-treinados do modelo yolov5l
+!python train.py --img 256 --batch 24 --epochs 2 --data  /content/caminho/data.yaml --cfg ./models/yolov5l.yaml --weights yolov5l --name resultados  --cache --exist-ok
+
+```
 
 As métricas finais do treino são as da validação (melhores).
 
+Exemplo de métricas:
+
 Para efetuar de nova a validação:
+
+```bash 
+
+# para validar os resultados do treino é necessário utilizar o script val.py
+# basta indicar o caminho para os pesos do treino e o tamanho de input das imagens
+
+!python val.py --data /content/caminho/data.yaml --weights /content/caminho/best.pt--img 640 
+
+# na consola encontram-se os resultados das métricas
+
+# os resultados da validação são guardados na pasta runs/val
+
+```
 
 Para obter as métricas de teste:
 
+```bash
+
+# basta indicar o caminho para os pesos do treino, o tamanho de input das imagens e indicar --task test
+
+!python val.py --data /content/caminho/data.yaml --weights /content/caminho/best.pt --img 640 
+
+```
+
+Exemplo de métricas de teste:
+
 ### Resultados do treino
+
+Exemplo de resultados de um treino:
 
 Colocar imagens do treino (metricas)
 
