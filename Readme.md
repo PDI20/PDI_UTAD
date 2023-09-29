@@ -88,7 +88,10 @@ O dataset deve ser constituído por imagens diurnas (tiradas manualmente, obtida
 
 | **Imagens adequadas para o treino** | **Imagens não adequadas para o treino** | 
 |:----:|:----:|
-|![](./assets/imagens/imagem_adequada.png)|![](./assets/imagens/imagem_adequada.png)|
+|![](./assets/imagens/imagem_adequada.png)|![](./assets/imagens/imagem_nao_adequada.png)|
+|![](./assets/imagens/imagem_adequada2.png)|![](./assets/imagens/imagem_nao_adequada2.png)|
+|![](./assets/imagens/imagem_adequada3.png)|![](./assets/imagens/imagem_nao_adequada3.png)|
+|![](./assets/imagens/imagem_adequada4.png)|![](./assets/imagens/imagem_nao_adequada4.png)|
 
 
 </div>
