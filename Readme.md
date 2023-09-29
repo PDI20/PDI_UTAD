@@ -132,7 +132,13 @@ Colocar video
 
 Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive.
 
-Colocar video
+```bash
+
+from google.colab import drive
+
+drive.mount('/content/drive/') # nome da pasta onde serão colocados os ficheiros do Google Drive -> /nome_da_pasta/MyDrive/
+
+```
 
 ## Acesso ao Google Drive
 
@@ -149,6 +155,12 @@ Parâmetros a ter em conta:
 - name -> o nome da diretoria onde são guardados os resultados do treino
 
 CODIGO
+
+As métricas finais do treino são as da validação (melhores).
+
+Para efetuar de nova a validação:
+
+Para obter as métricas de teste:
 
 ### Resultados do treino
 
