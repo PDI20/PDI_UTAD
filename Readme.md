@@ -407,12 +407,6 @@ for item in sorted(glob.iglob(diretoria_imagens)):
 
 # Módulo 3 - Pipeline de processamento digital da imagem
 
-## Pré-processamento das imagens recortadas
-
-Pré-processamento efetuado para maximizar os resultados quando aplicadas as diferentes abordagens.
-
-CODIGO
-
 ## Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)
 
 ### Instalar a biblioteca PaddleOCR
@@ -500,7 +494,7 @@ O resultado do OCR é um array do qual é possível extrair:
 
 imagens = '/content/drive/MyDrive/Exemplo_Codigo/imagens_recortadas/*'
 
-resultados_path = "/content/drive/MyDrive/Github/Abordagem1/resultados/resultados_ocr.txt"
+resultados_path = "/content/caminho/resultados_ocr"
 
 resultados_file = open(resultados_path, "a")
 
@@ -533,10 +527,6 @@ resultados_file.close()
 ```
 
 
-### Guardar os resultados
-
-CODIGO
-
 ## Abordagem 2 - Aplicação do método de Otsu
 
 ### Pré-processamento das imagens
@@ -545,7 +535,7 @@ Abrir imagem e converter para preto e branco:
 
 ```bash
 
-img = "/content/caminho/imagens_recortadas/0.png"
+img = "/content/caminho/imagem"
 
 imagem = cv2.imread(img, cv2.IMREAD_GRAYSCALE) # carregar imagem e converter a imagem para preto e branco
 
@@ -612,7 +602,7 @@ non_zero = cv2.countNonZero(thresh) # obter o número de pixeis não pretos
 
 if non_zero > (w * h) / 2:
 
-  thresh = cv2.threshold(temp, 0, 255, cv2.THRESH_BINARY_INV)[1] # inverter a cor dos pixeis
+  thresh = cv2.bitwise_not(temp) # inverter a cor dos pixeis
 
 ```
 
@@ -627,6 +617,149 @@ cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 (cnts, _) = contours.sort_contours(cnts, method="left-to-right") # ordenar os contours da esquerda para a direita
 
 ```
+
+### Classificar os caracteres extraídos
+
+### Bibliotecas
+
+```bash
+
+from tensorflow import keras
+from tensorflow.keras import layers
+
+```
+
+```bash
+
+input_shape = (50, 50, 1) # input que o modelo aceita
+num_classes = 36 # número de classes
+class_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+              'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+              'U', 'V', 'W', 'X', 'Y', 'Z'] # nomes das classes
+
+# modelo de classificação
+model = keras.Sequential(
+    [
+        layers.Dense(32, input_shape = input_shape),
+        layers.Dense(64, activation = 'relu'),
+        layers.Flatten(),
+        layers.Dense(num_classes, activation = 'softmax'),
+    ]
+)
+
+```
+
+Carregar pesos pré-treinados:
+
+```bash
+
+# carregar os pesos
+model.load_weights('/content/caminho/pesos')
+
+```
+
+
+### Extração e classificação dos caracteres
+
+Cálculo da área de cada contour detetado:
+
+```bash
+
+    area = cv2.contourArea(c) # calcular a área do contour
+    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x (centro da bounding box), y (centro da bounding box), largura, altura)
+
+```
+
+Definir a condição que identifica caracteres:
+
+```bash
+
+if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
+
+```
+
+Recortar imagem:
+
+```bash
+
+char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
+
+```
+
+Redimensionar a imagem recortada para ser utilizada pelo classificado:
+
+```bash
+
+# redimensionar o caracter
+char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
+char = np.expand_dims(char, axis = 0)
+
+```
+
+Classificar imagem recortada:
+
+```bash
+
+# classificar caracter
+prev =  model.predict(char)
+output_class = class_names[np.argmax(prev)]
+
+```
+
+### Extração e classificação dos caracteres (código completo)
+
+```bash
+
+resultados_dir = "/content/caminho/resultados_otsu"
+
+resultados_file = open(resultados_dir, "a")
+
+png = 0
+
+mask_cnt = 0
+
+for cnts in imagens_cnts:
+
+  resultados_file.write(str(png) + " -> ")
+
+  resultado_classificacao = ""
+
+  for c in cnts:
+
+    area = cv2.contourArea(c) # calcular a área do contour
+    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x, y , largura, altura)
+
+    counter = 0
+
+    if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
+
+        char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
+
+        # redimensionar o caracter
+        char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
+        char = np.expand_dims(char, axis = 0)
+
+        # classificar caracter
+        prev =  model.predict(char)
+        output_class = class_names[np.argmax(prev)]
+
+        resultado_classificacao = resultado_classificacao + output_class
+
+        mascaras[mask_cnt] = cv2.drawContours(mascaras[mask_cnt], [c], -1, (255, 255, 255), -1) # construir máscara
+
+        lx = cx
+
+        counter = counter + 1
+
+  resultados_file.write(resultado_classificacao + "\n")
+
+  png = png + 1
+
+  mask_cnt = mask_cnt + 1
+
+```
+
+
 
 ### Com base nos contours extrair os caracteres
 
@@ -651,7 +784,7 @@ ROI_number = 0
 for c in cnts:
 
     area = cv2.contourArea(c) # calcular a área do contour
-    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x, y , largura, altura)
+    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x (centro da bounding box), y (centro da bounding box), largura, altura)
 
     cx = x
 
@@ -662,13 +795,16 @@ for c in cnts:
 
         cv2.drawContours(mask, [c], -1, (255, 255, 255), -1) # construir máscara
 
-        cv2.imwrite('/content/caminho/caracteres_recortados/' + str(ROI_number) + ".png", ROI) # guardar imagem recortada
+        #cv2.imwrite('/content/caminho/guardar_imagem' + str(ROI_number) + ".png", ROI) # guardar imagem recortada
 
-        ROI_number = ROI_number + 1
+        #ROI_number = ROI_number + 1
 
         lx = cx
 
 ```
+
+
+
 
 Máscara gerada:
 
@@ -686,9 +822,7 @@ Caracteres extraídos:
 
 </div>
 
-### Classificar os caracteres extraídos
 
-CODIGO
 
 ## Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)
 
@@ -698,11 +832,17 @@ Instalar repositórios do Grounding Dino e SAM
 
 ```bash
 
-!pip install git+https://github.com/facebookresearch/segment-anything.git
+# Instalar repositório do Grounding Dino
 !git clone https://github.com/IDEA-Research/GroundingDINO.git
-
 %cd /content/GroundingDINO/
 !pip install -e .
+
+```
+
+```bash
+
+# Instalar repositórios SAM
+!pip install git+https://github.com/facebookresearch/segment-anything.git
 
 ```
 
@@ -710,17 +850,10 @@ Bibliotecas:
 
 ```bash
 
-# Geral
 import argparse
 import os
 import copy
 
-import numpy as np
-import torch
-from PIL import Image, ImageDraw, ImageFont
-from torchvision.ops import box_convert
-
-# Grounding DINO
 import GroundingDINO.groundingdino.datasets.transforms as T
 from GroundingDINO.groundingdino.models import build_model
 from GroundingDINO.groundingdino.util import box_ops
@@ -728,16 +861,19 @@ from GroundingDINO.groundingdino.util.slconfig import SLConfig
 from GroundingDINO.groundingdino.util.utils import clean_state_dict, get_phrases_from_posmap
 from GroundingDINO.groundingdino.util.inference import annotate, load_image, predict
 
-import supervision as sv
+# Carregar modelos
+from huggingface_hub import hf_hub_download
+
+import torch
+from PIL import Image
 
 # segment anything
 from segment_anything import build_sam, SamPredictor
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 
-# Carregar modelos
-from huggingface_hub import hf_hub_download
+import locale
+locale.getpreferredencoding = lambda: "UTF-8"
 
 ```
 
@@ -748,23 +884,25 @@ Função que carrega o modelo Grounding Dino
 ```bash
 
 # Carregar modelo GroundingDINO
-def load_model_hf(repo_id, filename, ckpt_config_filename, device='cpu'):
-    cache_config_file = hf_hub_download(repo_id=repo_id, filename=ckpt_config_filename)
+def load_model_hf(repo_id, filename, ckpt_config_filename, device ='cpu'):
+
+    cache_config_file = hf_hub_download(repo_id = repo_id, filename = ckpt_config_filename)
 
     args = SLConfig.fromfile(cache_config_file)
     model = build_model(args)
     args.device = device
 
-    cache_file = hf_hub_download(repo_id=repo_id, filename=filename)
-    checkpoint = torch.load(cache_file, map_location='cpu')
-    log = model.load_state_dict(clean_state_dict(checkpoint['model']), strict=False)
+    cache_file = hf_hub_download(repo_id = repo_id, filename = filename)
+    checkpoint = torch.load(cache_file, map_location = 'cpu')
+    log = model.load_state_dict(clean_state_dict(checkpoint['model']), strict = False)
     print("Model loaded from {} \n => {}".format(cache_file, log))
     _ = model.eval()
     return model
 
 ```
 
-Caminhos dos pesos e modelo do a utilizar:
+
+Caminhos dos pesos e modelo do Grounding Dino a utilizar:
 
 ```bash
 
@@ -789,32 +927,34 @@ groundingdino_model = load_model_hf(ckpt_repo_id, ckpt_filenmae, ckpt_config_fil
 
 Aplicar Grounding Dino sobre imagens:
 
-
 ```bash
 
 # Correr GroundingDINO
 
 local_image_path = "/content/caminho/imagem.png"
 
-TEXT_PROMPT = "letter" # prompt utilizado para detetar objetos
-BOX_TRESHOLD = 0.3 # similaridade de cada deteção
-TEXT_TRESHOLD = 0.25 # similaridade do texto em relação ao que foi detetado
+imagens_gd = []
+boxes_gd = []
 
-image_source, image = load_image(local_image_path)
+for item in sorted(glob.iglob()):
 
-# a predição retorna todas as bounding boxes, logits (confiança) e a palavra/frase que deu origem à deteção
-boxes, logits, phrases = predict(
-    model=groundingdino_model,
-    image=image,
-    caption=TEXT_PROMPT,
-    box_threshold=BOX_TRESHOLD,
-    text_threshold=TEXT_TRESHOLD
-)
+  TEXT_PROMPT = "letter" # prompt utilizado para a deteção
+  BOX_TRESHOLD = 0.3 # similaridade de cada deteção
+  TEXT_TRESHOLD = 0.25 # similaridade do texto em relação ao que foi detetado
 
-# imagem com as anotações da deteção
-annotated_frame = annotate(image_source=image_source, boxes=boxes, logits=logits, phrases=phrases)
-annotated_frame = annotated_frame[...,::-1] # BGR to RGB
+  image_source, image = load_image(item)
 
+  # a predição retorna todas as bounding boxes, logits (confiança) e a palavra/frase que deu origem à deteção
+  boxes, logits, phrases = predict(
+      model = groundingdino_model,
+      image = image,
+      caption = TEXT_PROMPT,
+      box_threshold = BOX_TRESHOLD,
+      text_threshold = TEXT_TRESHOLD
+  )
+
+  imagens_gd.append(image_source)
+  boxes_gd.append(boxes)
 ```
 
 <div align="center">
@@ -824,28 +964,21 @@ annotated_frame = annotated_frame[...,::-1] # BGR to RGB
 </div>
 
 
-### Aplicar o SAM sobre as imagens geradas pelo Grounding Dino
-
-Carregar o modelo SAM:
+### Carregar modelo SAM
 
 ```bash
 
 # Carregar modelo Segment Anything Model
-! wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
+!wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
 
-```
-
-Definir pesos e o obter o modelo:
-
-```bash
-
-sam_checkpoint = 'sam_vit_h_4b8939.pth'
-sam = build_sam(checkpoint=sam_checkpoint)
+sam_checkpoint = 'sam_vit_h_4b8939.pth' # pesos
+sam = build_sam(checkpoint = sam_checkpoint)
 sam.to(device = "cpu")
 sam_predictor = SamPredictor(sam)
 
 ```
 
+### Aplicar SAM sobre as imagens geradas pelo Grounding Dino
 
 Correr SAM sobre a imagem gerada pelo Grounding Dino:
 
@@ -876,6 +1009,7 @@ Obter as máscaras:
 ```bash
 
 transformed_boxes = sam_predictor.transform.apply_boxes_torch(boxes_xyxy, image_source.shape[:2]).to("cpu")
+
 masks, _, _ = sam_predictor.predict_torch(
             point_coords = None,
             point_labels = None,
@@ -891,10 +1025,13 @@ Colocar máscaras a preto e branco:
 
 ```bash
 
-# Obter apenas as máscaras (preto e branco)
-def get_just_masks(mask):
+# Função que retorna as máscaras
+def get_masks(mask):
+
     color = np.array([255/255, 255/255, 255/255, 1])
+
     h, w = mask.shape[-2:]
+
     mask_image = mask.reshape(h, w, 1) * color.reshape(1, 1, -1)
 
     just_mask = Image.fromarray((mask_image.cpu().numpy() * 255).astype(np.uint8)).convert("L")
@@ -908,8 +1045,51 @@ def get_just_masks(mask):
 # Guardar as máscaras num array
 for i in range(0, len(masks)):
 
-  new_mask = get_just_masks(masks[i])
-  save_imgs.append(new_mask)
+  new_mask = get_masks(masks[i])
+  mascaras.append(new_mask)
+
+```
+
+### Aplicar SAM sobre as imagens geradas pelo Grounding Dino (código completo)
+
+```bash
+
+i = 0
+
+mascaras_sam = []
+
+# Aplicar Segment Anything Model
+
+for img in imagens_gd:
+
+  sam_predictor.set_image(image_source)
+
+  # normalizar as bounding boxes
+  H, W, _ = image_source.shape
+  boxes_xyxy = box_ops.box_cxcywh_to_xyxy(boxes_gd[i]) * torch.Tensor([W, H, W, H])
+
+  # aplicar as bounding boxes à imagem
+  transformed_boxes = sam_predictor.transform.apply_boxes_torch(boxes_xyxy, image_source.shape[:2]).to("cpu")
+
+  # prever máscara com base nas bounding boxes
+  masks, _, _ = sam_predictor.predict_torch(
+            point_coords = None,
+            point_labels = None,
+            boxes = transformed_boxes,
+            multimask_output = False,
+        )
+
+  mascaras = []
+
+    # Guardar as máscaras num array
+    for i in range(0, len(masks)):
+
+      new_mask = get_masks(masks[i])
+      mascaras.append(new_mask)
+
+  mascaras_sam.append(mascaras)
+
+  i = i + 1
 
 ```
 
@@ -917,42 +1097,44 @@ for i in range(0, len(masks)):
 
 ```bash
 
-# Ordenar as máscaras e guardar as imagens
-def save_masks(masks):
+xmin = []
 
-  # order characters
-  xmin = []
+matricula_mascaras = []
 
-  # get all x min of the bounding boxes
-  for i in boxes:
+# obter o vlaor de x (mínimo) de cada bounding box
 
-    xmin.append(i[0])
+for item in boxes_gd:
 
-  # sort the values
-  xmin.sort()
+  temp = []
 
-  sorted_boxes = []
+  for i in range(0, len(item)):
 
+    temp.append(item[i])
 
-  count = 0
+  xmin.append(temp)
 
-  for i in range(0, len(xmin)):
+# ordenar os valores do menor para o maior
+xmin.sort()
 
-    for j in range(0, len(xmin)):
+counter = 0
 
-      if i != j:
+for item in xmin:
 
-        if xmin[i] == boxes[j][0]:
+  for i in range(0, len(item)):
 
-          if boxes[j][2] - boxes[j][0] < 100:
+    temp = []
 
-            save_imgs[j] = save_imgs[j].resize((300, 75))
+    if item[i] == boxes_gd[counter][0]:
 
-            save_imgs[j].save("/content/"+ str(count) + ".png")
+      if boxes_gd[counter][2] - boxes_gd[counter][0] < 75:
 
-            count = count + 1
+        temp.append(mascaras[counter].resize((300, 75)))
 
-          break
+      break
+
+    matricula_mascaras.append(temp)
+
+  counter = counter + 1
 
 ```
 
@@ -1013,14 +1195,165 @@ for c in cnts:
 
         cv2.drawContours(mask, [c], -1, (255, 255, 255), -1) # construir máscara
 
-        cv2.imwrite('/content/drive/MyDrive/Exemplo_Codigo/caracteres_recortados/' + str(ROI_number) + ".png", ROI) # guardar imagem recortada
+        #cv2.imwrite('/content/caminho/guardar_imagem + str(ROI_number) + ".png", ROI) # guardar imagem recortada
 
-        ROI_number = ROI_number + 1
+        #ROI_number = ROI_number + 1
 
         lx = cx
 
 ```
 
+### Calcular contours da imagem binarizada
+
+```bash
+
+cnts = cv2.findContours(mascara, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) # encontrar contours
+cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+
+(cnts, _) = contours.sort_contours(cnts, method="left-to-right") # ordenar os contours da esquerda para a direita
+
+```
+
+### Classificar os caracteres extraídos
+
+### Bibliotecas
+
+```bash
+
+from tensorflow import keras
+from tensorflow.keras import layers
+
+```
+
+```bash
+
+input_shape = (50, 50, 1) # input que o modelo aceita
+num_classes = 36 # número de classes
+class_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+              'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+              'U', 'V', 'W', 'X', 'Y', 'Z'] # nomes das classes
+
+# modelo de classificação
+model = keras.Sequential(
+    [
+        layers.Dense(32, input_shape = input_shape),
+        layers.Dense(64, activation = 'relu'),
+        layers.Flatten(),
+        layers.Dense(num_classes, activation = 'softmax'),
+    ]
+)
+
+```
+
+Carregar pesos pré-treinados:
+
+```bash
+
+# carregar os pesos
+model.load_weights('/content/caminho/pesos')
+
+```
+
+
+### Extração e classificação dos caracteres
+
+Cálculo da área de cada contour detetado:
+
+```bash
+
+    area = cv2.contourArea(c) # calcular a área do contour
+    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x (centro da bounding box), y (centro da bounding box), largura, altura)
+
+```
+
+Definir a condição que identifica caracteres:
+
+```bash
+
+if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
+
+```
+
+Recortar imagem:
+
+```bash
+
+char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
+
+```
+
+Redimensionar a imagem recortada para ser utilizada pelo classificado:
+
+```bash
+
+# redimensionar o caracter
+char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
+char = np.expand_dims(char, axis = 0)
+
+```
+
+Classificar imagem recortada:
+
+```bash
+
+# classificar caracter
+prev =  model.predict(char)
+output_class = class_names[np.argmax(prev)]
+
+```
+
+### Extração e classificação dos caracteres (código completo)
+
+```bash
+
+resultados_dir = "/content/caminho/resultados_gd_sam"
+
+resultados_file = open(resultados_dir, "a")
+
+png = 0
+
+mask_cnt = 0
+
+for cnts in imagens_cnts:
+
+  resultados_file.write(str(png) + " -> ")
+
+  resultado_classificacao = ""
+
+  for c in cnts:
+
+    area = cv2.contourArea(c) # calcular a área do contour
+    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x, y , largura, altura)
+
+    counter = 0
+
+    if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
+
+        char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
+
+        # redimensionar o caracter
+        char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
+        char = np.expand_dims(char, axis = 0)
+
+        # classificar caracter
+        prev =  model.predict(char)
+        output_class = class_names[np.argmax(prev)]
+
+        resultado_classificacao = resultado_classificacao + output_class
+
+        mascaras[mask_cnt] = cv2.drawContours(mascaras[mask_cnt], [c], -1, (255, 255, 255), -1) # construir máscara
+
+        lx = cx
+
+        counter = counter + 1
+
+  resultados_file.write(resultado_classificacao + "\n")
+
+  png = png + 1
+
+  mask_cnt = mask_cnt + 1
+
+```
 
 <div align="center">
 
