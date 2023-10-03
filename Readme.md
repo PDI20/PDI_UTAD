@@ -493,6 +493,7 @@ O resultado do OCR é um array do qual é possível extrair:
 </div>
 
 
+
 ### Aplicar o OCR e guardar os resultados (codigo completo)
 
 ```bash
