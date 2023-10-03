@@ -467,7 +467,6 @@ O resultado do OCR é um array do qual é possível extrair:
 ```bash
 
   boxes = [line[0] for line in result] # coordenadas das bounding boxes
-
 ```
 
 - o texto presente em cada bounding box;
@@ -476,7 +475,6 @@ O resultado do OCR é um array do qual é possível extrair:
 
   txts = [line[1][0] for line in result ] # texto detetado
 
-
 ```
 
 - a confiança da classificação do texto;
@@ -484,8 +482,6 @@ O resultado do OCR é um array do qual é possível extrair:
 ```bash
 
   scores = [line[1][1] for line in result] # confiança das deteções
-
-
 ```
 
 ### Exemplo de um resultado da aplicação do OCR
