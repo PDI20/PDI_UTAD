@@ -428,7 +428,7 @@ CODIGO
 
 ```
 
-Bibliotecas:
+### Bibliotecas:
 
 ```bash
 
@@ -448,41 +448,93 @@ ocr = PaddleOCR(use_angle_cls = True, lang = 'en') # lang define a linguagem que
   
 ### Aplicar o OCR sobre uma imagem
 
+
+
 ```bash
 
-imagem = '/content/caminho/imagens_recortadas/0.png'
+imagem = '/content/caminho/imagem'
 
 resultado = ocr.ocr(imagem, cls = True)
 
-# todos os resultados - coordenadas de cada deteção, texto detetado e confiança
-for idx in range(len(resultado)):
-
-    res = resultado[idx]
-
-    for linha in res:
-
-        print(linha)
-
-# mostrar os resultados na imagem original
-result = resultado[0]
-image = Image.open(imagem).convert('RGB')
-
-boxes = [line[0] for line in result] # coordenadas da bounding box
-txts = [line[1][0] for line in result] # texto detetado
-scores = [line[1][1] for line in result] # confiança das deteções
-
-im_show = draw_ocr(image, boxes, txts, scores, font_path='/content/PaddleOCR/StyleText/fonts/en_standard.ttf')
-
-im_show = Image.fromarray(im_show)
-
-im_show
 ```
 
-<div align="center>
+### Resultados do OCR
+
+O resultado do OCR é um array do qual é possível extrair:
+
+- todas as deteções efetuadas;
+
+```bash
+
+  boxes = [line[0] for line in result] # coordenadas das bounding boxes
+
+```
+
+- o texto presente em cada bounding box;
+
+```bash
+
+  txts = [line[1][0] for line in result ] # texto detetado
+
+
+```
+
+- a confiança da classificação do texto;
+
+```bash
+
+  scores = [line[1][1] for line in result] # confiança das deteções
+
+
+```
+
+### Exemplo de um resultado da aplicação do OCR
+
+<div>
 
 ![](./assets/imagens/ocr_resultados.png)
 
 </div>
+
+
+### Aplicar o OCR e guardar os resultados (codigo completo)
+
+```bash
+
+imagens = '/content/drive/MyDrive/Exemplo_Codigo/imagens_recortadas/*'
+
+resultados_path = "/content/drive/MyDrive/Github/Abordagem1/resultados/resultados_ocr.txt"
+
+resultados_file = open(resultados_path, "a")
+
+png = 0
+
+for item in sorted(glob.iglob(imagens)):
+
+  resultado = ocr.ocr(item, cls = True)
+
+  # mostrar os resultados na imagem original
+
+  result = resultado[0] 
+  image = Image.open(item).convert('RGB')
+
+  boxes = [line[0] for line in result] # coordenadas da bounding box
+  txts = [line[1][0] for line in result ] # texto detetado
+  scores = [line[1][1] for line in result] # confiança das deteções
+
+  # adicionar resultado ao ficheiro dos resultados
+  resultados_file.write(str(png) + " -> " + txts[0] + '\n')
+
+  # para desenhar as boundings box na imagem original
+  # im_show = draw_ocr(image, boxes, txts, scores, font_path='/content/PaddleOCR/StyleText/fonts/en_standard.ttf')
+  # im_show = Image.fromarray(im_show)
+
+  png = png + 1
+
+resultados_file.close()
+
+```
+
 
 ### Guardar os resultados
 
