@@ -11,7 +11,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 
 Diagrama de funcionamento do algoritmo:
 
-![](./assets/imagens/diagrama.png)
+![](./assets/imagens/Diagrama_V_2.drawio.png)
 
 # Conteúdo
 
@@ -1360,11 +1360,6 @@ for cnts in imagens_cnts:
 ![](./assets/imagens/ROI_0.png) ![](./assets/imagens/ROI_1.png) ![](./assets/imagens/ROI_2.png) ![](./assets/imagens/ROI_3.png) ![](./assets/imagens/ROI_4.png) ![](./assets/imagens/ROI_5.png)
 
 </div>
-
-
-### Classificar os caracteres extraídos
-
-CODIGO
 
 # Módulo 4 - Análise de texto e correção de erros
 
