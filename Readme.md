@@ -265,7 +265,7 @@ Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das
 
 # na consola encontram-se os resultados das métricas
 
-# os resultados da inferência são guardados na pasta runs/detect, se apenas for indicado o nome da diretoria
+# os resultados da inferência são guardados na pasta runs/detect
 
 ```
 
@@ -285,6 +285,14 @@ Cada ficheiro tem pelo menos uma linha de texto constituído por cinco valores:
 - y_center -> valor de y, do centro da bounding box;
 - width -> largura da bounding box;
 - height -> altura da bounding box.
+
+<div align="center">
+
+![](./assets/imagens/exemplo_imagem_txt.png)
+
+</div>
+
+Exemplo de um ficheiro de inferência:
 
 <div align="center">
 
