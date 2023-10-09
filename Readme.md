@@ -10,11 +10,14 @@ O algoritmo deve ser constituído por quatro módulos:
 -	 **Pipeline de processamento digital de imagem**: módulo responsável por extrair os caracteres presentes nas imagens recortadas, obtidas no módulo anterior. De forma a atingir este objetivo existem várias abordagens que podem ser utilizadas:
 o	OCR (Optical Character Recognition) - processo que converte imagens com texto em texto capaz de ser compreendido por computadores.
 o	Pipeline de processamento digital de imagem - segmentação e extração dos caracteres utilizando técnicas de processamento de imagem.
+
 -	**Análise de texto e correção de erros**: módulo responsável pela análise do texto extraído, de todas as imagens, e correção de potenciais erros cometidos pela abordagem utilizado no módulo anterior.
 
-Diagrama de funcionamento do algoritmo:
+
+# Diagrama de funcionamento do algoritmo:
 
 ![](./assets/imagens/Diagrama_V_2.drawio.png)
+
 
 # Conteúdo
 
