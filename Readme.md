@@ -310,58 +310,65 @@ import glob # obtém os caminhos todos os ficheiros presentes na diretoria dada,
 
 ```
 
-## Abrir os ficheiros e ler os seus conteúdos
+## Como utilizar a biblioteca glob
 
 ```bash
 
 # alterar pasta onde se encontram as labels, se necessário
 diretoria_labels = "/content/caminho/labels/*" # caminho termina com *, indica todos os ficheiros presentes na diretoria
 
-coordenadas = []
-
 # sorted ordena alfabeticamente os nomes dos caminhos
 for item in sorted(glob.iglob(diretoria_labels)):
 
-  # executar as operações necessárias para a leitura dos ficheiros
-
-  # abrir o ficheiro
-  f = open(item)
-
-  # ler todas as linhas do ficheiro
-  linhas = f.readlines()
-
-  for linha in linhas:
-
-    # remover parágrafos
-    l = linha.replace("\n", "")
-
-    # obter cada valor
-    temp = l.split(" ")
-
-    cc = [float(temp[1]), float(temp[2]), float(temp[3]), float(temp[4])]
-
-    coordenadas.append(cc)
-
-    #break
-
-  f.close()
+  print(item) # cada valor de item é uma string que corresponde ao caminho do ficheiro
 
 ```
 
-### Reverter a normalização das coordenadas geradas
+# Abrir e ler os ficheiros
 
 ```bash
 
-    # largura e altura da imagem aberta
-    largura_imagem = imagem.shape[1]
-    altura_imagem = imagem.shape[0]
+coordenadas = [] # guardará as coordenadas do ficheiro
 
-    # calcular coordenadas
-    # desnormalizar as coordenadas
-    des_x = coordenadas[i][0] * largura_imagem
-    des_y = coordenadas[i][1] * altura_imagem
-    des_width = coordenadas[i][2] * largura_imagem
-    des_height = coordenadas[i][3] * altura_imagem
+# abrir o ficheiro
+f = open(item)
+
+# ler todas as linhas do ficheiro
+linhas = f.readlines()
+
+# remover parágrafos caso existam
+l = linha.replace("\n", "")
+
+# obter cada valor
+# cada valor encontra-se separado por um espaço
+temp = l.split(" ")
+
+cc = [float(temp[1]), float(temp[2]), float(temp[3]), float(temp[4])]
+
+# guardar as coordenadas
+coordenadas.append(cc)
+
+# fechar o ficheiro
+f.close()
+
+```
+
+
+### Reverter a normalização das coordenadas geradas pela inferência
+
+```bash
+
+imagem = cv2.imread(item)
+
+# largura e altura da imagem aberta
+largura_imagem = imagem.shape[1]
+altura_imagem = imagem.shape[0]
+
+# calcular coordenadas desnormalizadas
+des_x = coordenadas[i][0] * largura_imagem
+des_y = coordenadas[i][1] * altura_imagem
+des_width = coordenadas[i][2] * largura_imagem
+des_height = coordenadas[i][3] * altura_imagem
 
 ```
 
@@ -388,61 +395,8 @@ for item in sorted(glob.iglob(diretoria_labels)):
 
 ```
 
-<div align="center">
-
 ![](./assets/imagens/imagem_adequada_cropped_sem_thickness.png.png)
 
-</div>
-
-## Recorte da imagem (código completo)
-
-```bash
-
-# alterar diretoria onde se encontram os resultados, se necessário
-diretoria_imagens = "/content/drive/MyDrive/Exemplo_Codigo/yolov5/yolov5-master/runs/detect/resultados3/*" # caminho termina com *, indica todos os ficheiros presentes na diretoria
-
-diretoria_guardar_imagens = "/content/drive/MyDrive/Exemplo_Codigo/imagens_recortadas/" # caminho onde as imagens recortadas serão guardadas
-
-i = 0
-
-# sorted ordena alfabeticamente os nomes dos caminhos
-for item in sorted(glob.iglob(diretoria_imagens)):
-
-  # executar as operações necessárias para a leitura dos ficheiros
-
-  if not item.__contains__("labels"): # para não considerar a diretoria das labels
-
-    # abrir a imagem
-    imagem = cv2.imread(item)
-
-    # largura e altura da imagem aberta
-    largura_imagem = imagem.shape[1]
-    altura_imagem = imagem.shape[0]
-
-    # calcular coordenadas
-    # desnormalizar as coordenadas
-    des_x = coordenadas[i][0] * largura_imagem
-    des_y = coordenadas[i][1] * altura_imagem
-    des_width = coordenadas[i][2] * largura_imagem
-    des_height = coordenadas[i][3] * altura_imagem
-
-    bb_thickeness = 4 # para remover a bounding box
-
-    # cálculo do ponto superior esquerdo (xmin, ymax) e do ponto inferior direito (xmax, ymin)
-    xmin = des_x - des_width + des_width / 2 + bb_thickeness 
-    xmax = des_x + des_width - des_width / 2 - bb_thickeness
-    ymin = des_y - des_height + des_height / 2 + bb_thickeness
-    ymax = des_y + des_height - des_height / 2 - bb_thickeness
-
-    # recorte da imagem
-    imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
-
-    # guardar imagem
-    cv2.imwrite("/content/drive/MyDrive/Exemplo_Codigo/imagens_recortadas/" + str(i) + ".png", imagem_crop)
-
-  i = i + 1
-
-```
 
 # Módulo 3 - Pipeline de processamento digital da imagem
 
