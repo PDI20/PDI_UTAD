@@ -403,8 +403,6 @@ imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
 
 </div>
 
-## Recorte da imagem (código completo)
-
 
 # Módulo 3 - Pipeline de processamento digital da imagem
 
