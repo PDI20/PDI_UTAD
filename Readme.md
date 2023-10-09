@@ -824,6 +824,7 @@ boxes, logits, phrases = predict(
     text_threshold = TEXT_TRESHOLD
 )
 
+```
 
 <div align="center">
 
