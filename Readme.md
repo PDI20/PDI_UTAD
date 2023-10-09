@@ -204,8 +204,22 @@ Parâmetros a ter em conta:
 
 Exemplo de resultados de um treino:
 
+```bash
+
+Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 7/7 [00:04<00:00,  1.67it/s]
+  all        209        223      0.973       0.98      0.993      0.754
+
+```
+
 Colocar imagens do treino (metricas)
 
+Resultados:
+
+<div align="center">
+
+![](./assets/imagens/results.png)
+
+</div>
 
 
 Para efetuar de nova a validação, sem o treino:
@@ -426,7 +440,8 @@ imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
 ```bash
 
 from paddleocr import PaddleOCR, draw_ocr # paddleOCR
-from PIL import Image # abrir imagem
+from PIL import Image # abrir imagens
+
 ```
 
 ### Carregar o modelo responsável pelo reconhecimento de texto
@@ -435,12 +450,11 @@ from PIL import Image # abrir imagem
 
 # carregar o modelo
 # apenas é necessário fazer uma vez por runtime
-ocr = PaddleOCR(use_angle_cls = True, lang = 'en') # lang define a linguagem que o modelo deve reconhecer
+ocr = PaddleOCR(use_angle_cls = True, lang = 'en') # lang define a língua que o modelo deve reconhecer
 
 ```
   
 ### Aplicar o OCR sobre uma imagem
-
 
 
 ```bash
@@ -460,6 +474,7 @@ O resultado do OCR é um array do qual é possível extrair:
 ```bash
 
   boxes = [line[0] for line in result] # coordenadas das bounding boxes
+
 ```
 
 - o texto presente em cada bounding box;
@@ -486,44 +501,6 @@ O resultado do OCR é um array do qual é possível extrair:
 </div>
 
 
-
-### Aplicar o OCR e guardar os resultados (codigo completo)
-
-```bash
-
-imagens = '/content/drive/MyDrive/Exemplo_Codigo/imagens_recortadas/*'
-
-resultados_path = "/content/caminho/resultados_ocr"
-
-resultados_file = open(resultados_path, "a")
-
-png = 0
-
-for item in sorted(glob.iglob(imagens)):
-
-  resultado = ocr.ocr(item, cls = True)
-
-  # mostrar os resultados na imagem original
-
-  result = resultado[0] 
-  image = Image.open(item).convert('RGB')
-
-  boxes = [line[0] for line in result] # coordenadas da bounding box
-  txts = [line[1][0] for line in result ] # texto detetado
-  scores = [line[1][1] for line in result] # confiança das deteções
-
-  # adicionar resultado ao ficheiro dos resultados
-  resultados_file.write(str(png) + " -> " + txts[0] + '\n')
-
-  # para desenhar as boundings box na imagem original
-  # im_show = draw_ocr(image, boxes, txts, scores, font_path='/content/PaddleOCR/StyleText/fonts/en_standard.ttf')
-  # im_show = Image.fromarray(im_show)
-
-  png = png + 1
-
-resultados_file.close()
-
-```
 
 
 ## Abordagem 2 - Aplicação do método de Otsu
@@ -577,9 +554,7 @@ mask = np.zeros(imagem_redimensionada.shape, dtype=np.uint8) # criar uma máscar
 
 ```bash
 
-temp = imagem_redimensionada
-
-thresh = cv2.threshold(temp, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1] # aplicar o método
+thresh = cv2.threshold(imagem_redimensionada, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1] # aplicar o método
 
 ```
 <div align="center">
@@ -594,8 +569,8 @@ O cálculo dos contours, próximo passo, apenas funciona se o fundo for preto e 
 
 ```bash
 
-w = imagem_redimensionada.shape[0] # largura da imagem
-h = imagem_redimensionada.shape[1] # altura da imagem
+largura = imagem_redimensionada.shape[0] # largura da imagem
+altura = imagem_redimensionada.shape[1] # altura da imagem
 
 non_zero = cv2.countNonZero(thresh) # obter o número de pixeis não pretos
 
@@ -604,7 +579,6 @@ if non_zero > (w * h) / 2:
   thresh = cv2.bitwise_not(temp) # inverter a cor dos pixeis
 
 ```
-
 
 ### Calcular contours da imagem binarizada
 
@@ -632,7 +606,7 @@ from tensorflow.keras import layers
 
 input_shape = (50, 50, 1) # input que o modelo aceita
 num_classes = 36 # número de classes
-class_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
               'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
               'U', 'V', 'W', 'X', 'Y', 'Z'] # nomes das classes
 
@@ -671,9 +645,11 @@ Cálculo da área de cada contour detetado:
 
 Definir a condição que identifica caracteres:
 
+Por exemplo:
+
 ```bash
 
-if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
+if 100 < area < 500 and w < 50 and h > 20:
 
 ```
 
@@ -685,7 +661,7 @@ char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
 
 ```
 
-Redimensionar a imagem recortada para ser utilizada pelo classificado:
+Redimensionar a imagem recortada para ser utilizada pelo classificador:
 
 ```bash
 
@@ -700,61 +676,8 @@ Classificar imagem recortada:
 ```bash
 
 # classificar caracter
-prev =  model.predict(char)
-output_class = class_names[np.argmax(prev)]
-
-```
-
-### Extração e classificação dos caracteres (código completo)
-
-```bash
-
-resultados_dir = "/content/caminho/resultados_otsu"
-
-resultados_file = open(resultados_dir, "a")
-
-png = 0
-
-mask_cnt = 0
-
-for cnts in imagens_cnts:
-
-  resultados_file.write(str(png) + " -> ")
-
-  resultado_classificacao = ""
-
-  for c in cnts:
-
-    area = cv2.contourArea(c) # calcular a área do contour
-    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x, y , largura, altura)
-
-    counter = 0
-
-    if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
-
-        char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
-
-        # redimensionar o caracter
-        char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
-        char = np.expand_dims(char, axis = 0)
-
-        # classificar caracter
-        prev =  model.predict(char)
-        output_class = class_names[np.argmax(prev)]
-
-        resultado_classificacao = resultado_classificacao + output_class
-
-        mascaras[mask_cnt] = cv2.drawContours(mascaras[mask_cnt], [c], -1, (255, 255, 255), -1) # construir máscara
-
-        lx = cx
-
-        counter = counter + 1
-
-  resultados_file.write(resultado_classificacao + "\n")
-
-  png = png + 1
-
-  mask_cnt = mask_cnt + 1
+previsao =  model.predict(char)
+classe_prevista = classes[np.argmax(previsao)]
 
 ```
 
@@ -762,7 +685,7 @@ Máscara gerada:
 
 <div align="center">
 
-![](./assets/imagens/imagem_adequada_mascara_contours.png)
+![](./assets/imagens/mascara_contours.png)
 
 </div>
 
@@ -780,7 +703,7 @@ Caracteres extraídos:
 
 ### Instalar bibliotecas Grounding Dino e Segment Anythin Model (SAM)
 
-Instalar repositórios do Grounding Dino e SAM
+Instalar Grounding Dino
 
 ```bash
 
@@ -790,6 +713,7 @@ Instalar repositórios do Grounding Dino e SAM
 !pip install -e .
 
 ```
+Instalar SAM (Segment Anything Model)
 
 ```bash
 
@@ -849,6 +773,7 @@ def load_model_hf(repo_id, filename, ckpt_config_filename, device ='cpu'):
     log = model.load_state_dict(clean_state_dict(checkpoint['model']), strict = False)
     print("Model loaded from {} \n => {}".format(cache_file, log))
     _ = model.eval()
+
     return model
 
 ```
@@ -876,38 +801,29 @@ groundingdino_model = load_model_hf(ckpt_repo_id, ckpt_filenmae, ckpt_config_fil
 
 ```
 
-
 Aplicar Grounding Dino sobre imagens:
 
 ```bash
 
 # Correr GroundingDINO
 
-local_image_path = "/content/caminho/imagem.png"
+imagem = "/content/caminho/imagem.png"
 
-imagens_gd = []
-boxes_gd = []
+TEXT_PROMPT = "dog" # prompt utilizado para a deteção
+BOX_TRESHOLD = 0.3 # similaridade de cada deteção
+TEXT_TRESHOLD = 0.25 # similaridade do texto em relação ao que foi detetado
 
-for item in sorted(glob.iglob()):
+image_source, image = load_image(item)
 
-  TEXT_PROMPT = "letter" # prompt utilizado para a deteção
-  BOX_TRESHOLD = 0.3 # similaridade de cada deteção
-  TEXT_TRESHOLD = 0.25 # similaridade do texto em relação ao que foi detetado
+# a predição retorna todas as bounding boxes, logits (confiança) e a palavra/frase que deu origem à deteção
+boxes, logits, phrases = predict(
+    model = groundingdino_model,
+    image = image,
+    caption = TEXT_PROMPT,
+    box_threshold = BOX_TRESHOLD,
+    text_threshold = TEXT_TRESHOLD
+)
 
-  image_source, image = load_image(item)
-
-  # a predição retorna todas as bounding boxes, logits (confiança) e a palavra/frase que deu origem à deteção
-  boxes, logits, phrases = predict(
-      model = groundingdino_model,
-      image = image,
-      caption = TEXT_PROMPT,
-      box_threshold = BOX_TRESHOLD,
-      text_threshold = TEXT_TRESHOLD
-  )
-
-  imagens_gd.append(image_source)
-  boxes_gd.append(boxes)
-```
 
 <div align="center">
 
@@ -955,7 +871,7 @@ boxes_xyxy = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H])
 ```
 
 
-Obter as máscaras:
+Previsão das máscaras:
 
 
 ```bash
@@ -972,8 +888,7 @@ masks, _, _ = sam_predictor.predict_torch(
 ```
 
 
-Colocar máscaras a preto e branco:
-
+Obter as máscaras:
 
 ```bash
 
@@ -989,104 +904,6 @@ def get_masks(mask):
     just_mask = Image.fromarray((mask_image.cpu().numpy() * 255).astype(np.uint8)).convert("L")
 
     return just_mask
-
-```
-
-```bash
-
-# Guardar as máscaras num array
-for i in range(0, len(masks)):
-
-  new_mask = get_masks(masks[i])
-  mascaras.append(new_mask)
-
-```
-
-### Aplicar SAM sobre as imagens geradas pelo Grounding Dino (código completo)
-
-```bash
-
-i = 0
-
-mascaras_sam = []
-
-# Aplicar Segment Anything Model
-
-for img in imagens_gd:
-
-  sam_predictor.set_image(image_source)
-
-  # normalizar as bounding boxes
-  H, W, _ = image_source.shape
-  boxes_xyxy = box_ops.box_cxcywh_to_xyxy(boxes_gd[i]) * torch.Tensor([W, H, W, H])
-
-  # aplicar as bounding boxes à imagem
-  transformed_boxes = sam_predictor.transform.apply_boxes_torch(boxes_xyxy, image_source.shape[:2]).to("cpu")
-
-  # prever máscara com base nas bounding boxes
-  masks, _, _ = sam_predictor.predict_torch(
-            point_coords = None,
-            point_labels = None,
-            boxes = transformed_boxes,
-            multimask_output = False,
-        )
-
-  mascaras = []
-
-    # Guardar as máscaras num array
-    for i in range(0, len(masks)):
-
-      new_mask = get_masks(masks[i])
-      mascaras.append(new_mask)
-
-  mascaras_sam.append(mascaras)
-
-  i = i + 1
-
-```
-
-### Obter as máscaras geradas
-
-```bash
-
-xmin = []
-
-matricula_mascaras = []
-
-# obter o vlaor de x (mínimo) de cada bounding box
-
-for item in boxes_gd:
-
-  temp = []
-
-  for i in range(0, len(item)):
-
-    temp.append(item[i])
-
-  xmin.append(temp)
-
-# ordenar os valores do menor para o maior
-xmin.sort()
-
-counter = 0
-
-for item in xmin:
-
-  for i in range(0, len(item)):
-
-    temp = []
-
-    if item[i] == boxes_gd[counter][0]:
-
-      if boxes_gd[counter][2] - boxes_gd[counter][0] < 75:
-
-        temp.append(mascaras[counter].resize((300, 75)))
-
-      break
-
-    matricula_mascaras.append(temp)
-
-  counter = counter + 1
 
 ```
 
@@ -1106,7 +923,7 @@ for item in xmin:
 
 ```bash
 
-cnts = cv2.findContours(mascara, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) # encontrar contours
+cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) # encontrar contours
 cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
 (cnts, _) = contours.sort_contours(cnts, method="left-to-right") # ordenar os contours da esquerda para a direita
@@ -1128,7 +945,7 @@ from tensorflow.keras import layers
 
 input_shape = (50, 50, 1) # input que o modelo aceita
 num_classes = 36 # número de classes
-class_names = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
               'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
               'U', 'V', 'W', 'X', 'Y', 'Z'] # nomes das classes
 
@@ -1167,9 +984,11 @@ Cálculo da área de cada contour detetado:
 
 Definir a condição que identifica caracteres:
 
+Por exemplo:
+
 ```bash
 
-if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
+if 100 < area < 500 and w < 50 and h > 20:
 
 ```
 
@@ -1181,7 +1000,7 @@ char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
 
 ```
 
-Redimensionar a imagem recortada para ser utilizada pelo classificado:
+Redimensionar a imagem recortada para ser utilizada pelo classificador:
 
 ```bash
 
@@ -1196,69 +1015,16 @@ Classificar imagem recortada:
 ```bash
 
 # classificar caracter
-prev =  model.predict(char)
-output_class = class_names[np.argmax(prev)]
+previsao =  model.predict(char)
+classe_prevista = classes[np.argmax(previsao)]
 
 ```
-
-### Extração e classificação dos caracteres (código completo)
-
-```bash
-
-resultados_dir = "/content/caminho/resultados_gd_sam"
-
-resultados_file = open(resultados_dir, "a")
-
-png = 0
-
-mask_cnt = 0
-
-for cnts in imagens_cnts:
-
-  resultados_file.write(str(png) + " -> ")
-
-  resultado_classificacao = ""
-
-  for c in cnts:
-
-    area = cv2.contourArea(c) # calcular a área do contour
-    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x, y , largura, altura)
-
-    counter = 0
-
-    if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
-
-        char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
-
-        # redimensionar o caracter
-        char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
-        char = np.expand_dims(char, axis = 0)
-
-        # classificar caracter
-        prev =  model.predict(char)
-        output_class = class_names[np.argmax(prev)]
-
-        resultado_classificacao = resultado_classificacao + output_class
-
-        mascaras[mask_cnt] = cv2.drawContours(mascaras[mask_cnt], [c], -1, (255, 255, 255), -1) # construir máscara
-
-        lx = cx
-
-        counter = counter + 1
-
-  resultados_file.write(resultado_classificacao + "\n")
-
-  png = png + 1
-
-  mask_cnt = mask_cnt + 1
-
-```
-
 <div align="center">
 
 ![](./assets/imagens/ROI_0.png) ![](./assets/imagens/ROI_1.png) ![](./assets/imagens/ROI_2.png) ![](./assets/imagens/ROI_3.png) ![](./assets/imagens/ROI_4.png) ![](./assets/imagens/ROI_5.png)
 
 </div>
+
 
 # Módulo 4 - Análise de texto e correção de erros
 
