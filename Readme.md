@@ -223,9 +223,9 @@ Para efetuar de nova a validação, sem o treino:
 
 Exemplo:
 
-                 Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 7/7 [00:03<00:00,  2.27it/s]
-                   all        209        223      0.973       0.98      0.993      0.753
-                   
+  Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 7/7 [00:03<00:00,  2.27it/s]
+    all        209        223      0.973       0.98      0.993      0.753
+
 
 Para obter as métricas de teste:
 
@@ -239,8 +239,8 @@ Para obter as métricas de teste:
 
 Exemplo:
 
-                 Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 5/5 [00:02<00:00,  1.80it/s]
-                   all        157        165      0.979      0.933      0.967      0.751
+  Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 5/5 [00:02<00:00,  1.80it/s]
+    all        157        165      0.979      0.933      0.967      0.751
 
 Exemplo de métricas de teste:
 
