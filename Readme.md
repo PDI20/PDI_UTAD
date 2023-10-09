@@ -762,53 +762,6 @@ for cnts in imagens_cnts:
 
 ```
 
-
-
-### Com base nos contours extrair os caracteres
-
-Definir os valores mínimos e máximos da área dos contours:
-
-```bash
-
-min_area = 150 # área mínima dos contours
-max_area = 2000 # área máxima dos contours
-
-lx = 0 # último valor x
-cx = 0 # atual valor x
-
-```
-
-### Com base nos contours extrair os caracteres
-
-```bash
-
-ROI_number = 0
-
-for c in cnts:
-
-    area = cv2.contourArea(c) # calcular a área do contour
-    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x (centro da bounding box), y (centro da bounding box), largura, altura)
-
-    cx = x
-
-    if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
-
-
-        ROI = 255 - thresh[y: y + h, x: x + w] # a área a recortar
-
-        cv2.drawContours(mask, [c], -1, (255, 255, 255), -1) # construir máscara
-
-        #cv2.imwrite('/content/caminho/guardar_imagem' + str(ROI_number) + ".png", ROI) # guardar imagem recortada
-
-        #ROI_number = ROI_number + 1
-
-        lx = cx
-
-```
-
-
-
-
 Máscara gerada:
 
 <div align="center">
@@ -1152,59 +1105,6 @@ for item in xmin:
 
 </div>
 
-
-### Calcular contours da imagem binarizada
-
-```bash
-
-cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) # encontrar contours
-cnts = cnts[0] if len(cnts) == 2 else cnts[1]
-
-(cnts, _) = contours.sort_contours(cnts, method="left-to-right") # ordenar os contours
-
-```
-
-### Com base nos contours extrair os caracteres
-
-Definir os valores mínimos e máximos da área dos contours:
-
-```bash
-
-min_area = 150 # área mínima dos contours
-max_area = 2000 # área máxima dos contours
-
-lx = 0 # último valor x
-cx = 0 # atual valor x
-
-```
-
-### Com base nos contours extrair os caracteres
-
-```bash
-
-ROI_number = 0
-
-for c in cnts:
-
-    area = cv2.contourArea(c) # calcular a área do contour
-    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x, y , largura, altura)
-
-    cx = x
-
-    if min_area < area < max_area and cx > lx + 10 and w < 50 and h > 20:
-
-
-        ROI = 255 - thresh[y: y + h, x: x + w] # a área a recortar
-
-        cv2.drawContours(mask, [c], -1, (255, 255, 255), -1) # construir máscara
-
-        #cv2.imwrite('/content/caminho/guardar_imagem + str(ROI_number) + ".png", ROI) # guardar imagem recortada
-
-        #ROI_number = ROI_number + 1
-
-        lx = cx
-
-```
 
 ### Calcular contours da imagem binarizada
 
