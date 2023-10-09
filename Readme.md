@@ -84,6 +84,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 # Recursos 
 
 | **Recursos** | **Utilização** | **Materiais de apoio** | **Repositório/Artigo** |
+|:--------------:|:----------------:|:------------------:|:----------------------:|
 | [YOLO (You Only Look Once)](https://github.com/ultralytics) | Treino de um modelo de deep learning utilizando o dataset criado | | [![GitHub](https://github.com/ultralytics) |
 | [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/README_en.md) | Deteção e classificação de texto  (abordagem 1) | | [![GitHub](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/README_en.md)] [![arXiv](https://arxiv.org/abs/2009.09941)] |
 | [Método de Otsu](https://en.wikipedia.org/wiki/Otsu%27s_method) | Segmentação de imagens (abordagem 2) | |  |
