@@ -376,13 +376,13 @@ des_height = coordenadas[i][3] * altura_imagem
 
 ```bash
 
-    bb_thickeness = 4 # para remover a bounding box
+bb_thickeness = 4 # para remover a bounding box
 
-    # cálculo do ponto superior esquerdo (xmin, ymax) e do ponto inferior direito (xmax, ymin)
-    xmin = des_x - des_width + des_width / 2 + bb_thickeness 
-    xmax = des_x + des_width - des_width / 2 - bb_thickeness
-    ymin = des_y - des_height + des_height / 2 + bb_thickeness
-    ymax = des_y + des_height - des_height / 2 - bb_thickeness
+# cálculo do ponto superior esquerdo (xmin, ymax) e do ponto inferior direito (xmax, ymin)
+xmin = des_x - des_width + des_width / 2 + bb_thickeness 
+xmax = des_x + des_width - des_width / 2 - bb_thickeness
+ymin = des_y - des_height + des_height / 2 + bb_thickeness
+ymax = des_y + des_height - des_height / 2 - bb_thickeness
 
 ```
 
@@ -390,12 +390,18 @@ des_height = coordenadas[i][3] * altura_imagem
 
 ```bash
 
-    # recorte da imagem
-    imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
+# recorte da imagem
+imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
 
 ```
 
-![](./assets/imagens/imagem_adequada_cropped_sem_thickness.png.png)
+<div align="center">
+
+![](./assets/imagens/imagem_adequada_cropped_sem_thickness.png)
+
+</div>
+
+## Recorte da imagem (código completo)
 
 
 # Módulo 3 - Pipeline de processamento digital da imagem
