@@ -72,19 +72,23 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
   - [Comparar resultados com as matrículas](#comparar-resultados-com-as-matrículas)
 
 
-# Recursos
+# Plataformas
 
-Para o desenvolvimento do protocolo serão utilizados os seguintes recursos:
+| ** Recursos ** | ** Utilização ** | ** Materiais de apoio ** |
+|:--------------:|:----------------:|:------------------------:|
+| [Google Colab](https://colab.google/) | Desenvolvimento do algoritmo | [Tutorial](https://colab.research.google.com/)
+| [Google Drive](https://www.google.com/drive/) | Armazenamento dos datasets e dos notebooks | [Tutorial](https://support.google.com/drive/answer/2424384?hl=en&co=GENIE.Platform=Desktop)
+| [Roboflow](https://roboflow.com/) | Preparação de dados | [Tutorial](https://blog.roboflow.com/getting-started-with-roboflow/)
 
-- [Google Colab](https://colab.research.google.com/): desenvolvimento do código e treino dos modelos;
-- [Google Drive](https://www.google.com/drive/): guardar os datasets e os resultados do treino;
-- [Roboflow](https://roboflow.com/): preparar os dados para o dataset;
-- [YOLO (You Only Look Once)](https://github.com/ultralytics): treinar um modelo utilizando o dataset desenvolvido e inferir sobre novas imagens;
-- [Otsu](https://en.wikipedia.org/wiki/Otsu%27s_method): segmentar imagens (abordagem 2);
-- [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/README_en.md): deteção automática de texto presente em imagens (abordagem 1);
-- [Grounding Dino](https://github.com/IDEA-Research/GroundingDINO): deteção automática de objetos, com base num prompt (abordagem 3);
-- [Segment Anything Model](https://github.com/facebookresearch/segment-anything): segmentação automática de objetos (abordagem 3).
 
+# Recursos 
+
+| ** Recursos ** | ** Utilização ** | ** Materiais de apoio ** | ** Repositório/Artigo ** |
+| [YOLO (You Only Look Once)](https://github.com/ultralytics) | Treino de um modelo de deep learning utilizando o dataset criado | | [![GitHub](https://github.com/ultralytics) |
+| [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/README_en.md) | Deteção e classificação de texto  (abordagem 1) | | [![GitHub](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/README_en.md)] [![arXiv](https://arxiv.org/abs/2009.09941)] |
+| [Método de Otsu](https://en.wikipedia.org/wiki/Otsu%27s_method) | Segmentação de imagens (abordagem 2) | |  |
+| [Grounding Dino](https://github.com/IDEA-Research/GroundingDINO) | Deteção automática de objetos com base num prompt (abordagem 3) | | [[!GitHub](https://github.com/IDEA-Research/GroundingDINO)] [![arXiv](https://arxiv.org/abs/2303.05499)]
+| [Segment Anything Model](https://github.com/facebookresearch/segment-anything) | Segmentação automática de objetos (abordagem 3) | | [![GitHub](https://github.com/facebookresearch/segment-anything)] [![arXiv](https://arxiv.org/abs/2304.02643)] |
 
 # Módulo 1 - Deteção da matrícula
 
