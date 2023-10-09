@@ -225,7 +225,7 @@ Exemplo:
 
   Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 7/7 [00:03<00:00,  2.27it/s]
     all        209        223      0.973       0.98      0.993      0.753
-
+                   
 
 Para obter as métricas de teste:
 
