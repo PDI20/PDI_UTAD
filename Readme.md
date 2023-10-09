@@ -161,12 +161,11 @@ drive.mount('/content/drive/') # nome da diretoria onde serão colocados os fich
 ```
 ## Treino do dataset
 
+YOLOv5 é utilizado como exemplo.
+
 Instalação de bibliotecas:
 
 ```bash
-
-# contém todos os scripts dos modelos, as bibliotecas nencessárias para o seu funcionamento
-# o ponto de exclamação antes do comando indica que se pretende utilizar um comando da linha de comandos
 
 # entrar na diretoria do YOLO
 %cd /content/caminho/yolov5
@@ -182,8 +181,8 @@ Parâmetros a ter em conta:
 - img -> tamanho da imagem utilizado como input
 - patience -> o número de “epochs” necessárias em que não existe melhoria da loss de validação para parar o treino automaticamente
 - name -> o nome da diretoria onde são guardados os resultados do treino
-- cfg -> modelo a utilizar, por exemplo, yolov5s.yaml, yolov5m.yaml, yolov5l.yaml, yolov5x.yaml (substituir o número 5 por 3 ou 8, tendo em conta a versão do modelo utilizada)
-- weights -> utilizar um modelo pré-treinado ou YOLO (por exemplo, yolov5s.pt, yolov5m.pt, yolov5l.pt, yolov5x.pt - substituir o número 5 por 3 ou 8, tendo em conta a versão do modelo utilizada) ou personalizado (por exemplo, best.pt)
+- cfg -> modelo a utilizar, por exemplo, yolov5s.yaml, yolov5m.yaml, yolov5l.yaml, yolov5x.yaml (substituir o número 5, tendo em conta a versão do modelo utilizada)
+- weights -> utilizar um modelo pré-treinado ou YOLO (por exemplo, yolov5s.pt, yolov5m.pt, yolov5l.pt, yolov5x.pt - substituir o número 5, tendo em conta a versão do modelo utilizada) ou personalizado (por exemplo, best.pt)
 
 
 ```bash
@@ -193,11 +192,23 @@ Parâmetros a ter em conta:
 
 ```
 
-As métricas finais do treino são as da validação (melhores).
+# Métricas
 
-Exemplo de métricas:
+- Precision (P) -> 
+- Recall (R) ->
+- mAP50 ->
+- mAP50-95 -> 
 
-Para efetuar de nova a validação:
+
+### Resultados do treino
+
+Exemplo de resultados de um treino:
+
+Colocar imagens do treino (metricas)
+
+
+
+Para efetuar de nova a validação, sem o treino:
 
 ```bash 
 
@@ -206,11 +217,15 @@ Para efetuar de nova a validação:
 
 !python val.py --data /content/caminho/data.yaml --weights /content/caminho/best.pt--img 640 
 
-# na consola encontram-se os resultados das métricas
-
 # os resultados da validação são guardados na pasta runs/val
 
 ```
+
+Exemplo:
+
+                 Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 7/7 [00:03<00:00,  2.27it/s]
+                   all        209        223      0.973       0.98      0.993      0.753
+                   
 
 Para obter as métricas de teste:
 
@@ -222,13 +237,14 @@ Para obter as métricas de teste:
 
 ```
 
+Exemplo:
+
+                 Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|██████████| 5/5 [00:02<00:00,  1.80it/s]
+                   all        157        165      0.979      0.933      0.967      0.751
+
 Exemplo de métricas de teste:
 
-### Resultados do treino
 
-Exemplo de resultados de um treino:
-
-Colocar imagens do treino (metricas)
 
 ## Inferir sobre novas imagens
 
