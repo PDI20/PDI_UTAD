@@ -336,17 +336,19 @@ f = open(item)
 # ler todas as linhas do ficheiro
 linhas = f.readlines()
 
-# remover parágrafos caso existam
-l = linha.replace("\n", "")
+for linha in linhas: # percorrer todas as linhas
 
-# obter cada valor
-# cada valor encontra-se separado por um espaço
-temp = l.split(" ")
+  # remover parágrafos caso existam
+  l = linha.replace("\n", "")
 
-cc = [float(temp[1]), float(temp[2]), float(temp[3]), float(temp[4])]
+  # obter cada valor
+  # cada valor encontra-se separado por um espaço
+  temp = l.split(" ")
 
-# guardar as coordenadas
-coordenadas.append(cc)
+  cc = [float(temp[1]), float(temp[2]), float(temp[3]), float(temp[4])]
+
+  # guardar as coordenadas
+  coordenadas.append(cc)
 
 # fechar o ficheiro
 f.close()
