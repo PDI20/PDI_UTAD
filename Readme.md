@@ -213,7 +213,9 @@ Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|�
 
 Colocar imagens do treino (metricas)
 
-Resultados:
+Resultados do treino:
+
+Os melhores resultados foram obtidos na iteração 414 e o treino parou na iteração 515, uma vez que não existiu uma melhoria dutante 100 iterações.
 
 <div align="center">
 
