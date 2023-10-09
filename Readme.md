@@ -85,7 +85,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 
 | **Recursos** | **Utilização** | **Materiais de apoio** | **Repositório/Artigo** |
 |:--------------:|:----------------:|:------------------:|:----------------------:|
-| [YOLO (You Only Look Once)](https://github.com/ultralytics) | Treino de um modelo de deep learning utilizando o dataset criado | | [![GitHub](https://github.com/ultralytics) |
+| [YOLO (You Only Look Once)](https://github.com/ultralytics) | Treino de um modelo de deep learning utilizando o dataset criado | | [![GitHub](https://badges.aleen42.com/src/github.svg)](https://github.com/ultralytics) |
 | [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/README_en.md) | Deteção e classificação de texto  (abordagem 1) | | [![GitHub](https://github.com/PaddlePaddle/PaddleOCR/blob/release/2.7/README_en.md)] [![arXiv](https://arxiv.org/abs/2009.09941)] |
 | [Método de Otsu](https://en.wikipedia.org/wiki/Otsu%27s_method) | Segmentação de imagens (abordagem 2) | |  |
 | [Grounding Dino](https://github.com/IDEA-Research/GroundingDINO) | Deteção automática de objetos com base num prompt (abordagem 3) | | [[!GitHub](https://github.com/IDEA-Research/GroundingDINO)] [![arXiv](https://arxiv.org/abs/2303.05499)]
