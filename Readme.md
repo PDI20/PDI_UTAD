@@ -194,10 +194,11 @@ Parâmetros a ter em conta:
 
 # Métricas
 
-- Precision (P) -> 
-- Recall (R) ->
-- mAP50 ->
-- mAP50-95 -> 
+- Precision (P) -> A acurácia de previsões positivas. Um valor alto de precisão indica que o modelo não gera previsões consideradas falsos positivos, o que siginifica que as previsões são confiáveis;
+- Recall (R) -> Também chamada de sensibilidade (sensitivity), mede a proporção de verdadeiros positivos em relação ao total de instâncias positivas. Um valor alto de Recall indica que o modelo consegue identificar corretamente a maior parte das instâncias positivas;
+- mAP (mean Average Precision)-> A média da precisão tendo em conta todas as classes do dataset;
+  - mAP50 -> A média da precisão de todas as classes tendo em conta um valor de IoU (Intersection over Union - o valor de interseção entre a bounding box anotada e a bounding box gerada pelo modelo) de 0.5;
+  - mAP50-95 -> A média da precisão de todas as classes, no intervalo entre 0.5 e 0.95 de IoU com um incremento, tipicamente, de 0.05.
 
 
 ### Resultados do treino
@@ -211,7 +212,6 @@ Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|�
 
 ```
 
-Colocar imagens do treino (metricas)
 
 Resultados do treino:
 
