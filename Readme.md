@@ -57,16 +57,20 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
     - [Verificar o número de píxeis pretos](#verificar-o-número-de-píxeis-pretos)
     - [Calcular contours da imagem binarizada](#calcular-contours-da-imagem-binarizada)
     - [Com base nos contours extrair os caracteres](#com-base-nos-contours-extrair-os-caracteres)
-    - [Classificar os caracteres extraídos](#classificar-os-caracteres-extraídos)
+    - [Extração e classificação dos caracteres](#extração-e-classificação-dos-caracteres)
+    - [Modelo de classificação de caracteres](#modelo-de-classificação-de-caracteres)
+    - [Bibliotecas](#bibliotecas)
+    - [Classificar o caracter](#classificar-o-caracter)
   - [Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)](#abordagem-3---utilização-da-biblioteca-grounding-dino-(deteção-de-caracteres)-e-segment-anything-model-(segmentação-de-caracteres))
     - [Instalar bibliotecas Grounding Dino e Segment Anythin Model (SAM)](#instalar-bibliotecas-grounding-dino-e-segment-anythin-model-(SAM))
     - [Aplicar do Grounding Dino sobre as imagens](#aplicar-do-grounding-dino-sobre-as-imagens)
     - [Aplicar o SAM sobre as imagens geradas pelo Grounding Dino](#aplicar-o-sam-sobre-as-imagens-geradas-pelo-grounding-dino)
     - [Obter as máscaras geradas](#obter-as-máscaras-geradas)
-    - [Inverter as cores das máscaras](#inverter-as-cores-das-máscaras)
     - [Calcular contours da imagem binarizada](#calcular-contours-da-imagem-binarizada)
-    - [Com base nos contours extrair os caracteres](#com-base-nos-contours-extrair-os-caracteres)
-    - [Classificar os caracteres extraídos](#classificar-os-caracteres-extraídos)
+    - [Extração e classificação dos caracteres](#extração-e-classificação-dos-caracteres)
+    - [Modelo de classificação de caracteres](#modelo-de-classificação-de-caracteres)
+    - [Bibliotecas](#bibliotecas)
+    - [Classificar o caracter](#classificar-o-caracter)
 - [Módulo 4 - Análise de texto e correção de erros](#módulo-4---Análise-de-texto-e-correção-de-erros)
   - [Formato das matrículas portuguesas](#formato-das-matrículas-portuguesas)
   - [Erros nos resultados obtidos pelo OCR e classificação de caracteres](#erros-nos-resultados-obtidos-pelo-ocr-e-classificação-de-caracteres)
@@ -384,10 +388,10 @@ largura_imagem = imagem.shape[1]
 altura_imagem = imagem.shape[0]
 
 # calcular coordenadas desnormalizadas
-des_x = coordenadas[i][0] * largura_imagem
-des_y = coordenadas[i][1] * altura_imagem
-des_width = coordenadas[i][2] * largura_imagem
-des_height = coordenadas[i][3] * altura_imagem
+des_x = coordenadas[0][0] * largura_imagem
+des_y = coordenadas[0][1] * altura_imagem
+des_width = coordenadas[0][2] * largura_imagem
+des_height = coordenadas[0][3] * altura_imagem
 
 ```
 
@@ -599,6 +603,11 @@ cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
 Cálculo da área de cada contour detetado:
 
+x - centro do contour
+y - centro do contour 
+w - largura do contour
+h - altura do contour
+
 ```bash
 
     area = cv2.contourArea(c) # calcular a área do contour
@@ -620,7 +629,7 @@ Recortar imagem:
 
 ```bash
 
-char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
+char = 255 - imagem[y: y + h, x: x + w] # a área a recortar
 
 ```
 
@@ -629,6 +638,14 @@ Caracteres extraídos:
 <div align="center">
 
 ![](./assets/imagens/ROI_0.png) ![](./assets/imagens/ROI_1.png) ![](./assets/imagens/ROI_2.png) ![](./assets/imagens/ROI_3.png) ![](./assets/imagens/ROI_4.png) ![](./assets/imagens/ROI_5.png)
+
+</div>
+
+Máscara gerada:
+
+<div align="center">
+
+![](./assets/imagens/mascara_contours.png)
 
 </div>
 
@@ -642,7 +659,7 @@ char = np.expand_dims(char, axis = 0)
 
 ```
 
-### Modelo de classificação
+### Modelo de classificação de caracteres
 
 Um modelo de classificação criado utilizando keras.
 
@@ -693,17 +710,6 @@ previsao =  model.predict(char)
 classe_prevista = classes[np.argmax(previsao)]
 
 ```
-
-Máscara gerada:
-
-<div align="center">
-
-![](./assets/imagens/mascara_contours.png)
-
-</div>
-
-
-
 
 ## Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)
 
@@ -880,7 +886,6 @@ boxes_xyxy = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H])
 
 Previsão das máscaras:
 
-
 ```bash
 
 transformed_boxes = sam_predictor.transform.apply_boxes_torch(boxes_xyxy, image_source.shape[:2]).to("cpu")
@@ -937,7 +942,69 @@ cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
 ```
 
-### Classificar os caracteres extraídos
+### Extração e classificação dos caracteres
+
+Cálculo da área de cada contour detetado:
+
+x - centro do contour
+y - centro do contour 
+w - largura do contour
+h - altura do contour
+
+```bash
+
+    area = cv2.contourArea(c) # calcular a área do contour
+    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x (centro da bounding box), y (centro da bounding box), largura, altura)
+
+```
+
+Definir a condição que identifica caracteres:
+
+Por exemplo:
+
+```bash
+
+if 100 < area < 500 and w < 50 and h > 20:
+
+```
+
+Recortar imagem:
+
+```bash
+
+char = 255 - imagem[y: y + h, x: x + w] # a área a recortar
+
+```
+
+Caracteres extraídos:
+
+<div align="center">
+
+![](./assets/imagens/ROI_0.png) ![](./assets/imagens/ROI_1.png) ![](./assets/imagens/ROI_2.png) ![](./assets/imagens/ROI_3.png) ![](./assets/imagens/ROI_4.png) ![](./assets/imagens/ROI_5.png)
+
+</div>
+
+Máscara gerada:
+
+<div align="center">
+
+![](./assets/imagens/mascara_contours.png)
+
+</div>
+
+Redimensionar a imagem recortada para ser utilizada pelo classificador:
+
+```bash
+
+# redimensionar o caracter
+char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
+char = np.expand_dims(char, axis = 0)
+
+```
+
+### Modelo de classificação de caracteres
+
+Um modelo de classificação criado utilizando keras.
 
 ### Bibliotecas
 
@@ -977,47 +1044,7 @@ model.load_weights('/content/caminho/pesos')
 
 ```
 
-
-### Extração e classificação dos caracteres
-
-Cálculo da área de cada contour detetado:
-
-```bash
-
-    area = cv2.contourArea(c) # calcular a área do contour
-    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x (centro da bounding box), y (centro da bounding box), largura, altura)
-
-```
-
-Definir a condição que identifica caracteres:
-
-Por exemplo:
-
-```bash
-
-if 100 < area < 500 and w < 50 and h > 20:
-
-```
-
-Recortar imagem:
-
-```bash
-
-char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
-
-```
-
-Redimensionar a imagem recortada para ser utilizada pelo classificador:
-
-```bash
-
-# redimensionar o caracter
-char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
-char = np.expand_dims(char, axis = 0)
-
-```
-
-Classificar imagem recortada:
+# Classificar o caracter
 
 ```bash
 
@@ -1026,11 +1053,6 @@ previsao =  model.predict(char)
 classe_prevista = classes[np.argmax(previsao)]
 
 ```
-<div align="center">
-
-![](./assets/imagens/ROI_0.png) ![](./assets/imagens/ROI_1.png) ![](./assets/imagens/ROI_2.png) ![](./assets/imagens/ROI_3.png) ![](./assets/imagens/ROI_4.png) ![](./assets/imagens/ROI_5.png)
-
-</div>
 
 
 # Módulo 4 - Análise de texto e correção de erros
