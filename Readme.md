@@ -16,7 +16,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 
 # Diagrama de funcionamento do algoritmo:
 
-![](./assets/imagens/Diagrama_V_2.drawio.png)
+![](./assets/imagens/Diagrama_V_3.drawio.png)
 
 
 # Conteúdo
