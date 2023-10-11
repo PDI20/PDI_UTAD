@@ -20,8 +20,8 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 
 
 # Conteúdo
-
-- [Recursos](#software-a-utilizar)
+-[Plataformas](#Plataformas)
+- [Recursos](#Recursos)
 - [Módulo 1 - Deteção da matrícula](#módulo-1---deteção-da-matrícula)
   - [Construção do dataset](#construção-do-dataset)
   - [Preparação do dataset (Roboflow)](#preparação-do-dataset-(roboflow))
@@ -32,23 +32,25 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
     - [Efetuar download do dataset no formato desejado](#efetuar-download-do-dataset-no-formato-desejado)
   - [Acesso ao Google Drive](#acesso-ao-google-drive)
   - [Treino do dataset](#treino-do-dataset)
+    - [Métricas](#Métricas)
     - [Resultados do treino](#resultados-do-treino)
   - [Inferir sobre novas imagens](#inferir-sobre-novas-imagens)
 - [Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes](#módulo-2---Recorte-da-imagem-com-base-nas-coordenadas-da-bounding-boxes)
   - [Organização dos ficheiros com as bounding boxes](#organização-dos-ficheiros-com-as-bounding-boxes)
   - [Bibliotecas a utilizar](#bibliotecas-a-utilizar)
-  - [Abrir os ficheiros e ler os seus conteúdos](#abrir-os-ficheiros-e-ler-os-seus-conteúdos)
-    - [Reverter a normalização das coordenadas geradas](#reverter-a-normalização-das-coordenadas-geradas)
+  - [Como utilizar a biblioteca glob](#Como-utilizar-a-biblioteca-glob)
+  - [Abrir e ler os ficheiros](#Abrir-e-ler-os-ficheiros)
+  - [Reverter a normalização das coordenadas geradas pela inferência](#reverter-a-normalização-das-coordenadas-geradas-pela-inferência)
   - [Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito](#calcular-as-coordenadas-dos-ponto-superior-esquerdo-e-do-ponto-inferior-direito)
   - [Efetuar o recorte da imagem com base nas coordenadas calculadas](#efetuar-o-recorte-da-imagem-com-base-nas-coordenadas-calculadas)
-  -[Recorte da imagem (código completo)](#recorte-da-imagem-(código-completo))
 - [Módulo 3 - Pipeline de processamento digital da imagem](#módulo-3---pipeline-de-processamento-digital-da-imagem)
-  - [Pré-processamento das imagens recortadas](#pré---processamento-das-imagens-recortadas)
-  - [Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)](#abordagem-1---Utilização-de-uma-biblioteca-OCR-(Optical-Character-recognition))
+  - [Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)](#abordagem-1---Utilização-de-uma-biblioteca-OCR-(optical-Character-recognition))
     - [Instalar a biblioteca PaddleOCR](#instalar-a-biblioteca-PaddleOCR)
+    - [Bibliotecas](#Bibliotecas)
     - [Carregar o modelo responsável pelo reconhecimento de texto](#carregar-o-modelo-responsável-pelo-reconhecimento-de-texto)
-    - [Aplicar o OCR sobre as imagens](#aplicar-o-OCR-sobre-as-imagens)
-    - [Guardar os resultados](#guardar-os-resultados)
+    - [Aplicar o OCR sobre uma imagem](#aplicar-o-ocr-sobre-as-imagens)
+    - [Resultados do OCR](#resultados-do-ocr)
+    - [Exemplo de um resultado da aplicação do OCR](#exemplo-de-um-resultado-da-aplicação-do-ocr)
   - [Abordagem 2 - Aplicação do método de Otsu](#abordagem-2---aplicação-do-método-de-otsu)
     - [Pré-processamento das imagens](#pré-processamento-das-imagens)
     - [Aplicar o algoritmo de Otsu](#aplicar-o-algoritmo-de-Otsu)
@@ -113,7 +115,6 @@ O dataset deve ser constituído por imagens diurnas (tiradas manualmente, obtida
 
 Necessário ter uma conta Roboflow.
 
-Colocar video
 
 ### Criar projeto de deteção de objetos
 
@@ -292,13 +293,13 @@ Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das
 
 # Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes
 
-## Organização do ficheiro com as bounding boxes
+## Organização dos ficheiros com as bounding boxes
 
 Cada ficheiro tem pelo menos uma linha de texto constituído por cinco valores:
 
 - class -> classe do objeto detetado, não é relevante para o problema em questão;
-- x_center -> valor de x, do centro da bounding box;
-- y_center -> valor de y, do centro da bounding box;
+- x -> valor de x, do centro da bounding box;
+- y -> valor de y, do centro da bounding box;
 - width -> largura da bounding box;
 - height -> altura da bounding box.
 
@@ -593,7 +594,57 @@ cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
 ```
 
-### Classificar os caracteres extraídos
+
+### Extração e classificação dos caracteres
+
+Cálculo da área de cada contour detetado:
+
+```bash
+
+    area = cv2.contourArea(c) # calcular a área do contour
+    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x (centro da bounding box), y (centro da bounding box), largura, altura)
+
+```
+
+Definir a condição que identifica caracteres:
+
+Por exemplo:
+
+```bash
+
+if 100 < area < 500 and w < 50 and h > 20:
+
+```
+
+Recortar imagem:
+
+```bash
+
+char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
+
+```
+
+Caracteres extraídos:
+
+<div align="center">
+
+![](./assets/imagens/ROI_0.png) ![](./assets/imagens/ROI_1.png) ![](./assets/imagens/ROI_2.png) ![](./assets/imagens/ROI_3.png) ![](./assets/imagens/ROI_4.png) ![](./assets/imagens/ROI_5.png)
+
+</div>
+
+Redimensionar a imagem recortada para ser utilizada pelo classificador:
+
+```bash
+
+# redimensionar o caracter
+char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
+char = np.expand_dims(char, axis = 0)
+
+```
+
+### Modelo de classificação
+
+Um modelo de classificação criado utilizando keras.
 
 ### Bibliotecas
 
@@ -633,47 +684,7 @@ model.load_weights('/content/caminho/pesos')
 
 ```
 
-
-### Extração e classificação dos caracteres
-
-Cálculo da área de cada contour detetado:
-
-```bash
-
-    area = cv2.contourArea(c) # calcular a área do contour
-    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x (centro da bounding box), y (centro da bounding box), largura, altura)
-
-```
-
-Definir a condição que identifica caracteres:
-
-Por exemplo:
-
-```bash
-
-if 100 < area < 500 and w < 50 and h > 20:
-
-```
-
-Recortar imagem:
-
-```bash
-
-char = 255 - imagens_thresh[counter][y: y + h, x: x + w] # a área a recortar
-
-```
-
-Redimensionar a imagem recortada para ser utilizada pelo classificador:
-
-```bash
-
-# redimensionar o caracter
-char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
-char = np.expand_dims(char, axis = 0)
-
-```
-
-Classificar imagem recortada:
+# Classificar o caracter
 
 ```bash
 
@@ -691,13 +702,6 @@ Máscara gerada:
 
 </div>
 
-Caracteres extraídos:
-
-<div align="center">
-
-![](./assets/imagens/ROI_0.png) ![](./assets/imagens/ROI_1.png) ![](./assets/imagens/ROI_2.png) ![](./assets/imagens/ROI_3.png) ![](./assets/imagens/ROI_4.png) ![](./assets/imagens/ROI_5.png)
-
-</div>
 
 
 
