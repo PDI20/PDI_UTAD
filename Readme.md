@@ -128,7 +128,7 @@ O dataset deve ser constituído por imagens diurnas (tiradas manualmente, obtida
 
 ### Preparação do dataset (Roboflow)
 
-Criar uma conta ![Roboflow](https://app.roboflow.com/login), caso necessário.
+Criar uma conta ![[Roboflow](https://github.com/SkalskiP/SkalskiP/blob/master/icons/transparent.png)](https://app.roboflow.com/login), caso necessário.
 
 
 #### Criar projeto de deteção de objetos
