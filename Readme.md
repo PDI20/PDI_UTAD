@@ -668,7 +668,8 @@ Máscara gerada:
 
 <div align="center">
 
-![](./assets/imagens/mascara_contours.png)
+![](./assets/imagens/mascara_contours_completa.png)
+
 
 </div>
 
