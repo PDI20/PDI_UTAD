@@ -516,7 +516,7 @@ O resultado do OCR é um array do qual é possível extrair:
 
 ### Exemplo de um resultado da aplicação do OCR
 
-<div>
+<div align="center">
 
 ![](./assets/imagens/ocr_resultados.png)
 
