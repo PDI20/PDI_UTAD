@@ -144,18 +144,21 @@ Colocar video
 
 ### Aplicar aumentações (opcional)
 
-As aumentações são opcionais, uma vez que os resultados do treino podem ser os pretendidos mesmo sem as efetuar.
+As aumentações são opcionais, uma vez que os resultados do treino podem bons mesmo se as utilizar.
 São úteis quando os dados são poucos.
 
 Caso sejam necessárias, as seguintes são as mais pertinentes:
 
-- Flip
-- Crop
-- Rotation
-- Brightness
-- Noise
+- Flip (horizontal)
+- Crop (5 a 10%)
+- Rotation (-15 a 15 graus)
+- Brightness (brighten e darken, -15 a 15%)
+- Blur (1.25 píxeis)
+- Noise (3%)
 
-Colocar video
+Os valores indicados em cada uma das aumentações podem e devem ser alterados.
+
+Colocar video para cada aumentação
 
 ### Efetuar download do dataset no formato desejado
 
@@ -507,6 +510,7 @@ O resultado do OCR é um array do qual é possível extrair:
 ```bash
 
   scores = [line[1][1] for line in result] # confiança das deteções
+
 ```
 
 ### Exemplo de um resultado da aplicação do OCR
@@ -516,7 +520,6 @@ O resultado do OCR é um array do qual é possível extrair:
 ![](./assets/imagens/ocr_resultados.png)
 
 </div>
-
 
 
 
