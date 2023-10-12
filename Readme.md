@@ -531,6 +531,7 @@ O resultado do OCR é um array do qual é possível extrair:
 ```bash
 
 import cv2
+from imutils import contours
 
 ```
 
@@ -1010,7 +1011,7 @@ Máscara gerada:
 
 <div align="center">
 
-![](./assets/imagens/mascara_contours.png)
+![](./assets/imagens/mascara_contours_completa.png)
 
 </div>
 
