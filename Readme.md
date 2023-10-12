@@ -150,12 +150,12 @@ São úteis quando os dados são poucos.
 
 Caso sejam necessárias, as seguintes são as mais pertinentes:
 
-- Flip (horizontal)
-- Crop (5 a 10%)
-- Rotation (-15 a 15 graus)
-- Brightness (brighten e darken, -15 a 15%)
-- Blur (1.25 píxeis)
-- Noise (3%)
+- **Flip** (horizontal)
+- **Crop** (5 a 10%)
+- **Rotation** (-15 a 15 graus)
+- **Brightness** (brighten e darken, -15 a 15%)
+- **Blur** (1.25 píxeis)
+- **Noise** (3%)
 
 Os valores indicados em cada uma das aumentações podem e devem ser alterados.
 
@@ -195,13 +195,13 @@ Instalação de bibliotecas:
 
 Parâmetros a ter em conta:
 
-- epochs -> número de iterações do treino
-- batch -> o número de imagens utilizadas em cada iteração - este número deve ter em conta o tamanho da imagem e a memória de vídeo da placa gráfica
-- img -> tamanho da imagem utilizado como input
-- patience -> o número de “epochs” necessárias em que não existe melhoria da loss de validação para parar o treino automaticamente
-- name -> o nome da diretoria onde são guardados os resultados do treino
-- cfg -> modelo a utilizar, por exemplo, yolov5s.yaml, yolov5m.yaml, yolov5l.yaml, yolov5x.yaml (substituir o número 5, tendo em conta a versão do modelo utilizada)
-- weights -> utilizar um modelo pré-treinado ou YOLO (por exemplo, yolov5s.pt, yolov5m.pt, yolov5l.pt, yolov5x.pt - substituir o número 5, tendo em conta a versão do modelo utilizada) ou personalizado (por exemplo, best.pt)
+- **epochs** -> número de iterações do treino
+- **batch** -> o número de imagens utilizadas em cada iteração - este número deve ter em conta o tamanho da imagem e a memória de vídeo da placa gráfica
+- **img** -> tamanho da imagem utilizado como input
+- **patience** -> o número de “epochs” necessárias em que não existe melhoria da loss de validação para parar o treino automaticamente
+- **name** -> o nome da diretoria onde são guardados os resultados do treino
+- **cfg** -> modelo a utilizar, por exemplo, yolov5s.yaml, yolov5m.yaml, yolov5l.yaml, yolov5x.yaml (substituir o número 5, tendo em conta a versão do modelo utilizada)
+- **weights** -> utilizar um modelo pré-treinado ou YOLO (por exemplo, yolov5s.pt, yolov5m.pt, yolov5l.pt, yolov5x.pt - substituir o número 5, tendo em conta a versão do modelo utilizada) ou personalizado (por exemplo, best.pt)
 
 
 ```bash
@@ -213,11 +213,11 @@ Parâmetros a ter em conta:
 
 # Métricas
 
-- Precision (P) -> A acurácia de previsões positivas. Um valor alto de precisão indica que o modelo não gera previsões consideradas falsos positivos, o que siginifica que as previsões são confiáveis;
-- Recall (R) -> Também chamada de sensibilidade (sensitivity), mede a proporção de verdadeiros positivos em relação ao total de instâncias positivas. Um valor alto de Recall indica que o modelo consegue identificar corretamente a maior parte das instâncias positivas;
-- mAP (mean Average Precision)-> A média da precisão tendo em conta todas as classes do dataset;
-  - mAP50 -> A média da precisão de todas as classes tendo em conta um valor de IoU (Intersection over Union - o valor de interseção entre a bounding box anotada e a bounding box gerada pelo modelo) de 0.5;
-  - mAP50-95 -> A média da precisão de todas as classes, no intervalo entre 0.5 e 0.95 de IoU com um incremento, tipicamente, de 0.05.
+- **Precision (P)** -> A acurácia de previsões positivas. Um valor alto de precisão indica que o modelo não gera previsões consideradas falsos positivos, o que siginifica que as previsões são confiáveis;
+- **Recall (R)** -> Também chamada de sensibilidade (sensitivity), mede a proporção de verdadeiros positivos em relação ao total de instâncias positivas. Um valor alto de Recall indica que o modelo consegue identificar corretamente a maior parte das instâncias positivas;
+- **mAP** (mean Average Precision)-> A média da precisão tendo em conta todas as classes do dataset;
+  - **mAP50** -> A média da precisão de todas as classes tendo em conta um valor de IoU (Intersection over Union - o valor de interseção entre a bounding box anotada e a bounding box gerada pelo modelo) de 0.5;
+  - **mAP50-95** -> A média da precisão de todas as classes, no intervalo entre 0.5 e 0.95 de IoU com um incremento, tipicamente, de 0.05.
 
 
 ### Resultados do treino
@@ -315,11 +315,11 @@ Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das
 
 Cada ficheiro tem pelo menos uma linha de texto constituído por cinco valores:
 
-- class -> classe do objeto detetado, não é relevante para o problema em questão;
-- x -> valor de x, do centro da bounding box;
-- y -> valor de y, do centro da bounding box;
-- width -> largura da bounding box;
-- height -> altura da bounding box.
+- **class** -> classe do objeto detetado, não é relevante para o problema em questão;
+- **x** -> valor de x, do centro da bounding box;
+- **y** -> valor de y, do centro da bounding box;
+- **width** -> largura da bounding box;
+- **height** -> altura da bounding box.
 
 <div align="center">
 
@@ -623,12 +623,12 @@ cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
 ### Extração e classificação dos caracteres
 
-Cálculo da área de cada contour detetado:
+Cálculo da área de cada contour encontrado:
 
-x - centro do contour
-y - centro do contour 
-w - largura do contour
-h - altura do contour
+- **x** - centro do contour
+- **y** - centro do contour 
+- **w** - largura do contour
+- **h** - altura do contour
 
 ```bash
 
@@ -968,10 +968,10 @@ cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
 Cálculo da área de cada contour detetado:
 
-x - centro do contour
-y - centro do contour 
-w - largura do contour
-h - altura do contour
+- **x** - centro do contour
+- **y** - centro do contour 
+- **w** - largura do contour
+- **h** - altura do contour
 
 ```bash
 
