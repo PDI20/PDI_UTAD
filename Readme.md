@@ -62,6 +62,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
     - [Resultados do OCR](#resultados-do-ocr)
     - [Exemplo de um resultado da aplicação do OCR](#exemplo-de-um-resultado-da-aplicação-do-ocr)
   - [Abordagem 2 - Aplicação do método de Otsu](#abordagem-2---aplicação-do-método-de-otsu)
+    - [Bibliotecas](#bibliotecas)
     - [Pré-processamento das imagens](#pré-processamento-das-imagens)
     - [Aplicar o algoritmo de Otsu](#aplicar-o-algoritmo-de-Otsu)
     - [Verificar o número de píxeis pretos](#verificar-o-número-de-píxeis-pretos)
@@ -84,7 +85,8 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 - [Módulo 4 - Análise de texto e correção de erros](#módulo-4---Análise-de-texto-e-correção-de-erros)
   - [Erros nos resultados obtidos pelo OCR e classificação de caracteres](#erros-nos-resultados-obtidos-pelo-ocr-e-classificação-de-caracteres)
   - [Correção de erros](#correção-de-erros)
-  - [Comparar resultados com as matrículas](#comparar-resultados-com-as-matrículas)
+  - [Resultados](#resultados)
+  - [Comparar resultados com as matrículas reais](#comparar-resultados-com-as-matrículas-reais)
 
 
 # Plataformas
@@ -523,6 +525,14 @@ O resultado do OCR é um array do qual é possível extrair:
 
 
 ## Abordagem 2 - Aplicação do método de Otsu
+
+### Bibliotecas
+
+```bash
+
+import cv2
+
+```
 
 ### Pré-processamento das imagens
 
