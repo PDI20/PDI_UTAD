@@ -14,13 +14,22 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 -	**Análise de texto e correção de erros**: módulo responsável pela análise do texto extraído, de todas as imagens, e correção de potenciais erros cometidos pela abordagem utilizado no módulo anterior.
 
 
+# Matrículas portuguesas
+
+| **Matrícula** | **Ano** | **Formato** | **Pares de caracteres** |
+|:-------------:|:-------:|:-----------:|:-----------------------:|
+| ![](./assets/imagens/1990.png) | Até 1992 | AA – 11 – 11 | Par 1 - 2 letras Par 2 - 2 números Par 3 - 2 números |
+| ![](./assets/imagens/1994.png) | 1992 a 2005 | 11 - 11 - AA
+| ![](./assets/imagens/2013.png) | 2005 a 2020 | 11 - AA - 11
+| ![](./assets/imagens/2020.png) | Desde 2020 | AA - 11 - AA
+
 # Diagrama de funcionamento do algoritmo:
 
 ![](./assets/imagens/Diagrama_V_3.drawio.png)
 
 
 # Conteúdo
--[Plataformas](#Plataformas)
+- [Plataformas](#Plataformas)
 - [Recursos](#Recursos)
 - [Módulo 1 - Deteção da matrícula](#módulo-1---deteção-da-matrícula)
   - [Construção do dataset](#construção-do-dataset)
