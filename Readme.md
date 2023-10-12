@@ -16,7 +16,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 
 # Matrículas portuguesas
 
-| **Matrícula** | **Ano** | **Formato** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| **Pares de caracteres** |
+| **Matrícula** | **Ano** | **Formato** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| **Pares de caracteres** |
 |:-------------:|:-------:|:-------------------:|:-----------------------:|
 | ![](./assets/imagens/1990.png) | Até 1992 | AA-11-11 | Par 1 - 2 letras, Par 2 - 2 números, Par 3 - 2 números |
 | ![](./assets/imagens/1994.png) | 1992 a 2005 | 11-11-AA | Par 1 - 2 números, Par 2 - 2 números, Par 3 - 2 letras |
