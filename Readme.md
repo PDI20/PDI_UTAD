@@ -1083,6 +1083,7 @@ classe_prevista = classes[np.argmax(previsao)]
 
 Verificar que erros existem nos resultados cometidos pelo OCR ou classificação de caracteres:
 
+- O tem apenas seis caracteres?
 - Existem caracteres que não sejam letras ou números?
 - Existem caracteres que contêm um número e uma letra?
 - Os pares de caracteres do resultado estão de acordo com a matrícula real?
