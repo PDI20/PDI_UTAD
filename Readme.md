@@ -128,22 +128,22 @@ O dataset deve ser constituído por imagens diurnas (tiradas manualmente, obtida
 
 ### Preparação do dataset (Roboflow)
 
-Necessário ter uma conta Roboflow.
+Criar uma conta ![Roboflow](https://app.roboflow.com/login), caso necessário.
 
 
-### Criar projeto de deteção de objetos
-
-Colocar video
-
-### Efetuar upload das imagens recolhidas
+#### Criar projeto de deteção de objetos
 
 Colocar video
 
-### Anotar as imagens
+#### Efetuar upload das imagens recolhidas
 
 Colocar video
 
-### Aplicar aumentações (opcional)
+#### Anotar as imagens
+
+Colocar video
+
+#### Aplicar aumentações (opcional)
 
 As aumentações são opcionais, uma vez que os resultados do treino podem bons mesmo se as utilizar.
 São úteis quando os dados são poucos.
@@ -161,7 +161,7 @@ Os valores indicados em cada uma das aumentações podem e devem ser alterados.
 
 Colocar video para cada aumentação
 
-### Efetuar download do dataset no formato desejado
+#### Efetuar download do dataset no formato desejado
 
 Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive.
 
