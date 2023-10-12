@@ -141,7 +141,7 @@ Colocar video
 
 #### Anotar as imagens
 
-Colocar video
+![](./assets/videos/anotacao_imagens.mov)
 
 #### Aplicar aumentações (opcional)
 
