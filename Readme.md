@@ -82,7 +82,6 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
     - [Bibliotecas](#bibliotecas)
     - [Classificar o caracter](#classificar-o-caracter)
 - [Módulo 4 - Análise de texto e correção de erros](#módulo-4---Análise-de-texto-e-correção-de-erros)
-  - [Formato das matrículas portuguesas](#formato-das-matrículas-portuguesas)
   - [Erros nos resultados obtidos pelo OCR e classificação de caracteres](#erros-nos-resultados-obtidos-pelo-ocr-e-classificação-de-caracteres)
   - [Correção de erros](#correção-de-erros)
   - [Comparar resultados com as matrículas](#comparar-resultados-com-as-matrículas)
@@ -1070,17 +1069,38 @@ classe_prevista = classes[np.argmax(previsao)]
 
 # Módulo 4 - Análise de texto e correção de erros
 
-### Formato das matrículas portuguesas
-
-Tabela com
-Imagens das diferentes matriculas
-
 ### Erros nos resultados obtidos pelo OCR e classificação de caracteres
 
-Exemplos de erros
+Verificar que erros existem nos resultados cometidos pelo OCR ou classificação de caracteres:
+
+- Existem caracteres que não sejam letras ou números?
+- Existem caracteres que contêm um número e uma letra?
+- Os pares de caracteres do resultado estão de acordo com a matrícula real?
 
 ### Correção de erros
 
-Como a correcao pode ser efetuada
+Para remover ou substituir caracteres:
 
-### Comparar resultados com as matrículas
+```bash
+
+exemplo_string = "AA 11.11"
+
+exemplo_string = exemplo_string.replace(' ', '') # remover o espaço
+
+exemplo_string = exemplo_string.replace('.', '') # remover ponto final
+
+```
+
+### Resultados
+
+O resultado de cada matrícula deve ser uma string com seis caracteres (letras e números), sem espaços.
+
+Exemplo:
+
+```bash
+
+exemplo_resultado = "AA1111"
+
+```
+
+### Comparar resultados com as matrículas reais
