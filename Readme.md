@@ -36,7 +36,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
   - [Construção do dataset](#construção-do-dataset)
   - [Preparação do dataset (Roboflow)](#preparação-do-dataset-(roboflow))
     - [Criar projeto de deteção de objetos](#criar-projeto-de-deteção-de-objetos)
-    - [Efetuar upload das imagens recolhidas](#efetuar-upload-das-imagens-recolhidas)
+    - [Upload das imagens](#upload-das-imagens)
     - [Anotar as imagens](#anotar-as-imagens)
     - [Aplicar aumentações (opcional)](#aplicar-aumentações-(opcional))
     - [Efetuar download do dataset no formato desejado](#efetuar-download-do-dataset-no-formato-desejado)
@@ -133,15 +133,23 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 #### Criar projeto de deteção de objetos
 
-Colocar video
+![](./assets/videos/criar_projeto.gif)
 
-#### Efetuar upload das imagens recolhidas
+#### Upload das imagens
 
-Colocar video
+![](./assets/videos/upload_imagens.gif)
 
 #### Anotar as imagens
 
-![](./assets/videos/anotacao_imagens.gif)
+![](./assets/videos/anotar_imagens.gif)
+
+#### Distribuição de imagens
+
+![](./assets/videos/distribuicao_imagens.gif)
+
+#### Gerar dataset
+
+![](./assets/videos/gerar_dataset_sem_aumentacoes.gif)
 
 #### Aplicar aumentações (opcional)
 
@@ -151,11 +159,28 @@ São úteis quando os dados são poucos.
 Caso sejam necessárias, as seguintes são as mais pertinentes:
 
 - **Flip** (horizontal)
+
+![](./assets/videos/augmentation_flip.gif)
+
 - **Crop** (5 a 10%)
+
+![](./assets/videos/augmentation_crop.gif)
+
 - **Rotation** (-15 a 15 graus)
+
+![](./assets/videos/augmentation_rotation.gif)
+
 - **Brightness** (brighten e darken, -15 a 15%)
+
+![](./assets/videos/augmentation_brightness.gif)
+
 - **Blur** (1.25 píxeis)
-- **Noise** (3%)
+
+![](./assets/videos/augmentation_blur.gif)
+
+- **Noise** (5%)
+
+![](./assets/videos/augmentation_noise.gif)
 
 Os valores indicados em cada uma das aumentações podem e devem ser alterados.
 
@@ -165,7 +190,7 @@ Colocar video para cada aumentação
 
 Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive.
 
-Colocar Video
+![](./assets/videos/exportar_dataset.gif)
 
 ## Acesso ao Google Drive
 
