@@ -133,23 +133,44 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 #### Criar projeto de deteção de objetos
 
-![](./assets/videos/teste2.gif)
+<div align="center">
+
+![](./assets/videos/criar_projeto.gif)
+
+</div>
+
 
 #### Upload das imagens
 
+<div align="center">
+
 ![](./assets/videos/upload_imagens.gif)
+
+</div>
 
 #### Anotar as imagens
 
-![](./assets/videos/anotar_imagens.gif)
+<div align="center">
+
+![](./assets/videos/anotacao_imagens.gif)
+
+</div>
 
 #### Distribuição de imagens
 
+<div align="center">
+
 ![](./assets/videos/distribuicao_imagens.gif)
+
+</div>
 
 #### Gerar dataset
 
-![](./assets/videos/gerar_dataset_sem_aumentacoes.gif)
+<div align="center">
+
+![](./assets/videos/gera_dataset.gif)
+
+</div>
 
 #### Aplicar aumentações (opcional)
 
@@ -160,27 +181,51 @@ Caso sejam necessárias, as seguintes são as mais pertinentes:
 
 - **Flip** (horizontal)
 
+<div align="center">
+
 ![](./assets/videos/augmentation_flip.gif)
+
+</div>
 
 - **Crop** (5 a 10%)
 
+<div align="center">
+
 ![](./assets/videos/augmentation_crop.gif)
+
+</div>
 
 - **Rotation** (-15 a 15 graus)
 
+<div align="center">
+
 ![](./assets/videos/augmentation_rotation.gif)
+
+</div>
 
 - **Brightness** (brighten e darken, -15 a 15%)
 
+<div align="center">
+
 ![](./assets/videos/augmentation_brightness.gif)
+
+</div>
 
 - **Blur** (1.25 píxeis)
 
+<div align="center">
+
 ![](./assets/videos/augmentation_blur.gif)
+
+</div>
 
 - **Noise** (5%)
 
+<div align="center">
+
 ![](./assets/videos/augmentation_noise.gif)
+
+</div>
 
 Os valores indicados em cada uma das aumentações podem e devem ser alterados.
 
@@ -190,7 +235,11 @@ Colocar video para cada aumentação
 
 Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive.
 
+<div align="center">
+
 ![](./assets/videos/exportar_dataset.gif)
+
+</div>
 
 ## Acesso ao Google Drive
 
