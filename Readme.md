@@ -133,7 +133,7 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 #### Criar projeto de deteção de objetos
 
-![](./assets/videos/criar_projeto.gif?raw=True)
+![](./assets/videos/teste2.gif)
 
 #### Upload das imagens
 
