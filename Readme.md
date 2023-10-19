@@ -160,7 +160,7 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 <div align="center">
 
-![](./assets/videos/distribuicao_imagens.gif)
+![](./assets/videos/distribuica_imagens.gif)
 
 </div>
 
@@ -168,7 +168,7 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 <div align="center">
 
-![](./assets/videos/gera_dataset.gif)
+![](./assets/videos/gerar_dataset.gif)
 
 </div>
 
