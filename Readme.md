@@ -61,28 +61,44 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
     - [Carregar o modelo responsável pelo reconhecimento de texto](#carregar-o-modelo-responsável-pelo-reconhecimento-de-texto)
     - [Aplicar o OCR sobre uma imagem](#aplicar-o-ocr-sobre-as-imagens)
     - [Resultados do OCR](#resultados-do-ocr)
-    - [Exemplo de um resultado da aplicação do OCR](#exemplo-de-um-resultado-da-aplicação-do-ocr)
+    - [Exemplo de um resultado da aplicação do OCR]
+    (#exemplo-de-um-resultado-da-aplicação-do-ocr)
+    - [Guardar resultados num ficheiro de texto](#guardar-resultados-num-ficheiro-de-texto)
   - [Abordagem 2 - Aplicação do método de Otsu](#abordagem-2---aplicação-do-método-de-otsu)
     - [Bibliotecas](#bibliotecas)
     - [Pré-processamento das imagens](#pré-processamento-das-imagens)
     - [Aplicar o algoritmo de Otsu](#aplicar-o-algoritmo-de-Otsu)
     - [Verificar o número de píxeis pretos](#verificar-o-número-de-píxeis-pretos)
+    - [Aplicar operação morfológica](#aplicar-operação-morfológica)
+    - [Construção da máscara com os caracteres](#construção-da-máscara-com-os-caracteres)
+    - [Máscara gerada](#máscara-gerada)
     - [Calcular contours da imagem binarizada](#calcular-contours-da-imagem-binarizada)
-    - [Com base nos contours extrair os caracteres](#com-base-nos-contours-extrair-os-caracteres)
-    - [Extração e classificação dos caracteres](#extração-e-classificação-dos-caracteres)
+    - [Ordenar as bounding boxes dos contours da esquerda para a direita](#ordenar-as-bounding-boxes-dos-contours-da-esquerda-para-a-direita)
+    - [Extração dos caracteres](#extração-dos-caracteres)
+      - [Definição da condição que identifica caracteres](#definição-da-condição-que-identifica-caracteres)
+      - [Caracteres extraídos](#caracteres-extraídos)
+      - [Recorte dos caracteres](#recorte-dos-caracteres)
     - [Modelo de classificação de caracteres](#modelo-de-classificação-de-caracteres)
-    - [Bibliotecas](#bibliotecas)
-    - [Classificar o caracter](#classificar-o-caracter)
+      - [Bibliotecas](#bibliotecas)
+      - [Carregar pesos pré-treinados do modelo de classificação](#carregar-pesos-pré-treinados-do-modelo-de-classificação)
+      - [Classificar o caracter](#classificar-o-caracter)
+      - [Guardar resultados num ficheiro de texto](#guardar-resultados-num-ficheiro-de-texto)
   - [Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)](#abordagem-3---utilização-da-biblioteca-grounding-dino-(deteção-de-caracteres)-e-segment-anything-model-(segmentação-de-caracteres))
     - [Instalar bibliotecas Grounding Dino e Segment Anythin Model (SAM)](#instalar-bibliotecas-grounding-dino-e-segment-anythin-model-(SAM))
     - [Aplicar do Grounding Dino sobre as imagens](#aplicar-do-grounding-dino-sobre-as-imagens)
     - [Aplicar o SAM sobre as imagens geradas pelo Grounding Dino](#aplicar-o-sam-sobre-as-imagens-geradas-pelo-grounding-dino)
     - [Obter as máscaras geradas](#obter-as-máscaras-geradas)
     - [Calcular contours da imagem binarizada](#calcular-contours-da-imagem-binarizada)
-    - [Extração e classificação dos caracteres](#extração-e-classificação-dos-caracteres)
+    - [Ordenar as bounding boxes dos contours da esquerda para a direita](#ordenar-as-bounding-boxes-dos-contours-da-esquerda-para-a-direita)
+    - [Extração dos caracteres](#extração-dos-caracteres)
+      - [Definição da condição que identifica caracteres](#definição-da-condição-que-identifica-caracteres)
+      - [Caracteres extraídos](#caracteres-extraídos)
+      - [Recorte dos caracteres](#recorte-dos-caracteres)
     - [Modelo de classificação de caracteres](#modelo-de-classificação-de-caracteres)
-    - [Bibliotecas](#bibliotecas)
-    - [Classificar o caracter](#classificar-o-caracter)
+      - [Bibliotecas](#bibliotecas)
+      - [Carregar pesos pré-treinados do modelo de classificação](#carregar-pesos-pré-treinados-do-modelo-de-classificação)
+      - [Classificar o caracter](#classificar-o-caracter)
+      - [Guardar resultados num ficheiro de texto](#guardar-resultados-num-ficheiro-de-texto)
 - [Módulo 4 - Análise de texto e correção de erros](#módulo-4---Análise-de-texto-e-correção-de-erros)
   - [Erros nos resultados obtidos pelo OCR e classificação de caracteres](#erros-nos-resultados-obtidos-pelo-ocr-e-classificação-de-caracteres)
   - [Correção de erros](#correção-de-erros)
@@ -512,10 +528,6 @@ ymax = des_y + des_height - des_height / 2 - bb_thickeness
 imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
 
 ```
-
-## Redimensionar imagem recortada
-
-imagem_crop_redimensionada = cv2.resize(imagem_crop, (300, 75))
 
 <div align="center">
 
