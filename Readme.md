@@ -824,7 +824,7 @@ crop_redimensionada = cv2.resize(crop, (20, 20)) # redimensionar a imagem recort
 
 ```
 
-### Caracteres extraídos
+#### Caracteres extraídos
 
 ALTERAR IMAGENS
 
@@ -839,7 +839,7 @@ ALTERAR IMAGENS
 
 Um modelo de classificação criado utilizando Keras.
 
-### Bibliotecas
+#### Bibliotecas
 
 ```bash
 
@@ -877,13 +877,29 @@ model.load_weights('/content/caminho/pesos')
 
 ```
 
-# Classificar o caracter
+#### Classificar o caracter
 
 ```bash
 
 # classificar caracter
 previsao =  model.predict(char)
 classe_prevista = classes[np.argmax(previsao)]
+
+```
+
+
+#### Guardar resultados num ficheiro de texto
+
+```bash
+
+resultados_file = "/caminho/resultados.txt"
+
+# abrir ficheiro e permitir a adição de novo conteúdo
+resultados_file = open(resultados_dir, "a")
+
+resultados_file.write("AA00AA" + "\n") # adicionar um parágrafo após cada resultado adicionado
+
+resultados_file.close()
 
 ```
 
@@ -1115,7 +1131,7 @@ crop_redimensionada = cv2.resize(crop, (20, 20)) # redimensionar a imagem recort
 
 ```
 
-### Caracteres extraídos
+#### Caracteres extraídos
 
 ALTERAR IMAGENS
 
@@ -1130,7 +1146,7 @@ ALTERAR IMAGENS
 
 Um modelo de classificação criado utilizando Keras.
 
-### Bibliotecas
+#### Bibliotecas
 
 ```bash
 
@@ -1168,7 +1184,7 @@ model.load_weights('/content/caminho/pesos')
 
 ```
 
-# Classificar o caracter
+#### Classificar o caracter
 
 ```bash
 
@@ -1178,6 +1194,21 @@ classe_prevista = classes[np.argmax(previsao)]
 
 ```
 
+
+#### Guardar resultados num ficheiro de texto
+
+```bash
+
+resultados_file = "/caminho/resultados.txt"
+
+# abrir ficheiro e permitir a adição de novo conteúdo
+resultados_file = open(resultados_dir, "a")
+
+resultados_file.write("AA00AA" + "\n") # adicionar um parágrafo após cada resultado adicionado
+
+resultados_file.close()
+
+```
 
 # Módulo 4 - Análise de texto e correção de erros
 
