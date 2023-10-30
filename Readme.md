@@ -85,8 +85,15 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
       - [Guardar resultados num ficheiro de texto](#guardar-resultados-num-ficheiro-de-texto)
   - [Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)](#abordagem-3---utilização-da-biblioteca-grounding-dino-(deteção-de-caracteres)-e-segment-anything-model-(segmentação-de-caracteres))
     - [Instalar bibliotecas Grounding Dino e Segment Anythin Model (SAM)](#instalar-bibliotecas-grounding-dino-e-segment-anythin-model-(SAM))
+    - [Instalar Grounding Dino](#instalar-grounding-dino)
+    - [Instalar SAM (Segment Anything Model)](#instalar-SAM-(Segment-Anything-Model))
+    - [Bibliotecas](#bibliotecas)
+    - [Carregar modelo Grounding Dino](#carregar-modelo-grounding-dino)
     - [Aplicar do Grounding Dino sobre as imagens](#aplicar-do-grounding-dino-sobre-as-imagens)
+    - [Carregar modelo SAM](#carregar-modelo-SAM)
     - [Aplicar o SAM sobre as imagens geradas pelo Grounding Dino](#aplicar-o-sam-sobre-as-imagens-geradas-pelo-grounding-dino)
+    - [Normalizar as bounding boxes](#normalizar-as-bounding-boxes)
+    - [Previsão das máscaras](#previsão-das-máscaras)
     - [Obter as máscaras geradas](#obter-as-máscaras-geradas)
     - [Calcular contours da imagem binarizada](#calcular-contours-da-imagem-binarizada)
     - [Ordenar as bounding boxes dos contours da esquerda para a direita](#ordenar-as-bounding-boxes-dos-contours-da-esquerda-para-a-direita)
@@ -919,7 +926,7 @@ resultados_file.close()
 
 ### Instalar bibliotecas Grounding Dino e Segment Anythin Model (SAM)
 
-Instalar Grounding Dino
+#### Instalar Grounding Dino
 
 ```bash
 
@@ -935,7 +942,7 @@ Instalar Grounding Dino
 %cd ..
 
 ```
-Instalar SAM (Segment Anything Model)
+#### Instalar SAM (Segment Anything Model)
 
 ```bash
 
@@ -944,7 +951,7 @@ Instalar SAM (Segment Anything Model)
 
 ```
 
-Bibliotecas:
+#### Bibliotecas
 
 ```bash
 
@@ -965,7 +972,7 @@ import locale
 locale.getpreferredencoding = lambda: "UTF-8"
 
 ```
-### Carregar modelo Grounding Dino
+#### Carregar modelo Grounding Dino
 
 ```bash
 
@@ -975,7 +982,7 @@ groundingdino_model = load_model("groundingdino/config/GroundingDINO_SwinT_OGC.p
 ```
 
 
-### Aplicar Grounding Dino sobre imagens
+#### Aplicar Grounding Dino sobre imagens
 
 ```bash
 
@@ -1007,7 +1014,7 @@ boxes, logits, phrases = predict(
 </div>
 
 
-### Carregar modelo SAM
+#### Carregar modelo SAM
 
 ```bash
 
@@ -1096,7 +1103,7 @@ def get_masks(mask):
 </div>
 
 
-### Calcular os contours das máscaras
+#### Calcular os contours das máscaras
 
 ```bash
 
