@@ -439,7 +439,7 @@ for item in sorted(glob.iglob(diretoria_labels)):
 
 ```
 
-# Abrir e ler os ficheiros
+## Abrir e ler os ficheiros
 
 ```bash
 
@@ -472,7 +472,7 @@ f.close()
 ```
 
 
-### Reverter a normalização das coordenadas geradas pela inferência
+## Reverter a normalização das coordenadas geradas pela inferência
 
 ```bash
 
@@ -513,6 +513,10 @@ imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
 
 ```
 
+## Redimensionar imagem recortada
+
+imagem_crop_redimensionada = cv2.resize(imagem_crop, (300, 75))
+
 <div align="center">
 
 ![](./assets/imagens/imagem_adequada_cropped_sem_thickness.png)
@@ -524,7 +528,7 @@ imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
 
 ```bash
 
-cv2.imwrite("/content/caminho/diretoria/imagens_recortadas")
+cv2.imwrite("/content/caminho/diretoria/imagens_recortadas/imagem_crop_redimensionada.png", imagem_crop_redimensionada)
 
 ```
 
@@ -613,6 +617,20 @@ O resultado do OCR é um array do qual é possível extrair:
 </div>
 
 
+### Guardar resultados num ficheiro de texto
+
+```bash
+
+resultados_file = "/caminho/resultados.txt"
+
+# abrir ficheiro e permitir a adição de novo conteúdo
+resultados_file = open(resultados_dir, "a")
+
+resultados_file.write("AA00AA" + "\n") # adicionar um parágrafo após cada resultado adicionado
+
+resultados_file.close()
+
+```
 
 ## Abordagem 2 - Aplicação do método de Otsu
 
