@@ -53,6 +53,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
   - [Reverter a normalização das coordenadas geradas pela inferência](#reverter-a-normalização-das-coordenadas-geradas-pela-inferência)
   - [Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito](#calcular-as-coordenadas-dos-ponto-superior-esquerdo-e-do-ponto-inferior-direito)
   - [Efetuar o recorte da imagem com base nas coordenadas calculadas](#efetuar-o-recorte-da-imagem-com-base-nas-coordenadas-calculadas)
+  - [Guardar imagem recortada](#guardar-imagem-recortada)
 - [Módulo 3 - Pipeline de processamento digital da imagem](#módulo-3---pipeline-de-processamento-digital-da-imagem)
   - [Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)](#abordagem-1---Utilização-de-uma-biblioteca-OCR-(optical-Character-recognition))
     - [Instalar a biblioteca PaddleOCR](#instalar-a-biblioteca-PaddleOCR)
@@ -172,9 +173,9 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 </div>
 
-#### Aplicar aumentações (opcional)
+#### Aplicar aumento de dados (opcional)
 
-As aumentações são opcionais, uma vez que os resultados do treino podem bons mesmo se as utilizar.
+O aumento de dados é opcional, uma vez que os resultados do treino podem bons mesmo se as utilizar.
 São úteis quando os dados são poucos.
 
 Caso sejam necessárias, as seguintes são as mais pertinentes:
@@ -187,7 +188,7 @@ Caso sejam necessárias, as seguintes são as mais pertinentes:
 
 </div>
 
-- **Crop** (5 a 10%)
+- **Crop** (5 a 15%)
 
 <div align="center">
 
@@ -233,7 +234,7 @@ Colocar video para cada aumentação
 
 #### Efetuar download do dataset no formato desejado
 
-Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive.
+Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive. Criar conta no [Google Drive](https://www.google.com/drive/) se necessário.
 
 <div align="center">
 
@@ -242,6 +243,8 @@ Efetuar o download do dataset no formato do modelo a utilizar no treino e coloca
 </div>
 
 ## Acesso ao Google Drive
+
+Permitir que o Google Drive seja acedido pelo Google Colab.
 
 ```bash
 
@@ -276,6 +279,7 @@ Parâmetros a ter em conta:
 - **name** -> o nome da diretoria onde são guardados os resultados do treino
 - **cfg** -> modelo a utilizar, por exemplo, yolov5s.yaml, yolov5m.yaml, yolov5l.yaml, yolov5x.yaml (substituir o número 5, tendo em conta a versão do modelo utilizada)
 - **weights** -> utilizar um modelo pré-treinado ou YOLO (por exemplo, yolov5s.pt, yolov5m.pt, yolov5l.pt, yolov5x.pt - substituir o número 5, tendo em conta a versão do modelo utilizada) ou personalizado (por exemplo, best.pt)
+- **bb_thickness** -> a espessura da linha da bounding box (pré-definido = 3)
 
 
 ```bash
@@ -287,7 +291,7 @@ Parâmetros a ter em conta:
 
 # Métricas
 
-- **Precision (P)** -> A acurácia de previsões positivas. Um valor alto de precisão indica que o modelo não gera previsões consideradas falsos positivos, o que siginifica que as previsões são confiáveis;
+- **Precision (P)** -> A precisão de previsões positivas. Um valor alto de precisão indica que o modelo não gera previsões consideradas falsos positivos, o que siginifica que as previsões são confiáveis;
 - **Recall (R)** -> Também chamada de sensibilidade (sensitivity), mede a proporção de verdadeiros positivos em relação ao total de instâncias positivas. Um valor alto de Recall indica que o modelo consegue identificar corretamente a maior parte das instâncias positivas;
 - **mAP** (mean Average Precision)-> A média da precisão tendo em conta todas as classes do dataset;
   - **mAP50** -> A média da precisão de todas as classes tendo em conta um valor de IoU (Intersection over Union - o valor de interseção entre a bounding box anotada e a bounding box gerada pelo modelo) de 0.5;
@@ -308,7 +312,7 @@ Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|�
 
 Resultados do treino:
 
-Os melhores resultados foram obtidos na iteração 414 e o treino parou na iteração 515, uma vez que não existiu uma melhoria dutante 100 iterações.
+Os melhores resultados foram obtidos na iteração 414 e o treino parou na iteração 515, uma vez que não existiu uma melhoria dutante 100 iterações (patience pré-definida é 100).
 
 <div align="center">
 
@@ -317,7 +321,7 @@ Os melhores resultados foram obtidos na iteração 414 e o treino parou na itera
 </div>
 
 
-Para efetuar de nova a validação, sem o treino:
+Para efetuar de novo a validação, sem o treino:
 
 ```bash 
 
@@ -341,11 +345,13 @@ Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|�
 
 Para obter as métricas de teste:
 
+Utilizar o mesmo código utilizado para obter as métricas da validação e adicionar o parâmetro "--task test".
+
 ```bash
 
 # basta indicar o caminho para os pesos do treino, o tamanho de input das imagens e indicar --task test
 
-!python val.py --data /content/caminho/data.yaml --weights /content/caminho/best.pt --img 640 
+!python val.py --data /content/caminho/data.yaml --weights /content/caminho/best.pt --img 640 --task test
 
 ```
 
@@ -362,7 +368,7 @@ Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|�
 ## Inferir sobre novas imagens
 
 A confiança mínima utilizada deve ser de 0.65.
-Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das bounding boxes detetadas. Caso não seja detetada nenhuma matrícula, o ficheiro não é gerado.
+Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das bounding boxes detetadas. Caso não seja detetada nenhuma matrícula, o ficheiro não é gerado, contudo a imagem será guardada sem as anotações efetuadas.
 
 ```bash
 
@@ -374,7 +380,7 @@ Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das
 
 # na consola encontram-se os resultados das métricas
 
-# os resultados da inferência são guardados na pasta runs/detect
+# os resultados da inferência são guardados na pasta runs/detect com o nome definido (--name)
 
 ```
 
@@ -454,6 +460,7 @@ for linha in linhas: # percorrer todas as linhas
   # cada valor encontra-se separado por um espaço
   temp = l.split(" ")
 
+  # ignorar o primeiro valor, uma vez que não é relevante para o problema em questão
   cc = [float(temp[1]), float(temp[2]), float(temp[3]), float(temp[4])]
 
   # guardar as coordenadas
@@ -511,6 +518,15 @@ imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
 ![](./assets/imagens/imagem_adequada_cropped_sem_thickness.png)
 
 </div>
+
+
+## Guardar imagem recortada
+
+```bash
+
+cv2.imwrite("/content/caminho/diretoria/imagens_recortadas")
+
+```
 
 
 # Módulo 3 - Pipeline de processamento digital da imagem
