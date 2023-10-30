@@ -621,13 +621,13 @@ O resultado do OCR é um array do qual é possível extrair:
 ```bash
 
 import cv2
-from imutils import contours
+import functools
 
 ```
 
 ### Pré-processamento das imagens
 
-Abrir imagem e converter para preto e branco:
+#### Abrir imagem e converter para preto e branco:
 
 ```bash
 
@@ -643,7 +643,7 @@ imagem = cv2.imread(img, cv2.IMREAD_GRAYSCALE) # carregar imagem e converter a i
 
 </div>
 
-Redimensionar imagem:
+#### Redimensionar imagem:
 
 ```bash
 
@@ -657,24 +657,12 @@ imagem_redimensionada = cv2.resize(imagem, (300, 75), interpolation=cv2.INTER_AR
 
 </div>
 
-Máscara dos contours:
-
-```bash
-
-mask = np.zeros(imagem_redimensionada.shape, dtype=np.uint8) # criar uma máscara
-
-```
-<div align="center">
-
-![](./assets/imagens/mascara_contours.png)
-
-</div>
 
 ### Aplicar o algoritmo de Otsu
 
 ```bash
 
-thresh = cv2.threshold(imagem_redimensionada, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1] # aplicar o método
+thresh = cv2.threshold(imagem_redimensionada, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1] # aplicar o método de Otsu
 
 ```
 <div align="center">
@@ -682,6 +670,7 @@ thresh = cv2.threshold(imagem_redimensionada, 0, 255, cv2.THRESH_BINARY_INV + cv
 ![](./assets/imagens/imagem_adequada_binarizada.png)
 
 </div>
+
 
 ### Verificar o número de píxeis pretos
 
@@ -694,59 +683,132 @@ altura = imagem_redimensionada.shape[1] # altura da imagem
 
 non_zero = cv2.countNonZero(thresh) # obter o número de pixeis não pretos
 
-if non_zero > (w * h) / 2:
+if non_zero > (largura * altura) / 2:
 
   thresh = cv2.bitwise_not(temp) # inverter a cor dos pixeis
 
 ```
 
-### Calcular contours da imagem binarizada
+
+### Aplicar operação morfológica
 
 ```bash
 
-cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) # encontrar contours
-cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+kernel = np.ones((4,4),np.uint8)
+thresh = cv2.morphologyEx(adapT, cv2.MORPH_OPEN, kernel)  # Operação morfológica de abertura
 
-(cnts, _) = contours.sort_contours(cnts, method="left-to-right") # ordenar os contours da esquerda para a direita
+```
+
+### Construção da máscara com os caracteres
+
+```bash
+
+ # Análise de componentes
+_, labels = cv2.connectedComponents(thresh)
+
+# Inicialização da máscara
+mask = np.zeros(thresh.shape, dtype="uint8")
+
+
+# Definir um valor máximo e mínimo de pixéis para que o contour seja considerado um caracter
+total_pixels = largura * altura
+lower = total_pixels // 75   # limite mínimo
+upper = total_pixels // 20 # limite máximo
+
+
+# Percorrer os componentes
+for (j, label) in enumerate(np.unique(labels)):
+
+    # Se for o fundo, ignorar
+
+    if label == 0:
+        continue
+
+    # Senão, construir a máscara com as labels obtidas pela análise de componentes
+
+    label_mask = np.zeros(adapT.shape, dtype="uint8")
+    label_mask[labels == label] = 255
+    num_pixels = cv2.countNonZero(label_mask)  # calcular o número de pixéis
+
+    # Se o número de pixéis do componente está entre o valor de lower e upper,
+    # adicionar à máscara (é um caracter)
+    if num_pixels > lower and numPixels < upper:
+
+        mask = cv2.add(mask, label_mask)
+
+```
+
+### Máscara gerada
+
+### Calcular os contours da máscara gerada
+
+```bash
+
+# Contours da máscara
+cnts, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+bounding_boxes = [cv2.boundingRect(contour) for contour in cnts] # bounding boxes dos contours
+
+```
+
+### Ordenar as bounding boxes da esquerda para a direita
+
+```bash
+
+# função que compara a posição das bounding boxes
+
+def compare(rect1, rect2):
+
+    return rect1[0] - rect2[0]
+
+```
+
+```bash
+
+# Sort the bounding boxes from left to right
+bounding_boxes = sorted(bounding_boxes, key=functools.cmp_to_key(compare))
 
 ```
 
 
 ### Extração e classificação dos caracteres
 
-Cálculo da área de cada contour encontrado:
+#### Definição da condição que identifica caracteres 
 
-- **x** - centro do contour
-- **y** - centro do contour 
-- **w** - largura do contour
-- **h** - altura do contour
+Utilizar o/ou valor/es da bounding box para definir uma condição que permita apenas selecionar os caracteres presentes na máscara.
 
-```bash
-
-    area = cv2.contourArea(c) # calcular a área do contour
-    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x (centro da bounding box), y (centro da bounding box), largura, altura)
-
-```
-
-Definir a condição que identifica caracteres:
-
-Por exemplo:
+- **x** - centro da bounding box
+- **y** - centro da bounding box
+- **w** - largura da bounding box
+- **h** - altura da bounding box
 
 ```bash
 
-if 100 < area < 500 and w < 50 and h > 20:
+  x, y ,w , h = bounding_boxes[0]   # obter as coordenadas da bounding_box
 
 ```
 
-Recortar imagem:
+Exemplo de condição:
 
 ```bash
 
-char = 255 - imagem[y: y + h, x: x + w] # a área a recortar
+if w < 60:
 
 ```
 
-Caracteres extraídos:
+#### Recorte do caracter
+
+```bash
+
+ep = 3 # padding extra
+
+crop = mask[y - ep: y + h + ep, x - ep: x + w + ep] # recorte do caracter
+crop_redimensionada = cv2.resize(crop, (20, 20)) # redimensionar a imagem recortada 20x20, para ser utilizado no classificador
+
+```
+
+### Caracteres extraídos
+
+ALTERAR IMAGENS
 
 <div align="center">
 
@@ -754,28 +816,10 @@ Caracteres extraídos:
 
 </div>
 
-Máscara gerada:
-
-<div align="center">
-
-![](./assets/imagens/mascara_contours_completa.png)
-
-
-</div>
-
-Redimensionar a imagem recortada para ser utilizada pelo classificador:
-
-```bash
-
-# redimensionar o caracter
-char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
-char = np.expand_dims(char, axis = 0)
-
-```
 
 ### Modelo de classificação de caracteres
 
-Um modelo de classificação criado utilizando keras.
+Um modelo de classificação criado utilizando Keras.
 
 ### Bibliotecas
 
@@ -788,10 +832,10 @@ from tensorflow.keras import layers
 
 ```bash
 
-input_shape = (50, 50, 1) # input que o modelo aceita
-num_classes = 36 # número de classes
+input_shape = (20, 20, 1) # input que o modelo aceita
+num_classes = 34 # número de classes
 classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-              'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+              'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T',
               'U', 'V', 'W', 'X', 'Y', 'Z'] # nomes das classes
 
 # modelo de classificação
@@ -806,7 +850,7 @@ model = keras.Sequential(
 
 ```
 
-Carregar pesos pré-treinados:
+#### Carregar pesos pré-treinados do modelo de classificação
 
 ```bash
 
@@ -838,6 +882,12 @@ Instalar Grounding Dino
 %cd /content/GroundingDINO/
 !pip install -e .
 
+# Efetuar download dos pesos do modelo pré-treinado
+%cd ..
+%mkdir weights
+!wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
+%cd ..
+
 ```
 Instalar SAM (Segment Anything Model)
 
@@ -852,19 +902,10 @@ Bibliotecas:
 
 ```bash
 
-import argparse
 import os
 import copy
 
-import GroundingDINO.groundingdino.datasets.transforms as T
-from GroundingDINO.groundingdino.models import build_model
-from GroundingDINO.groundingdino.util import box_ops
-from GroundingDINO.groundingdino.util.slconfig import SLConfig
-from GroundingDINO.groundingdino.util.utils import clean_state_dict, get_phrases_from_posmap
-from GroundingDINO.groundingdino.util.inference import annotate, load_image, predict
-
-# Carregar modelos
-from huggingface_hub import hf_hub_download
+from groundingdino.util.inference import load_model, load_image, predict, annotate
 
 import torch
 from PIL import Image
@@ -878,56 +919,17 @@ import locale
 locale.getpreferredencoding = lambda: "UTF-8"
 
 ```
-
-### Aplicar do Grounding Dino sobre as imagens
-
-Função que carrega o modelo Grounding Dino
-
-```bash
-
-# Carregar modelo GroundingDINO
-def load_model_hf(repo_id, filename, ckpt_config_filename, device ='cpu'):
-
-    cache_config_file = hf_hub_download(repo_id = repo_id, filename = ckpt_config_filename)
-
-    args = SLConfig.fromfile(cache_config_file)
-    model = build_model(args)
-    args.device = device
-
-    cache_file = hf_hub_download(repo_id = repo_id, filename = filename)
-    checkpoint = torch.load(cache_file, map_location = 'cpu')
-    log = model.load_state_dict(clean_state_dict(checkpoint['model']), strict = False)
-    print("Model loaded from {} \n => {}".format(cache_file, log))
-    _ = model.eval()
-
-    return model
-
-```
-
-
-Caminhos dos pesos e modelo do Grounding Dino a utilizar:
-
-```bash
-
-# Caminhos GroundingDINO
-ckpt_repo_id = "ShilongLiu/GroundingDINO"
-ckpt_filenmae = "groundingdino_swinb_cogcoor.pth"
-ckpt_config_filename = "GroundingDINO_SwinB.cfg.py"
-
-```
-
-
-Carregar o modelo Grounding Dino:
-
+### Carregar modelo Grounding Dino
 
 ```bash
 
 # Carregar modelo
-groundingdino_model = load_model_hf(ckpt_repo_id, ckpt_filenmae, ckpt_config_filename)
+groundingdino_model = load_model("groundingdino/config/GroundingDINO_SwinT_OGC.py", "weights/groundingdino_swint_ogc.pth")
 
 ```
 
-Aplicar Grounding Dino sobre imagens:
+
+### Aplicar Grounding Dino sobre imagens
 
 ```bash
 
@@ -975,7 +977,7 @@ sam_predictor = SamPredictor(sam)
 
 ### Aplicar SAM sobre as imagens geradas pelo Grounding Dino
 
-Correr SAM sobre a imagem gerada pelo Grounding Dino:
+#### Correr SAM sobre a imagem gerada pelo Grounding Dino
 
 
 ```bash
@@ -986,7 +988,7 @@ sam_predictor.set_image(image_source)
 ```
 
 
-Normalizar as bounding boxes:
+#### Normalizar as bounding boxes
 
 
 ```bash 
@@ -998,7 +1000,7 @@ boxes_xyxy = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H])
 ```
 
 
-Previsão das máscaras:
+#### Previsão das máscaras
 
 ```bash
 
@@ -1014,7 +1016,10 @@ masks, _, _ = sam_predictor.predict_torch(
 ```
 
 
-Obter as máscaras:
+#### Obter as máscaras
+
+As máscaras terão fundo preto e o caracter branco.
+
 
 ```bash
 
@@ -1045,52 +1050,56 @@ def get_masks(mask):
 </div>
 
 
-### Calcular contours da imagem binarizada
+### Calcular os contours das máscaras
 
 ```bash
 
-cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) # encontrar contours
-cnts = cnts[0] if len(cnts) == 2 else cnts[1]
-
-(cnts, _) = contours.sort_contours(cnts, method="left-to-right") # ordenar os contours da esquerda para a direita
+# Contours da máscara
+cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+bounding_boxes = [cv2.boundingRect(contour) for contour in cnts] # bounding boxes dos contours
 
 ```
+
 
 ### Extração e classificação dos caracteres
 
-Cálculo da área de cada contour detetado:
+#### Definição da condição que identifica caracteres 
 
-- **x** - centro do contour
-- **y** - centro do contour 
-- **w** - largura do contour
-- **h** - altura do contour
+Utilizar o/ou valor/es da bounding box para definir uma condição que permita apenas selecionar os caracteres presentes na máscara.
 
-```bash
-
-    area = cv2.contourArea(c) # calcular a área do contour
-    x, y, w, h = cv2.boundingRect(c) # obter os valores da bounding box (x (centro da bounding box), y (centro da bounding box), largura, altura)
-
-```
-
-Definir a condição que identifica caracteres:
-
-Por exemplo:
+- **x** - centro da bounding box
+- **y** - centro da bounding box
+- **w** - largura da bounding box
+- **h** - altura da bounding box
 
 ```bash
 
-if 100 < area < 500 and w < 50 and h > 20:
+  x, y ,w , h = bounding_boxes[0]   # obter as coordenadas da bounding_box
 
 ```
 
-Recortar imagem:
+Exemplo de condição:
 
 ```bash
 
-char = 255 - imagem[y: y + h, x: x + w] # a área a recortar
+if w < 60:
 
 ```
 
-Caracteres extraídos:
+#### Recorte do caracter
+
+```bash
+
+ep = 3 # padding extra
+
+crop = mask[y - ep: y + h + ep, x - ep: x + w + ep] # recorte do caracter
+crop_redimensionada = cv2.resize(crop, (20, 20)) # redimensionar a imagem recortada 20x20, para ser utilizado no classificador
+
+```
+
+### Caracteres extraídos
+
+ALTERAR IMAGENS
 
 <div align="center">
 
@@ -1098,27 +1107,10 @@ Caracteres extraídos:
 
 </div>
 
-Máscara gerada:
-
-<div align="center">
-
-![](./assets/imagens/mascara_contours_completa.png)
-
-</div>
-
-Redimensionar a imagem recortada para ser utilizada pelo classificador:
-
-```bash
-
-# redimensionar o caracter
-char = cv2.resize(char, (50, 50), interpolation = cv2.INTER_AREA)
-char = np.expand_dims(char, axis = 0)
-
-```
 
 ### Modelo de classificação de caracteres
 
-Um modelo de classificação criado utilizando keras.
+Um modelo de classificação criado utilizando Keras.
 
 ### Bibliotecas
 
@@ -1131,10 +1123,10 @@ from tensorflow.keras import layers
 
 ```bash
 
-input_shape = (50, 50, 1) # input que o modelo aceita
-num_classes = 36 # número de classes
+input_shape = (20, 20, 1) # input que o modelo aceita
+num_classes = 34 # número de classes
 classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-              'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+              'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T',
               'U', 'V', 'W', 'X', 'Y', 'Z'] # nomes das classes
 
 # modelo de classificação
@@ -1149,7 +1141,7 @@ model = keras.Sequential(
 
 ```
 
-Carregar pesos pré-treinados:
+#### Carregar pesos pré-treinados do modelo de classificação
 
 ```bash
 
@@ -1180,6 +1172,8 @@ Verificar que erros existem nos resultados cometidos pelo OCR ou classificação
 - Existem caracteres que contêm um número e uma letra?
 - Os pares de caracteres do resultado estão de acordo com a matrícula real?
 
+**Nota**: é importante, quando existem pares com uma letra e um número, substituir o número "0" e o número "1" pela letra "O" e a letra "I", respetivamente. 
+
 ### Correção de erros
 
 Para remover ou substituir caracteres:
@@ -1193,6 +1187,7 @@ exemplo_string = exemplo_string.replace(' ', '') # remover o espaço
 exemplo_string = exemplo_string.replace('.', '') # remover ponto final
 
 ```
+
 
 ### Resultados
 
