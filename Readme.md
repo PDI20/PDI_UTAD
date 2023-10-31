@@ -674,7 +674,7 @@ imagem = cv2.imread(img, cv2.IMREAD_GRAYSCALE) # carregar imagem e converter a i
 
 <div align="center">
 
-![](./assets/imagens/imagem_adequada_grayscale_scaled_no_grid.png)
+![](./assets/imagens/new_preto_branco.png)
 
 </div>
 
@@ -688,7 +688,7 @@ thresh = cv2.threshold(imagem_redimensionada, 0, 255, cv2.THRESH_BINARY_INV + cv
 ```
 <div align="center">
 
-![](./assets/imagens/imagem_adequada_binarizada.png)
+![](./assets/imagens/new_binarizacao.png)
 
 </div>
 
@@ -720,44 +720,74 @@ thresh = cv2.morphologyEx(adapT, cv2.MORPH_OPEN, kernel)  # Operação morfológ
 
 ```
 
+<div align="center">
+
+![](./assets/imagens/new_operacao_morfologica.png)
+
+</div>
+
 ### Construção da máscara com os caracteres
+
+#### Análise de componentes
 
 ```bash
 
- # Análise de componentes
+# Análise de componentes
 _, labels = cv2.connectedComponents(thresh)
+
+```
+
+#### Inicializar a máscara
+
+```bash
 
 # Inicialização da máscara
 mask = np.zeros(thresh.shape, dtype="uint8")
 
+```
+
+#### Definir valor máximo e mínimo de pixéis
+
+```bash
 
 # Definir um valor máximo e mínimo de pixéis para que o contour seja considerado um caracter
-total_pixels = largura * altura
-lower = total_pixels // 75   # limite mínimo
-upper = total_pixels // 20 # limite máximo
+pixeis = largura * altura
+minimo = pixeis // 75   # limite mínimo
+maximo = pixeis // 20 # limite máximo
 
+```
+#### Percorrer todas as labels
+
+
+```bash
 
 # Percorrer os componentes
 for (j, label) in enumerate(np.unique(labels)):
 
-    # Se for o fundo, ignorar
+```
 
-    if label == 0:
-        continue
 
-    # Senão, construir a máscara com as labels obtidas pela análise de componentes
+#### Construir a máscara 
 
-    label_mask = np.zeros(adapT.shape, dtype="uint8")
-    label_mask[labels == label] = 255
-    num_pixels = cv2.countNonZero(label_mask)  # calcular o número de pixéis
+```bash 
 
-    # Se o número de pixéis do componente está entre o valor de lower e upper,
-    # adicionar à máscara (é um caracter)
-    if num_pixels > lower and numPixels < upper:
+label_mask = np.zeros(adapT.shape, dtype="uint8")
+label_mask[labels == label] = 255
+pixeis_label = cv2.countNonZero(label_mask)  # obter número de píxeis brancos da label
 
-        mask = cv2.add(mask, label_mask)
+# Se o número de pixéis do componente está entre o valor de lower e upper,
+# adicionar à máscara (é um caracter)
+if pixeis_label > minimo and pixeis_label < maximo:
+
+    mask = cv2.add(mask, label_mask)
 
 ```
+
+<div align="center">
+
+![](./assets/imagens/new_mascara_gerada.png)
+
+</div>
 
 ### Máscara gerada
 
