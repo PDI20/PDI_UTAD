@@ -184,7 +184,7 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 <div align="center">
 
-![](./assets/videos/distribuica_imagens.gif)
+![](./assets/videos/distribuica_dataset.gif)
 
 </div>
 
