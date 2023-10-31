@@ -863,7 +863,7 @@ ALTERAR IMAGENS
 
 <div align="center">
 
-![](./assets/imagens/ROI_0.png) ![](./assets/imagens/ROI_1.png) ![](./assets/imagens/ROI_2.png) ![](./assets/imagens/ROI_3.png) ![](./assets/imagens/ROI_4.png) ![](./assets/imagens/ROI_5.png)
+![](./assets/imagens/crop0.jpg) ![](./assets/imagens/crop1.jpg) ![](./assets/imagens/crop2.jpg) ![](./assets/imagens/crop3.jpg) ![](./assets/imagens/crop4.jpg) ![](./assets/imagens/crop5.jpg)
 
 </div>
 
@@ -1170,7 +1170,7 @@ ALTERAR IMAGENS
 
 <div align="center">
 
-![](./assets/imagens/ROI_0.png) ![](./assets/imagens/ROI_1.png) ![](./assets/imagens/ROI_2.png) ![](./assets/imagens/ROI_3.png) ![](./assets/imagens/ROI_4.png) ![](./assets/imagens/ROI_5.png)
+![](./assets/imagens/crop0.jpg) ![](./assets/imagens/crop1.jpg) ![](./assets/imagens/crop2.jpg) ![](./assets/imagens/crop3.jpg) ![](./assets/imagens/crop4.jpg) ![](./assets/imagens/crop5.jpg)
 
 </div>
 
