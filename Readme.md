@@ -1164,7 +1164,7 @@ crop_redimensionada = cv2.resize(crop, (20, 20)) # redimensionar a imagem recort
 
 #### Caracteres extraídos
 
-<div align="center" width = "100" height = "100">
+<div align="center">
 
 ![](./assets/imagens/crop0.jpg) ![](./assets/imagens/crop1.jpg) ![](./assets/imagens/crop2.jpg) ![](./assets/imagens/crop3.jpg) ![](./assets/imagens/crop4.jpg) ![](./assets/imagens/crop5.jpg)
 
