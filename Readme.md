@@ -662,9 +662,7 @@ import functools
 
 ```
 
-### Pré-processamento das imagens
-
-#### Abrir imagem e converter para preto e branco:
+### Abrir imagem e converter para preto e branco:
 
 ```bash
 
@@ -677,20 +675,6 @@ imagem = cv2.imread(img, cv2.IMREAD_GRAYSCALE) # carregar imagem e converter a i
 <div align="center">
 
 ![](./assets/imagens/imagem_adequada_grayscale_scaled_no_grid.png)
-
-</div>
-
-#### Redimensionar imagem:
-
-```bash
-
-imagem_redimensionada = cv2.resize(imagem, (300, 75), interpolation=cv2.INTER_AREA) # redimensionar a imagem
-
-```
-
-<div align="center">
-
-![](./assets/imagens/imagem_adequada_grayscale_scaled.png)
 
 </div>
 
