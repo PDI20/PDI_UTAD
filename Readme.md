@@ -366,6 +366,7 @@ Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|�
 
 ```
 
+
 Para obter as métricas de teste:
 
 Utilizar o mesmo código utilizado para obter as métricas da validação e adicionar o parâmetro "--task test".
@@ -377,6 +378,7 @@ Utilizar o mesmo código utilizado para obter as métricas da validação e adic
 !python val.py --data /content/caminho/data.yaml --weights /content/caminho/best.pt --img 640 --task test
 
 ```
+
 
 Exemplo de métricas de teste:
 
@@ -695,7 +697,7 @@ thresh = cv2.threshold(imagem_redimensionada, 0, 255, cv2.THRESH_BINARY_INV + cv
 
 ### Verificar o número de píxeis pretos
 
-O cálculo dos contours, próximo passo, apenas funciona se o fundo for preto e os caracteres brancos. 
+O cálculo dos contours, próximo passo, apenas funciona se o fundo for preto e os caracteres brancos. O fundo pode ser branco devido à matrícula (preta e branca) ou devido à iluminação. 
 
 ```bash
 
@@ -709,6 +711,35 @@ if non_zero > (largura * altura) / 2:
   thresh = cv2.bitwise_not(temp) # inverter a cor dos pixeis
 
 ```
+
+
+Exemplo:
+
+- Imagem original:
+
+<div align="center">
+
+![](./assets/imagens/new_preto_branco_normal.png)
+
+</div>
+
+
+- Imagem binarizada:
+
+<div align="center">
+
+![](./assets/imagens/new_preto_branco_binarizada.png)
+
+</div>
+
+
+- Imagem binarizada com os píxeis invertidos:
+
+<div align="center">
+
+![](./assets/imagens/new_preto_branco_invertida.png)
+
+</div>
 
 
 ### Aplicar operação morfológica
