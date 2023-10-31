@@ -38,7 +38,7 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
     - [Criar projeto de deteção de objetos](#criar-projeto-de-deteção-de-objetos)
     - [Upload das imagens](#upload-das-imagens)
     - [Anotar as imagens](#anotar-as-imagens)
-    - [Aplicar aumentações (opcional)](#aplicar-aumentações-(opcional))
+    - [Aplicar aumento de dados (opcional)](#aplicar-aumentações-(opcional))
     - [Efetuar download do dataset no formato desejado](#efetuar-download-do-dataset-no-formato-desejado)
   - [Acesso ao Google Drive](#acesso-ao-google-drive)
   - [Treino do dataset](#treino-do-dataset)
@@ -53,31 +53,34 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
   - [Reverter a normalização das coordenadas geradas pela inferência](#reverter-a-normalização-das-coordenadas-geradas-pela-inferência)
   - [Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito](#calcular-as-coordenadas-dos-ponto-superior-esquerdo-e-do-ponto-inferior-direito)
   - [Efetuar o recorte da imagem com base nas coordenadas calculadas](#efetuar-o-recorte-da-imagem-com-base-nas-coordenadas-calculadas)
-  - [Guardar imagem recortada](#guardar-imagem-recortada)
+  - [Redimensionar e guardar imagem recortada](#redimensionar-e-guardar-imagem-recortada)
 - [Módulo 3 - Pipeline de processamento digital da imagem](#módulo-3---pipeline-de-processamento-digital-da-imagem)
   - [Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)](#abordagem-1---Utilização-de-uma-biblioteca-OCR-(optical-Character-recognition))
     - [Instalar a biblioteca PaddleOCR](#instalar-a-biblioteca-PaddleOCR)
-    - [Bibliotecas](#Bibliotecas)
-    - [Carregar o modelo responsável pelo reconhecimento de texto](#carregar-o-modelo-responsável-pelo-reconhecimento-de-texto)
-    - [Aplicar o OCR sobre uma imagem](#aplicar-o-ocr-sobre-as-imagens)
-    - [Resultados do OCR](#resultados-do-ocr)
-    - [Exemplo de um resultado da aplicação do OCR]
-    (#exemplo-de-um-resultado-da-aplicação-do-ocr)
+      - [Bibliotecas](#Bibliotecas)
+      - [Carregar o modelo responsável pelo reconhecimento de texto](#carregar-o-modelo-responsável-pelo-reconhecimento-de-texto)
+      - [Aplicar o OCR sobre uma imagem](#aplicar-o-ocr-sobre-as-imagens)
+      - [Resultados do OCR](#resultados-do-ocr)
+    - [Exemplo de um resultado da aplicação do OCR](#exemplo-de-um-resultado-da-aplicação-do-ocr)
     - [Guardar resultados num ficheiro de texto](#guardar-resultados-num-ficheiro-de-texto)
   - [Abordagem 2 - Aplicação do método de Otsu](#abordagem-2---aplicação-do-método-de-otsu)
     - [Bibliotecas](#bibliotecas)
-    - [Pré-processamento das imagens](#pré-processamento-das-imagens)
+    - [Abrir imagem e converter para preto e branco](#abrir-imagem-e-converter-para-preto-e-branco)
     - [Aplicar o algoritmo de Otsu](#aplicar-o-algoritmo-de-Otsu)
     - [Verificar o número de píxeis pretos](#verificar-o-número-de-píxeis-pretos)
     - [Aplicar operação morfológica](#aplicar-operação-morfológica)
     - [Construção da máscara com os caracteres](#construção-da-máscara-com-os-caracteres)
-    - [Máscara gerada](#máscara-gerada)
+      - [Análise de componentes](#análise-de-componentes)
+      - [Inicializar a máscara](#inicializar-a-máscara)
+      - [Definir valor máximo e mínimo de pixéis](#definir-valor-máximo-e-mínimo-de-pixéis)
+      - [Percorrer todas as labels](#percorrer-todas-as-labels)
+      - [Construir a máscara](#construir-a-máscara)
     - [Calcular contours da imagem binarizada](#calcular-contours-da-imagem-binarizada)
     - [Ordenar as bounding boxes dos contours da esquerda para a direita](#ordenar-as-bounding-boxes-dos-contours-da-esquerda-para-a-direita)
     - [Extração dos caracteres](#extração-dos-caracteres)
       - [Definição da condição que identifica caracteres](#definição-da-condição-que-identifica-caracteres)
-      - [Caracteres extraídos](#caracteres-extraídos)
       - [Recorte dos caracteres](#recorte-dos-caracteres)
+      - [Caracteres extraídos](#caracteres-extraídos)
     - [Modelo de classificação de caracteres](#modelo-de-classificação-de-caracteres)
       - [Bibliotecas](#bibliotecas)
       - [Carregar pesos pré-treinados do modelo de classificação](#carregar-pesos-pré-treinados-do-modelo-de-classificação)
@@ -91,16 +94,16 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
     - [Carregar modelo Grounding Dino](#carregar-modelo-grounding-dino)
     - [Aplicar do Grounding Dino sobre as imagens](#aplicar-do-grounding-dino-sobre-as-imagens)
     - [Carregar modelo SAM](#carregar-modelo-SAM)
-    - [Aplicar o SAM sobre as imagens geradas pelo Grounding Dino](#aplicar-o-sam-sobre-as-imagens-geradas-pelo-grounding-dino)
-    - [Normalizar as bounding boxes](#normalizar-as-bounding-boxes)
-    - [Previsão das máscaras](#previsão-das-máscaras)
-    - [Obter as máscaras geradas](#obter-as-máscaras-geradas)
-    - [Calcular contours da imagem binarizada](#calcular-contours-da-imagem-binarizada)
-    - [Ordenar as bounding boxes dos contours da esquerda para a direita](#ordenar-as-bounding-boxes-dos-contours-da-esquerda-para-a-direita)
+    - [Aplicar SAM sobre as imagens geradas pelo Grounding Dino](#aplicar-sam-sobre-as-imagens-geradas-pelo-grounding-dino)
+      - [Correr SAM sobre a imagem gerada pelo Grounding Dino](#correr-sam-sobre-a-imagem-gerada-pelo-grounding-dino)
+      - [Normalizar as bounding boxes](#normalizar-as-bounding-boxes)
+      - [Previsão das máscaras](#previsão-das-máscaras)
+      - [Obter as máscaras geradas](#obter-as-máscaras-geradas)
+      - [Calcular contours da imagem binarizada](#calcular-contours-da-imagem-binarizada)
     - [Extração dos caracteres](#extração-dos-caracteres)
       - [Definição da condição que identifica caracteres](#definição-da-condição-que-identifica-caracteres)
-      - [Caracteres extraídos](#caracteres-extraídos)
       - [Recorte dos caracteres](#recorte-dos-caracteres)
+      - [Caracteres extraídos](#caracteres-extraídos)
     - [Modelo de classificação de caracteres](#modelo-de-classificação-de-caracteres)
       - [Bibliotecas](#bibliotecas)
       - [Carregar pesos pré-treinados do modelo de classificação](#carregar-pesos-pré-treinados-do-modelo-de-classificação)
@@ -545,9 +548,11 @@ imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
 </div>
 
 
-## Guardar imagem recortada
+## Redimensionar e guardar imagem recortada
 
 ```bash
+
+cv2.resize(imagem_crop_redimensionada, (300, 75))
 
 cv2.imwrite("/content/caminho/diretoria/imagens_recortadas/imagem_crop_redimensionada.png", imagem_crop_redimensionada)
 
@@ -664,7 +669,7 @@ import functools
 
 ```
 
-### Abrir imagem e converter para preto e branco:
+### Abrir imagem e converter para preto e branco
 
 ```bash
 
@@ -820,7 +825,6 @@ if pixeis_label > minimo and pixeis_label < maximo:
 
 </div>
 
-### Máscara gerada
 
 ### Calcular os contours da máscara gerada
 
@@ -852,7 +856,7 @@ bounding_boxes = sorted(bounding_boxes, key=functools.cmp_to_key(compare))
 ```
 
 
-### Extração e classificação dos caracteres
+### Extração dos caracteres
 
 #### Definição da condição que identifica caracteres 
 
@@ -1289,7 +1293,7 @@ Para remover ou substituir caracteres:
 
 ```bash
 
-exemplo_string = "AA 11.11"
+exemplo_string = "A1 11.11"
 
 exemplo_string = exemplo_string.replace(' ', '') # remover o espaço
 
@@ -1306,7 +1310,7 @@ Exemplo:
 
 ```bash
 
-exemplo_resultado = "AA1111"
+exemplo_resultado = "AI1111"
 
 ```
 
