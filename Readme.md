@@ -652,7 +652,7 @@ resultados_file = "/caminho/resultados.txt"
 # abrir ficheiro e permitir a adição de novo conteúdo
 resultados_file = open(resultados_dir, "a")
 
-resultados_file.write("AA00AA" + "\n") # adicionar um parágrafo após cada resultado adicionado
+resultados_file.write("22XV69" + "\n") # adicionar um parágrafo após cada resultado adicionado
 
 resultados_file.close()
 
@@ -963,7 +963,7 @@ resultados_file = "/caminho/resultados.txt"
 # abrir ficheiro e permitir a adição de novo conteúdo
 resultados_file = open(resultados_dir, "a")
 
-resultados_file.write("AA00AA" + "\n") # adicionar um parágrafo após cada resultado adicionado
+resultados_file.write("22XV69" + "\n") # adicionar um parágrafo após cada resultado adicionado
 
 resultados_file.close()
 
@@ -1268,7 +1268,7 @@ resultados_file = "/caminho/resultados.txt"
 # abrir ficheiro e permitir a adição de novo conteúdo
 resultados_file = open(resultados_dir, "a")
 
-resultados_file.write("AA00AA" + "\n") # adicionar um parágrafo após cada resultado adicionado
+resultados_file.write("22XV69" + "\n") # adicionar um parágrafo após cada resultado adicionado
 
 resultados_file.close()
 
