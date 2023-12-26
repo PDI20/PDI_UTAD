@@ -1455,12 +1455,12 @@ resultados_f.close() # fechar o ficheiro
 
 Verificar que erros existem nos resultados cometidos pelo OCR ou classificação de caracteres:
 
-- O tem apenas seis caracteres?
+- O resultado tem apenas seis caracteres?
 - Existem caracteres que não sejam letras ou números?
-- Existem caracteres que contêm um número e uma letra?
-- Os pares de caracteres do resultado estão de acordo com a matrícula real?
+- Existem caracteres que têm um número e uma letra?
+- Os pares de caracteres do resultado estão de acordo com a matrícula real? Se não, o que falhou?
 
-**Nota**: é importante, quando existem pares com uma letra e um número, substituir o número "0" e o número "1" pela letra "O" e a letra "I", respetivamente. 
+**Nota**: é importante, quando existem pares com uma letra e um número, substituir o número "0" e o número "1" pela letra "O" e a letra "I", respetivamente.
 
 ### **Correção de erros**
 
