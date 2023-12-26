@@ -31,84 +31,106 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 
 # Conteúdo
 - [Plataformas](#Plataformas)
+
 - [Recursos](#Recursos)
+
 - [Módulo 1 - Deteção da matrícula](#módulo-1---deteção-da-matrícula)
   - [Construção do dataset](#construção-do-dataset)
   - [Preparação do dataset (Roboflow)](#preparação-do-dataset-(roboflow))
     - [Criar projeto de deteção de objetos](#criar-projeto-de-deteção-de-objetos)
     - [Upload das imagens](#upload-das-imagens)
     - [Anotar as imagens](#anotar-as-imagens)
+    - [Distribuição das imagens](#distribuição-das-imagens)
+    - [Gerar dataset](#gerar-dataset)
     - [Aplicar aumento de dados (opcional)](#aplicar-aumentações-(opcional))
     - [Efetuar download do dataset no formato desejado](#efetuar-download-do-dataset-no-formato-desejado)
   - [Acesso ao Google Drive](#acesso-ao-google-drive)
   - [Treino do dataset](#treino-do-dataset)
+    - [Preparação para o treini](#preparação-para-o-treino)
+    - [Dependências do modelo YOLO](#dependências-do-modelo-yolo)
+    - [Unzip do dataset](#unzip-do-dataset)
+    - [#Exemplos de parâmetros](#exemplos-de-parâmetros)
+    - [Treino do modelo](#treino-do-modelo)
     - [Métricas](#Métricas)
     - [Resultados do treino](#resultados-do-treino)
-  - [Inferir sobre novas imagens](#inferir-sobre-novas-imagens)
+  - [Inferências](#inferências)
+    - [Parâmetros das inferências](#parâmetros-das-inferências)
+    - [Exemplos de parâmetros](#exemplos-de-parâmetros)
+    - [Para efetuar as inferências](#para-efetuar-as-inferências)
+
 - [Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes](#módulo-2---Recorte-da-imagem-com-base-nas-coordenadas-da-bounding-boxes)
   - [Organização dos ficheiros com as bounding boxes](#organização-dos-ficheiros-com-as-bounding-boxes)
-  - [Bibliotecas a utilizar](#bibliotecas-a-utilizar)
-  - [Como utilizar a biblioteca glob](#Como-utilizar-a-biblioteca-glob)
-  - [Abrir e ler os ficheiros](#Abrir-e-ler-os-ficheiros)
-  - [Reverter a normalização das coordenadas geradas pela inferência](#reverter-a-normalização-das-coordenadas-geradas-pela-inferência)
-  - [Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito](#calcular-as-coordenadas-dos-ponto-superior-esquerdo-e-do-ponto-inferior-direito)
-  - [Efetuar o recorte da imagem com base nas coordenadas calculadas](#efetuar-o-recorte-da-imagem-com-base-nas-coordenadas-calculadas)
-  - [Redimensionar e guardar imagem recortada](#redimensionar-e-guardar-imagem-recortada)
+  - [Aceder ao Google Drive](#aceder-ao-google-drive)
+  - [Bibliotecas](#bibliotecas)
+  - [Caminhos das diretorias](#caminhos-das-diretorias)
+  - [Obter os caminhos das labels](#obter-os-caminhos-das-labels)
+  - [Obter os caminhos das imagens](#obter-os-caminhos-das-imagens)
+  - [Obter os nomes dos ficheiros das labels](#obter-os-nomes-dos-ficheiros-das-labels)
+  - [Obter os nomes dos ficheiros das imagens](#obter-os-nomes-dos-ficheiros-das-imagens)
+  - [Efetuar o recorte das imagens](#efetuar-o-recorte-das-imagens)
+
 - [Módulo 3 - Pipeline de processamento digital da imagem](#módulo-3---pipeline-de-processamento-digital-da-imagem)
+
   - [Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)](#abordagem-1---Utilização-de-uma-biblioteca-OCR-(optical-Character-recognition))
+    - [Aceder ao Google Drive](#aceder-ao-google-drive)
     - [Instalar a biblioteca PaddleOCR](#instalar-a-biblioteca-PaddleOCR)
-      - [Bibliotecas](#Bibliotecas)
-      - [Carregar o modelo responsável pelo reconhecimento de texto](#carregar-o-modelo-responsável-pelo-reconhecimento-de-texto)
-      - [Aplicar o OCR sobre uma imagem](#aplicar-o-ocr-sobre-as-imagens)
-      - [Resultados do OCR](#resultados-do-ocr)
+    - [Bibliotecas](#Bibliotecas)
+    - [Carregar modelo OCR](#carregar-modelo-ocr)
+    - [Aplicar o OCR sobre as imagens das matrículas recortadas](#aplicar-o-ocr-sobre-as-imagens-das-matrículas-recortadas)
+    - [Obter os resultados da aplicação do OCR](#obter-resultados-da-aplicação-do-ocr)
+    - [Guardar os resultados](#guardar-os-resultados)
     - [Exemplo de um resultado da aplicação do OCR](#exemplo-de-um-resultado-da-aplicação-do-ocr)
-    - [Guardar resultados num ficheiro de texto](#guardar-resultados-num-ficheiro-de-texto)
+
   - [Abordagem 2 - Aplicação do método de Otsu](#abordagem-2---aplicação-do-método-de-otsu)
+    - [Aceder ao Google Drive](#aceder-ao-google-drive)
     - [Bibliotecas](#bibliotecas)
-    - [Abrir imagem e converter para preto e branco](#abrir-imagem-e-converter-para-preto-e-branco)
-    - [Aplicar o algoritmo de Otsu](#aplicar-o-algoritmo-de-Otsu)
-    - [Verificar o número de píxeis pretos](#verificar-o-número-de-píxeis-pretos)
-    - [Aplicar operação morfológica](#aplicar-operação-morfológica)
-    - [Construção da máscara com os caracteres](#construção-da-máscara-com-os-caracteres)
-      - [Análise de componentes](#análise-de-componentes)
+    - [Ler as imagens e convertê-las para preto e branco](#ler-as-imagens-e-convertê-las-para-preto-e-branco)
+    - [Aplicar o método de Otsu](#aplicar-o-método-de-otsu)
+    - [Verificar se a imagem tem mais pixéis pretos do que brancos](#verificar-se-a-imagem-tem-mais-pixéis-pretos-do-que-brancos)
+    - [Aplicação de operações morfológicas](#aplicação-de-operações-morfológicas)
+    - [Construção de uma máscara com caracteres](#construção-de-uma-máscara-com-caracteres)
       - [Inicializar a máscara](#inicializar-a-máscara)
-      - [Definir valor máximo e mínimo de pixéis](#definir-valor-máximo-e-mínimo-de-pixéis)
-      - [Percorrer todas as labels](#percorrer-todas-as-labels)
-      - [Construir a máscara](#construir-a-máscara)
-    - [Calcular contours da imagem binarizada](#calcular-contours-da-imagem-binarizada)
-    - [Ordenar as bounding boxes dos contours da esquerda para a direita](#ordenar-as-bounding-boxes-dos-contours-da-esquerda-para-a-direita)
-    - [Extração dos caracteres](#extração-dos-caracteres)
-      - [Definição da condição que identifica caracteres](#definição-da-condição-que-identifica-caracteres)
-      - [Recorte dos caracteres](#recorte-dos-caracteres)
-      - [Caracteres extraídos](#caracteres-extraídos)
-    - [Modelo de classificação de caracteres](#modelo-de-classificação-de-caracteres)
+      - [Análise de componentes](#análise-de-componentes)
+      - [Obter os contornos presentes na máscara](#obter-os-contornos-presentes-na-máscara)
+      - [Ordenar os contornos da esquerda para a direita](#ordenar-os-contornos-da-esquerda-para-a-direita)
+    - [Extrair os caracteres](#extrair-os-caracteres)  
+    - [Classificação dos caracteres](#classificar-os-caracteres)
       - [Bibliotecas](#bibliotecas)
-      - [Carregar pesos pré-treinados do modelo de classificação](#carregar-pesos-pré-treinados-do-modelo-de-classificação)
-      - [Classificar o caracter](#classificar-o-caracter)
-      - [Guardar resultados num ficheiro de texto](#guardar-resultados-num-ficheiro-de-texto)
+      - [Carregar o modelo de classificação](#carregar-o-modelo-de-classificação)
+      - [Carregar pesos pré-treinados](#carregar-pesos-pré-treinados)
+      - [Classificar os caracteres](#classificar-os-caracteres)
+    - [Guardar os resultados](#guardar-os-resultados)
+
   - [Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)](#abordagem-3---utilização-da-biblioteca-grounding-dino-(deteção-de-caracteres)-e-segment-anything-model-(segmentação-de-caracteres))
-    - [Instalar bibliotecas Grounding Dino e Segment Anythin Model (SAM)](#instalar-bibliotecas-grounding-dino-e-segment-anythin-model-(SAM))
+    - [Aceder ao Google Drive](#aceder-ao-google-drive)
     - [Instalar Grounding Dino](#instalar-grounding-dino)
-    - [Instalar SAM (Segment Anything Model)](#instalar-SAM-(Segment-Anything-Model))
-    - [Bibliotecas](#bibliotecas)
-    - [Carregar modelo Grounding Dino](#carregar-modelo-grounding-dino)
-    - [Aplicar do Grounding Dino sobre as imagens](#aplicar-do-grounding-dino-sobre-as-imagens)
-    - [Carregar modelo SAM](#carregar-modelo-SAM)
-    - [Aplicar SAM sobre as imagens geradas pelo Grounding Dino](#aplicar-sam-sobre-as-imagens-geradas-pelo-grounding-dino)
-      - [Correr SAM sobre a imagem gerada pelo Grounding Dino](#correr-sam-sobre-a-imagem-gerada-pelo-grounding-dino)
-      - [Normalizar as bounding boxes](#normalizar-as-bounding-boxes)
-      - [Previsão das máscaras](#previsão-das-máscaras)
-      - [Obter as máscaras geradas](#obter-as-máscaras-geradas)
-      - [Calcular contours da imagem binarizada](#calcular-contours-da-imagem-binarizada)
-    - [Extração dos caracteres](#extração-dos-caracteres)
-      - [Definição da condição que identifica caracteres](#definição-da-condição-que-identifica-caracteres)
-      - [Recorte dos caracteres](#recorte-dos-caracteres)
-      - [Caracteres extraídos](#caracteres-extraídos)
-    - [Modelo de classificação de caracteres](#modelo-de-classificação-de-caracteres)
+    - [Instalar Segment Anything Modelo (SAM)](#instalar-segment-anything-model-sam)
+    - [Efetuar download dos pesos do Grounding Dino](#efetuar-download-dos-pesos-do-grounding-dino)
+    - [Bibliotecas do Grounding Dino](#bibliotecas-do-grounding-dino)
+    - [Utilização do modelo Grounding Dino](#utilização-do-modelo-grounding-dino)
+      - [Carregar o modelo Grounding Dino](#carregar-o-modelo-grounding-dino)
+      - [Parâmetros do Grounding Dino](#parâmetros-do-grounding-dino)
+      - [Aplicar o Grounding Dino](#aplicar-o-grounding-dino)
+      - [Resultados da deteção](#resultados-da-deteção)
+    - [Utilização do SAM](#utilização-do-sam)
+      - [Download od checkpoint do SAM](#download-do-checkpoint-do-sam)
+      - [Inicializar o modelo SAM](#inicializar-o-modelo-sam)
+      - [Aplicar o modelo SAM](#aplicar-o-modelo-sam)
+      - [Normalizar as bounding boxes obtidas pelo Grounding Dino](#normalizar-as-bounding-boxes-obtidas-pelo-grounding-dino)
+      - [Calcular as máscaras com base nas bounding boxes do Grounding Dino](#calcular-as-máscaras-com-base-nas-bounding-boxes-do-grounding-dino)
+      - [Função que transforma os arrays com a informação das máscaras em imagens](#função-que-transforma-os-arrays-com-a-informação-das-máscaras-em-imagens)
+    - [Criar uma máscara com todas as máscras](#criar-uma-máscara-com-todas-as-máscaras)
+    - [Obter os contornos presentes na máscara](#obter-os-contornos-presentes-na-máscara)
+    - [Ordenar os contornos da esquerda para a direita](#ordenar-os-contornos-da-esquerda-para-a-direita)
+    - [Extrair os caracteres](#extrair-os-caracteres)
+    - [Extrair os caracteres](#extrair-os-caracteres)  
+    - [Classificação dos caracteres](#classificar-os-caracteres)
       - [Bibliotecas](#bibliotecas)
-      - [Carregar pesos pré-treinados do modelo de classificação](#carregar-pesos-pré-treinados-do-modelo-de-classificação)
-      - [Classificar o caracter](#classificar-o-caracter)
-      - [Guardar resultados num ficheiro de texto](#guardar-resultados-num-ficheiro-de-texto)
+      - [Carregar o modelo de classificação](#carregar-o-modelo-de-classificação)
+      - [Carregar pesos pré-treinados](#carregar-pesos-pré-treinados)
+      - [Classificar os caracteres](#classificar-os-caracteres)
+    - [Guardar os resultados](#guardar-os-resultados)
+      
 - [Módulo 4 - Análise de texto e correção de erros](#módulo-4---Análise-de-texto-e-correção-de-erros)
   - [Erros nos resultados obtidos pelo OCR e classificação de caracteres](#erros-nos-resultados-obtidos-pelo-ocr-e-classificação-de-caracteres)
   - [Correção de erros](#correção-de-erros)
@@ -826,7 +848,7 @@ from PIL import Image # abrir imagens
 
 ### **Carregar modelo OCR**
   
-### **Aplicar o OCR as imagens das matrículas recortadas**
+### **Aplicar o OCR sobre as imagens das matrículas recortadas**
 
 ### **Obter resultados da aplicação do OCR**
 
@@ -1209,7 +1231,7 @@ text_threshold = 0 # número mínimo de similaridade entre as bounding boxes
 
 #### **Resultados da deteção**
 
-##### **Imagem original**
+#### **Imagem original**
 
 ```bash
 
@@ -1217,7 +1239,7 @@ Image.fromarray(imagem_source)
 
 ```
 
-##### **Imagem com deteções**
+#### **Imagem com deteções**
 
 ```bash
 
@@ -1323,11 +1345,11 @@ def mask_image(mask):
 
 #### **Criar uma máscara com todas as máscaras**
 
-##### **Obter os contornos presentes na máscara**
+#### **Obter os contornos presentes na máscara**
 
 Utilizar a biblioteca cv2.
 
-##### **Ordenar os contornos da esquerda para a direita**
+#### **Ordenar os contornos da esquerda para a direita**
 
 Utilizar a biblioteca imutils.
 
