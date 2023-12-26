@@ -135,9 +135,9 @@ o	Pipeline de processamento digital de imagem - segmentação e extração dos c
 | [Grounding Dino](https://github.com/IDEA-Research/GroundingDINO) | Deteção automática de objetos com base num prompt (abordagem 3) | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/roboflow-ai/notebooks/blob/main/notebooks/zero-shot-object-detection-with-grounding-dino.ipynb) | [![GitHub](https://badges.aleen42.com/src/github.svg)](https://github.com/IDEA-Research/GroundingDINO) [![arXiv](https://img.shields.io/badge/arXiv-2304.07193-b31b1b.svg)](https://arxiv.org/abs/2303.05499)
 | [Segment Anything Model](https://github.com/facebookresearch/segment-anything) | Segmentação automática de objetos (abordagem 3) | [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/roboflow-ai/notebooks/blob/main/notebooks/how-to-segment-anything-with-sam.ipynb) | [![GitHub](https://badges.aleen42.com/src/github.svg)](https://github.com/facebookresearch/segment-anything) [![arXiv](https://img.shields.io/badge/arXiv-2304.07193-b31b1b.svg)](https://arxiv.org/abs/2304.02643) |
 
-# Módulo 1 - Deteção da matrícula
+# **Módulo 1 - Deteção da matrícula**
 
-## Construção do dataset
+## **Construção do dataset**
 
 O dataset deve ser constituído por imagens diurnas (tiradas manualmente, obtidas da Internet, vídeo, etc..) de veículos (carros, carrinhas, camiões, motas...) com matrícula portuguesa frontais e traseiras sem muita angulação (vertical ou horizontal) em que os caracteres das da matrícula sejam bem visíveis. A condição de iluminação das imagens também deve ser variada. Quantas mais imagens melhor, embora o tempo de anotação seja maior (sugestão: 200 a 500 imagens). 
 
@@ -153,12 +153,12 @@ O dataset deve ser constituído por imagens diurnas (tiradas manualmente, obtida
 
 </div>
 
-### Preparação do dataset (Roboflow)
+### **Preparação do dataset (Roboflow)**
 
 Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 
-#### Criar projeto de deteção de objetos
+#### **Criar projeto de deteção de objetos**
 
 <div align="center">
 
@@ -167,7 +167,7 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 </div>
 
 
-#### Upload das imagens
+#### **Upload das imagens**
 
 <div align="center">
 
@@ -175,7 +175,7 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 </div>
 
-#### Anotar as imagens
+#### **Anotar as imagens**
 
 <div align="center">
 
@@ -183,7 +183,7 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 </div>
 
-#### Distribuição de imagens
+#### **Distribuição de imagens**
 
 <div align="center">
 
@@ -191,7 +191,7 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 </div>
 
-#### Gerar dataset
+#### **Gerar dataset**
 
 <div align="center">
 
@@ -199,7 +199,7 @@ Criar uma conta [Roboflow](https://app.roboflow.com/login), caso necessário.
 
 </div>
 
-#### Aplicar aumento de dados (opcional)
+#### **Aplicar aumento de dados (opcional)**
 
 O aumento de dados é opcional, uma vez que os resultados do treino podem bons mesmo se as utilizar.
 São úteis quando os dados são poucos.
@@ -256,7 +256,7 @@ Caso sejam necessárias, as seguintes são as mais pertinentes:
 
 Os valores indicados em cada uma das aumentações podem e devem ser alterados.
 
-#### Efetuar download do dataset no formato desejado
+#### **Efetuar download do dataset no formato desejado**
 
 Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive. Criar conta no [Google Drive](https://www.google.com/drive/) se necessário.
 
@@ -266,9 +266,9 @@ Efetuar o download do dataset no formato do modelo a utilizar no treino e coloca
 
 </div>
 
-# No Google Colab
+# **No Google Colab**
 
-## Acesso ao Google Drive
+## **Acesso ao Google Drive**
 
 Permitir que o Google Drive seja acedido pelo Google Colab.
 
@@ -281,12 +281,12 @@ drive.mount('/content/drive/') # nome da diretoria onde serão colocados os fich
 # os conteúdos do Google Drive têm de estar numa diretoria vazia
 
 ```
-## Treino do dataset
+## **Treino do dataset**
 
 YOLOv5 é utilizado como exemplo.
 
 
-### Preparação para o treino 
+### **Preparação para o treino**
 
 Antes de prosseguir, adicionar o repositório da [YOLOv5](https://github.com/ultralytics).
 
@@ -313,7 +313,7 @@ Instalação de dependências do modelo YOLO:
   5. Na célula abaixo, substituir apenas a palavra "caminho" pelo caminho copiado.
 
 
-### Dependências do modelo YOLO
+### **Dependências do modelo YOLO**
 
 ```bash
 
@@ -324,7 +324,7 @@ Instalação de dependências do modelo YOLO:
 
 ```
 
-### Unzip do dataset
+### **Unzip do dataset**
 
 Obter o caminho da diretoria onde se encontra o dataset:
   1. No lado esquerdo, escolher o tab "Ficheiros";
@@ -390,7 +390,7 @@ Variáveis que afetam a performance do modelo.
 
 ```
 
-### Exemplos de parâmetros
+### **Exemplos de parâmetros**
 
 ```bash
 
@@ -404,7 +404,7 @@ name = "resultados" # nome da diretoria onde serão guardados os resultados
 
 ```
 
-### Treino do modelo
+### **Treino do modelo**
 
 ```bash 
 
@@ -415,7 +415,7 @@ name = "resultados" # nome da diretoria onde serão guardados os resultados
 
 ```
 
-### Métricas
+### **Métricas**
 
 - **Precision (P)** -> A precisão de previsões positivas. Um valor alto de precisão indica que o modelo não gera previsões consideradas falsos positivos, o que siginifica que as previsões são confiáveis;
 - **Recall (R)** -> Também chamada de sensibilidade (sensitivity), mede a proporção de verdadeiros positivos em relação ao total de instâncias positivas. Um valor alto de Recall indica que o modelo consegue identificar corretamente a maior parte das instâncias positivas;
@@ -432,7 +432,7 @@ Em todas as métricas, quanto mais próximo o valor for de 1, melhores os result
 **Bons resultados no treino não significa que os resultados, quando utilizadas imagens nunca antes vistas pelo modelo, também sejam bons.**
 
 
-### Resultados do treino
+### **Resultados do treino**
 
 Exemplo de resultados de um treino:
 
@@ -501,9 +501,9 @@ Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|�
 ```
 
 
-## Inferências
+## **Inferências**
 
-### Parâmetros das inferências
+### **Parâmetros das inferências**
 
 Variáveis que afetam a performance do modelo.
 
@@ -547,7 +547,7 @@ Variáveis que afetam a performance do modelo.
 Os dois últimos parâmetros são definidos para diminuir o espaço ocupado por cada bounding box.
 
 
-### Exemplos de parâmetros
+### **Exemplos de parâmetros**
 
 ```bash
 
@@ -562,7 +562,7 @@ hide_labels = True # esconde a label da deteção
 
 ```
 
-### Para efetuar as inferências
+### **Para efetuar as inferências**
 
 ```bash
 
@@ -582,9 +582,9 @@ hide_labels = True # esconde a label da deteção
 
 
 
-# Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes
+# **Módulo 2 - Recorte da imagem com base nas coordenadas da bounding boxes**
 
-## Organização dos ficheiros com as bounding boxes
+## **Organização dos ficheiros com as bounding boxes**
 
 Cada ficheiro tem pelo menos uma linha de texto constituído por cinco valores:
 
@@ -609,7 +609,7 @@ Exemplo de um ficheiro de inferência:
 </div>
 
 
-## Aceder ao Google Drive
+## **Aceder ao Google Drive**
 
 ```bash
 
@@ -621,7 +621,7 @@ drive.mount('/content/drive/') # nome da diretoria onde serão colocados os fich
 
 ```
 
-## Bibliotecas
+## **Bibliotecas**
 
 ```bash
 
@@ -630,7 +630,7 @@ import glob # obtém os caminhos todos os ficheiros presentes na diretoria dada,
 
 ```
 
-## Caminhos das diretorias
+## **Caminhos das diretorias**
 
 Adicionar o os caminhos ao código abaixo.
 
@@ -641,7 +641,7 @@ diretoria_imagens = "/*.jpg" # alterar a extenção com base na extensão das im
 
 ```
 
-## Obter os caminhos das labels
+## **Obter os caminhos das labels**
 
 ```bash
 
@@ -655,7 +655,7 @@ caminhos_labels
 
 ```
 
-## Obter os caminhos das imagens
+## **Obter os caminhos das imagens**
 
 ```bash
 
@@ -669,7 +669,7 @@ caminhos_imagens
 
 ```
 
-## Obter os nomes dos ficheiros das labels
+## **Obter os nomes dos ficheiros das labels**
 
 ```bash
 
@@ -705,7 +705,7 @@ nomes_imagens
 
 ```
 
-## Efetuar o recorte das imagens
+## **Efetuar o recorte das imagens**
 
 ```bash
 
@@ -786,11 +786,11 @@ for i in range (0, len(caminhos_imagens)):
 ```
 
 
-# Módulo 3 - Pipeline de processamento digital da imagem
+# **Módulo 3 - Pipeline de processamento digital da imagem**
 
-## Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)
+## **Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)**
 
-### Aceder ao Google Drive
+### **Aceder ao Google Drive**
 
 ```bash
 
@@ -802,7 +802,7 @@ drive.mount('/content/drive/') # nome da diretoria onde serão colocados os fich
 
 ```
 
-### Instalar a biblioteca PaddleOCR
+### **Instalar a biblioteca PaddleOCR**
 
 ```bash
 
@@ -815,7 +815,7 @@ drive.mount('/content/drive/') # nome da diretoria onde serão colocados os fich
 
 ```
 
-### Bibliotecas:
+### **Bibliotecas**
 
 ```bash
 
@@ -824,13 +824,13 @@ from PIL import Image # abrir imagens
 
 ```
 
-### Carregar modelo OCR
+### **Carregar modelo OCR**
   
-### Aplicar o OCR as imagens das matrículas recortadas
+### **Aplicar o OCR as imagens das matrículas recortadas**
 
-### Obter resultados da aplicação do OCR
+### **Obter resultados da aplicação do OCR**
 
-### Guardar os resultados
+### **Guardar os resultados**
 
 Exemplo de como guardar texto num ficheiro.
 
@@ -847,7 +847,7 @@ resultados_f.close() # fechar o ficheiro
 
 ```
 
-### Exemplo de um resultado da aplicação do OCR
+### **Exemplo de um resultado da aplicação do OCR**
 
 <div align="center">
 
@@ -856,7 +856,7 @@ resultados_f.close() # fechar o ficheiro
 </div>
 
 
-## Abordagem 2 - Aplicação do método de Otsu
+## **Abordagem 2 - Aplicação do método de Otsu**
 
  **Elementos estruturantes**
 
@@ -901,7 +901,7 @@ resultados_f.close() # fechar o ficheiro
 
 - threshold = cv2.threshold(imagem, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
-### Bibliotecas
+### **Bibliotecas**
 
 ```bash
 
@@ -913,7 +913,7 @@ import os
 
 ```
 
-### Ler as imagens e convertê-las para preto e branco
+### **Ler as imagens e convertê-las para preto e branco**
 
 <div align="center">
 
@@ -921,7 +921,7 @@ import os
 
 </div>
 
-### Aplicar o método de Otsu
+### **Aplicar o método de Otsu**
 
 <div align="center">
 
@@ -931,7 +931,7 @@ import os
 
 **Nota:** As operações morfológicas podem ser aplicadas antes ou depois de aplicar o método. Neste exemplo será aplicado depois de aplicado o método.
 
-#### Verificar se a imagem tem mais pixéis pretos do que brancos
+#### **Verificar se a imagem tem mais pixéis pretos do que brancos**
 
 **Nota**: O cálculo dos contornos não funciona se o fundo da imagem for branco.
 
@@ -964,7 +964,7 @@ Exemplo:
 </div>
 
 
-#### Aplicação de operações morfológicas
+#### **Aplicação de operações morfológicas**
 
 Exemplo de uma operação morfológica.
 
@@ -974,13 +974,13 @@ Exemplo de uma operação morfológica.
 
 </div>
 
-### Construção de uma máscara com caracteres
+### **Construção de uma máscara com caracteres**
 
-#### Inicializar a máscara 
+#### **Inicializar a máscara** 
 
 Utilizar a biblioteca numpy, função zeros (np.zeros).
 
-#### Análise de componentes
+#### **Análise de componentes**
 
 Atribuir uma label a cada componente encontrado.
 
@@ -993,15 +993,15 @@ Atribuir uma label a cada componente encontrado.
     
     2.3. Verificar se o valor obtida se encontra dentro do intervalo do mínimo e do máximo definidos, e se se encontrar, adicionar a máscara da label à máscara gerada acima.
 
-#### Obter os contornos presentes na máscara
+#### **Obter os contornos presentes na máscara**
 
 Utilizar a função cv2.findContours()
 
-#### Ordenar os contornos da esquerda para a direita.
+#### **Ordenar os contornos da esquerda para a direita.**
 
 Utilizar função "contours", da biblioteca "imutils".
 
-### Extrair os caracteres
+### **Extrair os caracteres**
 
 Obter a informação de cada bounding box (cv2.boundingRect(contorno)), gerada pela obtenção dos contornos.
 
@@ -1019,9 +1019,9 @@ cv2.imwrite(os.path.join(caminho, f'crop{crop_num}.png'), resized_crop)
 
 ```
 
-### Classificação dos caracteres
+### **Classificação dos caracteres**
 
-#### Bibliotecas
+#### **Bibliotecas**
 
 ```bash
 
@@ -1031,7 +1031,7 @@ import tensorflow as tf
 
 ```
 
-#### Carregar o modelo de classificação
+#### **Carregar o modelo de classificação**
 
 ```bash
 
@@ -1052,7 +1052,7 @@ modelo = keras.Sequential(
 
 ```
 
-#### Carregar pesos pré-treinados
+#### **Carregar pesos pré-treinados**
 
 ```bash
 
@@ -1061,7 +1061,7 @@ modelo.load_weights(caminho_pesos)
 
 ```
 
-#### Classificar os caracteres
+#### **Classificar os caracteres**
 
 ```bash
 
@@ -1079,7 +1079,7 @@ print("Classe previsa:", classe)
 
 ```
 
-#### Guardar os resultados
+#### **Guardar os resultados**
 
 Exemplo de como guardar texto num ficheiro.
 
@@ -1096,10 +1096,10 @@ resultados_f.close() # fechar o ficheiro
 
 ``` 
 
-## Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)
+## **Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)**
 
 
-### Aceder ao Google Drive
+### **Aceder ao Google Drive**
 
 ```bash
 
@@ -1111,7 +1111,7 @@ drive.mount('/content/drive/') # nome da diretoria onde serão colocados os fich
 
 ```
 
-### Instalar Grounding Dino
+### **Instalar Grounding Dino**
 
 ```bash
 
@@ -1126,7 +1126,7 @@ drive.mount('/content/drive/') # nome da diretoria onde serão colocados os fich
 
 ```
 
-### Instalar Segment Anything Model (SAM)
+### **Instalar Segment Anything Model (SAM)**
 
 ```bash
 
@@ -1144,7 +1144,7 @@ drive.mount('/content/drive/') # nome da diretoria onde serão colocados os fich
 
 ```
 
-### Efetuar download dos pesos do Grounding Dino
+### **Efetuar download dos pesos do Grounding Dino**
 
 ```bash
 
@@ -1165,7 +1165,7 @@ drive.mount('/content/drive/') # nome da diretoria onde serão colocados os fich
 
 ```
 
-### Importante
+### **Importante**
 
 Importante
 Depois de instalar os dois repositórios, fazer o seguinte:
@@ -1174,7 +1174,7 @@ Selecionar "Tempo de execução", que fica abaixo do título do notebook;
 Selecionar "Reiniciar sessão";
 Avançar para as próximas células.
 
-### Bibliotecas do Grounding Dino
+### **Bibliotecas do Grounding Dino**
 
 ```bash
 
@@ -1189,11 +1189,11 @@ locale.getpreferredencoding = lambda: "UTF-8"
 
 ```
 
-### Utilização do modelo Grounding Dino
+### **Utilização do modelo Grounding Dino**
 
-#### Carregar o modelo Grounding Dino
+#### **Carregar o modelo Grounding Dino**
 
-#### Parâmetros do Grounding Dino
+#### **Parâmetros do Grounding Dino**
 
 O text prompt pode ser constituído por palavras ou frases.
 
@@ -1205,11 +1205,11 @@ text_threshold = 0 # número mínimo de similaridade entre as bounding boxes
 
 ```
 
-#### Aplicar o Grounding Dino
+#### **Aplicar o Grounding Dino**
 
-#### Resultados da deteção
+#### **Resultados da deteção**
 
-##### Imagem original
+##### **Imagem original**
 
 ```bash
 
@@ -1217,7 +1217,7 @@ Image.fromarray(imagem_source)
 
 ```
 
-##### Imagem com deteções
+##### **Imagem com deteções**
 
 ```bash
 
@@ -1233,9 +1233,9 @@ Image.fromarray(annotated_frame)
 
 </div>
 
-### Utilização do SAM
+### **Utilização do SAM**
 
-#### Bibliotecas do SAM
+#### **Bibliotecas do SAM**
 
 ```bash
 
@@ -1255,7 +1255,7 @@ import numpy as np
 
 ```
 
-#### Download do checkpoint do SAM
+#### **Download do checkpoint do SAM**
 
 ```bash
 
@@ -1264,11 +1264,11 @@ import numpy as np
 
 ```
 
-#### Inicializar o modelo SAM
+#### **Inicializar o modelo SAM**
 
-#### Aplicar o modelo SAM
+#### **Aplicar o modelo SAM**
 
-#### Normalizar as bounding boxes obtidas pelo Grounding Dino
+#### **Normalizar as bounding boxes obtidas pelo Grounding Dino**
 
 ```bash
 
@@ -1278,7 +1278,7 @@ boxes_xyxy = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H])
 
 ```
 
-#### Calcular as máscaras com base nas bounding boxes do Grounding Dino
+#### **Calcular as máscaras com base nas bounding boxes do Grounding Dino**
 
 ```bash
 
@@ -1289,7 +1289,7 @@ masks, _, _ = sam_predictor.predict_torch(colocar parâmetros)
 
 ```
 
-#### Função que transforma os arrays com a informação das máscaras em imagens
+#### **Função que transforma os arrays com a informação das máscaras em imagens**
 
 ```bash
 
@@ -1321,17 +1321,17 @@ def mask_image(mask):
 
 </div>
 
-#### Criar uma máscara com todas as máscaras
+#### **Criar uma máscara com todas as máscaras**
 
-##### Obter os contornos presentes na mácara
+##### **Obter os contornos presentes na máscara**
 
 Utilizar a biblioteca cv2.
 
-##### Ordenar os contornos da esquerda para a direita
+##### **Ordenar os contornos da esquerda para a direita**
 
 Utilizar a biblioteca imutils.
 
-### Extrair os caracteres
+### **Extrair os caracteres**
 
 Obter a informação de cada bounding box (cv2.boundingRect(contorno)), gerada pela obtenção dos contornos.
 
@@ -1349,9 +1349,9 @@ cv2.imwrite(os.path.join(caminho, f'crop{crop_num}.png'), resized_crop)
 
 ```
 
-### Classificação dos caracteres
+### **Classificação dos caracteres**
 
-#### Bibliotecas
+#### **Bibliotecas**
 
 ```bash
 
@@ -1361,7 +1361,7 @@ import tensorflow as tf
 
 ```
 
-#### Carregar o modelo de classificação
+#### **Carregar o modelo de classificação**
 
 ```bash
 
@@ -1382,7 +1382,7 @@ modelo = keras.Sequential(
 
 ```
 
-#### Carregar pesos pré-treinados
+#### **Carregar pesos pré-treinados**
 
 ```bash
 
@@ -1391,7 +1391,7 @@ modelo.load_weights(caminho_pesos)
 
 ```
 
-#### Classificar os caracteres
+#### **Classificar os caracteres**
 
 ```bash
 
@@ -1409,7 +1409,7 @@ print("Classe previsa:", classe)
 
 ```
 
-#### Guardar os resultados
+#### **Guardar os resultados**
 
 Exemplo de como guardar texto num ficheiro.
 
@@ -1427,9 +1427,9 @@ resultados_f.close() # fechar o ficheiro
 ``` 
 
 
-# Módulo 4 - Análise de texto e correção de erros
+# **Módulo 4 - Análise de texto e correção de erros**
 
-### Erros nos resultados obtidos pelo OCR e classificação de caracteres
+### **Erros nos resultados obtidos pelo OCR e classificação de caracteres**
 
 Verificar que erros existem nos resultados cometidos pelo OCR ou classificação de caracteres:
 
@@ -1440,7 +1440,7 @@ Verificar que erros existem nos resultados cometidos pelo OCR ou classificação
 
 **Nota**: é importante, quando existem pares com uma letra e um número, substituir o número "0" e o número "1" pela letra "O" e a letra "I", respetivamente. 
 
-### Correção de erros
+### **Correção de erros**
 
 Para remover ou substituir caracteres:
 
@@ -1455,7 +1455,7 @@ exemplo_string = exemplo_string.replace('.', '') # remover ponto final
 ```
 
 
-### Resultados
+### **Resultados**
 
 O resultado de cada matrícula deve ser uma string com seis caracteres (letras e números), sem espaços.
 
@@ -1467,4 +1467,4 @@ exemplo_resultado = "AI1111"
 
 ```
 
-### Comparar resultados com as matrículas reais
+### **Comparar resultados com as matrículas reais**
