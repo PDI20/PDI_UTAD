@@ -609,7 +609,19 @@ Exemplo de um ficheiro de inferência:
 </div>
 
 
-## Bibliotecas a utilizar
+## Aceder ao Google Drive
+
+```bash
+
+from google.colab import drive
+
+drive.mount('/content/drive/') # nome da diretoria onde serão colocados os ficheiros do Google Drive -> /nome_da_pasta/MyDrive/
+
+# os conteúdos do Google Drive têm de estar numa diretoria vazia
+
+```
+
+## Bibliotecas
 
 ```bash
 
@@ -618,108 +630,158 @@ import glob # obtém os caminhos todos os ficheiros presentes na diretoria dada,
 
 ```
 
-## Como utilizar a biblioteca glob
+## Caminhos das diretorias
+
+Adicionar o os caminhos ao código abaixo.
 
 ```bash
 
-# alterar pasta onde se encontram as labels, se necessário
-diretoria_labels = "/content/caminho/labels/*" # caminho termina com *, indica todos os ficheiros presentes na diretoria
-
-# sorted ordena alfabeticamente os nomes dos caminhos
-for item in sorted(glob.iglob(diretoria_labels)):
-
-  print(item) # cada valor de item é uma string que corresponde ao caminho do ficheiro
+diretoria_labels = "/*.txt"
+diretoria_imagens = "/*.jpg" # alterar a extenção com base na extensão das imagens
 
 ```
 
-## Abrir e ler os ficheiros
+## Obter os caminhos das labels
 
 ```bash
 
-coordenadas = [] # guardará as coordenadas do ficheiro
+caminhos_labels = []
 
-# abrir o ficheiro
-f = open(item)
+for item in sorted(glob.iglob(diretoria_labels)): # sorted ordena os nomes de forma ascendente
 
-# ler todas as linhas do ficheiro
-linhas = f.readlines()
+  caminhos_labels.append(item)
 
-for linha in linhas: # percorrer todas as linhas
-
-  # remover parágrafos caso existam
-  l = linha.replace("\n", "")
-
-  # obter cada valor
-  # cada valor encontra-se separado por um espaço
-  temp = l.split(" ")
-
-  # ignorar o primeiro valor, uma vez que não é relevante para o problema em questão
-  cc = [float(temp[1]), float(temp[2]), float(temp[3]), float(temp[4])]
-
-  # guardar as coordenadas
-  coordenadas.append(cc)
-
-# fechar o ficheiro
-f.close()
+caminhos_labels
 
 ```
 
-
-## Reverter a normalização das coordenadas geradas pela inferência
+## Obter os caminhos das imagens
 
 ```bash
 
-imagem = cv2.imread(item)
+caminhos_imagens = []
 
-# largura e altura da imagem aberta
-largura_imagem = imagem.shape[1]
-altura_imagem = imagem.shape[0]
+for item in sorted(glob.iglob(diretoria_imagens)): # sorted ordena os nomes de forma ascendente
 
-# calcular coordenadas desnormalizadas
-des_x = coordenadas[0][0] * largura_imagem
-des_y = coordenadas[0][1] * altura_imagem
-des_width = coordenadas[0][2] * largura_imagem
-des_height = coordenadas[0][3] * altura_imagem
+  caminhos_imagens.append(item)
+
+caminhos_imagens
 
 ```
 
-## Calcular as coordenadas dos ponto superior esquerdo e do ponto inferior direito
+## Obter os nomes dos ficheiros das labels
 
 ```bash
 
-bb_thickeness = 4 # para remover a bounding box
+nomes_labels = []
 
-# cálculo do ponto superior esquerdo (xmin, ymax) e do ponto inferior direito (xmax, ymin)
-xmin = des_x - des_width + des_width / 2 + bb_thickeness 
-xmax = des_x + des_width - des_width / 2 - bb_thickeness
-ymin = des_y - des_height + des_height / 2 + bb_thickeness
-ymax = des_y + des_height - des_height / 2 - bb_thickeness
+for item in caminhos_labels:
+
+  split_item = item.split("/")
+  nome_item = split_item[-1]
+  nome_item = nome_item.replace(".txt", "")
+
+  nomes_labels.append(nome_item)
+
+nomes_labels
 
 ```
 
-## Efetuar o recorte da imagem com base nas coordenadas calculadas
+## **Obter os nomes dos ficheiros das imagens**
 
 ```bash
 
-# recorte da imagem
-imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
+nomes_imagens = []
+
+for item in caminhos_imagens:
+
+  split_item = item.split("/")
+  nome_item = split_item[-1]
+  nome_item = nome_item.replace(".jpg", "") # alterar ".png" para a extensão das imagens
+
+  nomes_imagens.append(nome_item)
+
+nomes_imagens
 
 ```
 
-<div align="center">
-
-![](./assets/imagens/imagem_adequada_cropped_sem_thickness.png)
-
-</div>
-
-
-## Redimensionar e guardar imagem recortada
+## Efetuar o recorte das imagens
 
 ```bash
 
-cv2.resize(imagem_crop_redimensionada, (300, 75))
+counter = 0 # atribuir um nome às imagens que serão guardadas
 
-cv2.imwrite("/content/caminho/diretoria/imagens_recortadas/imagem_crop_redimensionada.png", imagem_crop_redimensionada)
+counter_labels = 0 # abrir a label correta
+
+for i in range (0, len(caminhos_imagens)):
+
+  # verificar se a imagem tem uma label, se existir efetua o recorte da imagem com base nas coordenadas
+  if nomes_imagens[i] in nomes_labels:
+
+     # ler a imagem
+     imagem = cv2.imread(caminhos_imagens[i])
+
+     # largura e altura da imagem
+     largura = imagem.shape[1]
+     altura = imagem.shape[0]
+
+     # ler os ficheiros
+
+     # abrir o ficheiro
+     f = open(caminhos_labels[counter_labels])
+
+     # ler todas as linhas do ficheiro
+     linhas = f.readlines()
+
+     # processar todas as linhas do ficheiro
+     for linha in linhas:
+
+        # remover parágrafos
+        l = linha.replace("\n", "")
+
+        # obter cada valor
+        l_split = l.split(" ")
+
+        # coordenadas da bounding box
+        coordenadas = [float(l_split[1]), float(l_split[2]), float(l_split[3]), float(l_split[4])]
+
+
+        # calcular as coordenadas
+
+        # desnormalizar as coordenadas
+        des_x = coordenadas[0] * largura
+        des_y = coordenadas[1] * altura
+        des_width = coordenadas[2] * largura
+        des_height = coordenadas[3] * altura
+
+        # espessura da bounding box
+        # ajustar com base na espessura utilizada nas inferências
+        bb_thickeness = 4 # para remover a bounding box
+
+        # cálculo do ponto superior esquerdo (xmin, ymax) e do ponto inferior direito (xmax, ymin)
+        xmin = des_x - des_width + des_width / 2 + bb_thickeness
+        xmax = des_x + des_width - des_width / 2 - bb_thickeness
+        ymin = des_y - des_height + des_height / 2 + bb_thickeness
+        ymax = des_y + des_height - des_height / 2 - bb_thickeness
+
+
+        # recorte da imagem
+        imagem_crop = imagem[int(ymin) : int(ymax), int(xmin) : int(xmax)]
+
+        # redimensionar a imagem
+        imagem_crop = cv2.resize(imagem_crop, (300, 75))
+
+        # guardar imagem
+        cv2.imwrite("/content/" + str(counter) + ".png", imagem_crop)
+
+
+        counter = counter + 1
+
+     # fechar o ficheiro
+     f.close()
+
+     counter_labels = counter_labels + 1
+
 
 ```
 
@@ -727,6 +789,18 @@ cv2.imwrite("/content/caminho/diretoria/imagens_recortadas/imagem_crop_redimensi
 # Módulo 3 - Pipeline de processamento digital da imagem
 
 ## Abordagem 1 - Utilização de uma biblioteca OCR (Optical Character recognition)
+
+### Aceder ao Google Drive
+
+```bash
+
+from google.colab import drive
+
+drive.mount('/content/drive/') # nome da diretoria onde serão colocados os ficheiros do Google Drive -> /nome_da_pasta/MyDrive/
+
+# os conteúdos do Google Drive têm de estar numa diretoria vazia
+
+```
 
 ### Instalar a biblioteca PaddleOCR
 
@@ -750,52 +824,26 @@ from PIL import Image # abrir imagens
 
 ```
 
-### Carregar o modelo responsável pelo reconhecimento de texto
-
-```bash
-
-# carregar o modelo
-# apenas é necessário fazer uma vez por runtime
-ocr = PaddleOCR(use_angle_cls = True, lang = 'en') # lang define a língua que o modelo deve reconhecer
-
-```
+### Carregar modelo OCR
   
-### Aplicar o OCR sobre uma imagem
+### Aplicar o OCR as imagens das matrículas recortadas
 
+### Obter resultados da aplicação do OCR
 
-```bash
+### Guardar os resultados
 
-imagem = '/content/caminho/imagem'
+Exemplo de como guardar texto num ficheiro.
 
-resultado = ocr.ocr(imagem, cls = True)
+```bash 
 
-```
+caminho_ficheiro_resultados = "/content/resultados.txt" # caminho onde será guardado o ficheiro
 
-### Resultados do OCR
+resultados_f = open(caminho_ficheiro_resultados, "a") # gera o ficheiro caso não exista
 
-O resultado do OCR é um array do qual é possível extrair:
+# adicionar resultado ao ficheiro dos resultados
+resultados_f.write("22XV69" + '\n') # \n adiciona um parágrafo
 
-- todas as deteções efetuadas;
-
-```bash
-
-  boxes = [line[0] for line in result] # coordenadas das bounding boxes
-
-```
-
-- o texto presente em cada bounding box;
-
-```bash
-
-  txts = [line[1][0] for line in result ] # texto detetado
-
-```
-
-- a confiança da classificação do texto;
-
-```bash
-
-  scores = [line[1][1] for line in result] # confiança das deteções
+resultados_f.close() # fechar o ficheiro
 
 ```
 
@@ -808,41 +856,64 @@ O resultado do OCR é um array do qual é possível extrair:
 </div>
 
 
-### Guardar resultados num ficheiro de texto
-
-```bash
-
-resultados_file = "/caminho/resultados.txt"
-
-# abrir ficheiro e permitir a adição de novo conteúdo
-resultados_file = open(resultados_dir, "a")
-
-resultados_file.write("22XV69" + "\n") # adicionar um parágrafo após cada resultado adicionado
-
-resultados_file.close()
-
-```
-
 ## Abordagem 2 - Aplicação do método de Otsu
+
+ **Elementos estruturantes**
+
+- Elemento estrututante em forma de Cruz - cv2.getStructuringElement(cv2.MORPH_CROSS, (4, 4))
+
+- Elemento estrututante em forma de Elipse - cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (4, 4))
+
+- Elemento estrututante em forma de Rectângulo - cv2.getStructuringElement(cv2.MORPH_RECT, (4, 4))
+
+- kernel = np.ones((4, 4), np.uint8)
+
+
+[**Operações morfológicas**](https://docs.opencv.org/4.x/d9/d61/tutorial_py_morphological_ops.html)
+
+- Operação morfológica de Erosão - cv2.erode(imagem, elemento_estruturante, iterations = 1)
+
+- Operação morfológica de Dilatação - cv2.dilate(imagem, elemento_estruturante, iterations = 1)
+
+- Operação morfológica de Abertura - cv2.morphologyEX(imagem, cv2.MORPH_OPEN, elemento_estruturante)
+
+- Operação morfológica de Fecho - cv2.morphologyEX(imagem, cv2.MORPH_CLOSE, elemento_estruturante)
+
+- Operação morfológica de Gradiente Morfológico - cv2.morphologyEX(imagem, cv2.MORPH_GRADIENT, elemento_estruturante)
+
+- Operação morfológica de Top Hat - cv2.morphologyEX(imagem, cv2.MORPH_TOPHAT, elemento_estruturante)
+
+- Operação morfológica de Black Hat - cv2.morphologyEX(imagem, cv2.MORPH_BLACKHAT, elemento_estruturante)
+
+
+**[Filtros](https://docs.opencv.org/3.4/d4/d13/tutorial_py_filtering.html)**
+
+- Média  -> cv2.blur(imagem, (5, 5))
+
+- Gaussiano -> cv2.GaussianBlur(imagem, (5, 5), 0)
+
+- Mediano -> cv2.medianBlur(imagem, 5)
+
+- Bilateral -> cv2.bilateralFilter(imagem, 9, 75, 75) -> 9 (tamanho do filtro) e os valores 75 definem o impacto do filtro na imagem
+
+
+**[Método de Otsu](https://docs.opencv.org/3.4/d7/d4d/tutorial_py_thresholding.html)**
+
+- threshold = cv2.threshold(imagem, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
 ### Bibliotecas
 
 ```bash
 
-import cv2
-import functools
+import cv2 # OpenCV
+import numpy as np # biblioteca com funções matemáticas
+from imutils import contours # para ordenar contornos
+from google.colab.patches import cv2_imshow # visualização de imagens
+import os
 
 ```
 
-### Abrir imagem e converter para preto e branco
-
-```bash
-
-img = "/content/caminho/imagem"
-
-imagem = cv2.imread(img, cv2.IMREAD_GRAYSCALE) # carregar imagem e converter a imagem para preto e branco
-
-```
+### Ler as imagens e convertê-las para preto e branco
 
 <div align="center">
 
@@ -850,38 +921,19 @@ imagem = cv2.imread(img, cv2.IMREAD_GRAYSCALE) # carregar imagem e converter a i
 
 </div>
 
+### Aplicar o método de Otsu
 
-### Aplicar o algoritmo de Otsu
-
-```bash
-
-thresh = cv2.threshold(imagem_redimensionada, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1] # aplicar o método de Otsu
-
-```
 <div align="center">
 
 ![](./assets/imagens/new_binarizacao.png)
 
 </div>
 
+**Nota:** As operações morfológicas podem ser aplicadas antes ou depois de aplicar o método. Neste exemplo será aplicado depois de aplicado o método.
 
-### Verificar o número de píxeis pretos
+#### Verificar se a imagem tem mais pixéis pretos do que brancos
 
-O cálculo dos contours, próximo passo, apenas funciona se o fundo for preto e os caracteres brancos. O fundo pode ser branco devido à matrícula (preta e branca) ou devido à iluminação. 
-
-```bash
-
-largura = imagem_redimensionada.shape[0] # largura da imagem
-altura = imagem_redimensionada.shape[1] # altura da imagem
-
-non_zero = cv2.countNonZero(thresh) # obter o número de pixeis não pretos
-
-if non_zero > (largura * altura) / 2:
-
-  thresh = cv2.bitwise_not(temp) # inverter a cor dos pixeis
-
-```
-
+**Nota**: O cálculo dos contornos não funciona se o fundo da imagem for branco.
 
 Exemplo:
 
@@ -912,14 +964,9 @@ Exemplo:
 </div>
 
 
-### Aplicar operação morfológica
+#### Aplicação de operações morfológicas
 
-```bash
-
-kernel = np.ones((4,4),np.uint8)
-thresh = cv2.morphologyEx(adapT, cv2.MORPH_OPEN, kernel)  # Operação morfológica de abertura
-
-```
+Exemplo de uma operação morfológica.
 
 <div align="center">
 
@@ -927,148 +974,52 @@ thresh = cv2.morphologyEx(adapT, cv2.MORPH_OPEN, kernel)  # Operação morfológ
 
 </div>
 
-### Construção da máscara com os caracteres
+### Construção de uma máscara com caracteres
+
+#### Inicializar a máscara 
+
+Utilizar a biblioteca numpy, função zeros (np.zeros).
 
 #### Análise de componentes
 
-```bash
+Atribuir uma label a cada componente encontrado.
 
-# Análise de componentes
-_, labels = cv2.connectedComponents(thresh)
+  1. Definir um valor mínimo e máximo que cada label pode ter, com base no número de pixéis da imagem;
+  2. Percorrer cada componente:
 
-```
+    2.1. Gerar uma máscara para cada label;
 
-#### Inicializar a máscara
+    2.2. Obter o número de pixéis da máscara gerada;
+    
+    2.3. Verificar se o valor obtida se encontra dentro do intervalo do mínimo e do máximo definidos, e se se encontrar, adicionar a máscara da label à máscara gerada acima.
 
-```bash
+#### Obter os contornos presentes na máscara
 
-# Inicialização da máscara
-mask = np.zeros(thresh.shape, dtype="uint8")
+Utilizar a função cv2.findContours()
 
-```
+#### Ordenar os contornos da esquerda para a direita.
 
-#### Definir valor máximo e mínimo de pixéis
+Utilizar função "contours", da biblioteca "imutils".
 
-```bash
+### Extrair os caracteres
 
-# Definir um valor máximo e mínimo de pixéis para que o contour seja considerado um caracter
-pixeis = largura * altura
-minimo = pixeis // 75   # limite mínimo
-maximo = pixeis // 20 # limite máximo
-
-```
-#### Percorrer todas as labels
-
+Obter a informação de cada bounding box (cv2.boundingRect(contorno)), gerada pela obtenção dos contornos.
 
 ```bash
 
-# Percorrer os componentes
-for (j, label) in enumerate(np.unique(labels)):
+ep = 3 # padding
+
+crop_num = 0
+
+
+resized_crop = cv2.resize(crop, (20, 20)) # redimensionar a imagem recortada
+
+# gravar imagem
+cv2.imwrite(os.path.join(caminho, f'crop{crop_num}.png'), resized_crop)
 
 ```
 
-
-#### Construir a máscara 
-
-```bash 
-
-label_mask = np.zeros(adapT.shape, dtype="uint8")
-label_mask[labels == label] = 255
-pixeis_label = cv2.countNonZero(label_mask)  # obter número de píxeis brancos da label
-
-# Se o número de pixéis do componente está entre o valor de lower e upper,
-# adicionar à máscara (é um caracter)
-if pixeis_label > minimo and pixeis_label < maximo:
-
-    mask = cv2.add(mask, label_mask)
-
-```
-
-<div align="center">
-
-![](./assets/imagens/new_mascara_gerada.png)
-
-</div>
-
-
-### Calcular os contours da máscara gerada
-
-```bash
-
-# Contours da máscara
-cnts, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-bounding_boxes = [cv2.boundingRect(contour) for contour in cnts] # bounding boxes dos contours
-
-```
-
-### Ordenar as bounding boxes da esquerda para a direita
-
-```bash
-
-# função que compara a posição das bounding boxes
-
-def compare(rect1, rect2):
-
-    return rect1[0] - rect2[0]
-
-```
-
-```bash
-
-# Sort the bounding boxes from left to right
-bounding_boxes = sorted(bounding_boxes, key=functools.cmp_to_key(compare))
-
-```
-
-
-### Extração dos caracteres
-
-#### Definição da condição que identifica caracteres 
-
-Utilizar o/ou valor/es da bounding box para definir uma condição que permita apenas selecionar os caracteres presentes na máscara.
-
-- **x** - centro da bounding box
-- **y** - centro da bounding box
-- **w** - largura da bounding box
-- **h** - altura da bounding box
-
-```bash
-
-  x, y ,w , h = bounding_boxes[0]   # obter as coordenadas da bounding_box
-
-```
-
-Exemplo de condição:
-
-```bash
-
-if w < 60:
-
-```
-
-#### Recorte do caracter
-
-```bash
-
-ep = 3 # padding extra
-
-crop = mask[y - ep: y + h + ep, x - ep: x + w + ep] # recorte do caracter
-crop_redimensionada = cv2.resize(crop, (20, 20)) # redimensionar a imagem recortada 20x20, para ser utilizado no classificador
-
-```
-
-#### Caracteres extraídos
-
-<div align="center">
-
-![](./assets/imagens/crop0.jpg) ![](./assets/imagens/crop1.jpg) ![](./assets/imagens/crop2.jpg) ![](./assets/imagens/crop3.jpg) ![](./assets/imagens/crop4.jpg) ![](./assets/imagens/crop5.jpg)
-
-</div>
-
-
-### Modelo de classificação de caracteres
-
-Um modelo de classificação criado utilizando Keras.
+### Classificação dos caracteres
 
 #### Bibliotecas
 
@@ -1076,21 +1027,23 @@ Um modelo de classificação criado utilizando Keras.
 
 from tensorflow import keras
 from tensorflow.keras import layers
+import tensorflow as tf
 
 ```
 
+#### Carregar o modelo de classificação
+
 ```bash
 
-input_shape = (20, 20, 1) # input que o modelo aceita
+input_shape = (20, 20, 3) # input que o modelo aceita
 num_classes = 34 # número de classes
 classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
               'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T',
-              'U', 'V', 'W', 'X', 'Y', 'Z'] # nomes das classes
+              'U', 'V', 'W', 'X', 'Y', 'Z'] # nomes das classes -> não existe classe para a letra "O" e a letra "I"
 
-# modelo de classificação
-model = keras.Sequential(
+modelo = keras.Sequential(
     [
-        layers.Dense(32, input_shape = input_shape),
+        layers.Dense(32, input_shape =input_shape),
         layers.Dense(64, activation = 'relu'),
         layers.Flatten(),
         layers.Dense(num_classes, activation = 'softmax'),
@@ -1099,123 +1052,178 @@ model = keras.Sequential(
 
 ```
 
-#### Carregar pesos pré-treinados do modelo de classificação
+#### Carregar pesos pré-treinados
 
 ```bash
 
-# carregar os pesos
-model.load_weights('/content/caminho/pesos')
+caminho_pesos = "/content/best_weights.h5"
+modelo.load_weights(caminho_pesos)
 
 ```
 
-#### Classificar o caracter
+#### Classificar os caracteres
 
 ```bash
 
-# classificar caracter
-previsao =  model.predict(char)
-classe_prevista = classes[np.argmax(previsao)]
+imagem = cv2.imread('/content/crop0.png')
+
+cv2_imshow(imagem)
+
+imagem = np.expand_dims(imagem, axis = 0) # para garantir que as dimensões são as corretas
+
+previsao = modelo.predict(imagem) # classificação por parte do modelo
+
+classe = classes[np.argmax(previsao)] # classe prevista
+
+print("Classe previsa:", classe)
 
 ```
 
+#### Guardar os resultados
 
-#### Guardar resultados num ficheiro de texto
+Exemplo de como guardar texto num ficheiro.
 
 ```bash
 
-resultados_file = "/caminho/resultados.txt"
+caminho_ficheiro_resultados = "/content/resultados.txt" # caminho onde será guardado o ficheiro
 
-# abrir ficheiro e permitir a adição de novo conteúdo
-resultados_file = open(resultados_dir, "a")
+resultados_f = open(caminho_ficheiro_resultados, "a") # gera o ficheiro caso não exista
 
-resultados_file.write("22XV69" + "\n") # adicionar um parágrafo após cada resultado adicionado
+# adicionar resultado ao ficheiro dos resultados
+resultados_f.write("22XV69" + '\n') # \n adiciona um parágrafo
 
-resultados_file.close()
+resultados_f.close() # fechar o ficheiro
 
-```
+``` 
 
 ## Abordagem 3 - Utilização da biblioteca Grounding Dino (deteção de caracteres) e Segment Anything Model (segmentação de caracteres)
 
-### Instalar bibliotecas Grounding Dino e Segment Anythin Model (SAM)
 
-#### Instalar Grounding Dino
+### Aceder ao Google Drive
 
 ```bash
 
-# Instalar repositório do Grounding Dino
+from google.colab import drive
+
+drive.mount('/content/drive/') # nome da diretoria onde serão colocados os ficheiros do Google Drive -> /nome_da_pasta/MyDrive/
+
+# os conteúdos do Google Drive têm de estar numa diretoria vazia
+
+```
+
+### Instalar Grounding Dino
+
+```bash
+
+# clonar o repositório -> isto gera uma diretoria chamada "GroundingDino"
 !git clone https://github.com/IDEA-Research/GroundingDINO.git
+
+# entrar na diretoria
 %cd /content/GroundingDINO/
+
+# instalar dependências
 !pip install -e .
 
-# Efetuar download dos pesos do modelo pré-treinado
-%cd ..
-%mkdir weights
+```
+
+### Instalar Segment Anything Model (SAM)
+
+```bash
+
+# voltar à diretoria inicial
+%cd /content/
+
+# colar o repositório -> isto gera uma diretoria chamada "segment-anything"
+!git clone https://github.com/facebookresearch/segment-anything.git
+
+# entrar na diretoria
+%cd /content/segment-anything/
+
+# instalar dependências
+!pip install -e .
+
+```
+
+### Efetuar download dos pesos do Grounding Dino
+
+```bash
+
+%cd /content/
+
+# criar uma nova diretoria
+!mkdir grounding_dino_weights
+
+# entrar na nova diretoria
+%cd grounding_dino_weights
+
+# efetuar o download dos pesos
 !wget -q https://github.com/IDEA-Research/GroundingDINO/releases/download/v0.1.0-alpha/groundingdino_swint_ogc.pth
-%cd ..
 
-```
-#### Instalar SAM (Segment Anything Model)
+# voltar à diretoria inicial
 
-```bash
-
-# Instalar repositórios SAM
-!pip install git+https://github.com/facebookresearch/segment-anything.git
+%cd /content/
 
 ```
 
-#### Bibliotecas
+### Importante
+
+Importante
+Depois de instalar os dois repositórios, fazer o seguinte:
+
+Selecionar "Tempo de execução", que fica abaixo do título do notebook;
+Selecionar "Reiniciar sessão";
+Avançar para as próximas células.
+
+### Bibliotecas do Grounding Dino
 
 ```bash
-
-import os
-import copy
 
 from groundingdino.util.inference import load_model, load_image, predict, annotate
+from groundingdino.util import box_ops
+from PIL import Image # ler imagens
 
-import torch
-from PIL import Image
+from google.colab.patches import cv2_imshow # visualização de imagens
 
-# segment anything
-from segment_anything import build_sam, SamPredictor
-import cv2
-import numpy as np
-
-import locale
+import locale # evitar erros
 locale.getpreferredencoding = lambda: "UTF-8"
 
 ```
-#### Carregar modelo Grounding Dino
+
+### Utilização do modelo Grounding Dino
+
+#### Carregar o modelo Grounding Dino
+
+#### Parâmetros do Grounding Dino
+
+O text prompt pode ser constituído por palavras ou frases.
 
 ```bash
 
-# Carregar modelo
-groundingdino_model = load_model("groundingdino/config/GroundingDINO_SwinT_OGC.py", "weights/groundingdino_swint_ogc.pth")
+text_prompt = "" # prompt que vai ser utilizado para efetuar as deteções -> "." indica a procura dos diferentes objetos de forma individual
+box_threshold = 0 # número mínimo de similaridade entre as bounding boxes
+text_threshold = 0 # número mínimo de similaridade entre as bounding boxes
 
 ```
 
+#### Aplicar o Grounding Dino
 
-#### Aplicar Grounding Dino sobre imagens
+#### Resultados da deteção
+
+##### Imagem original
 
 ```bash
 
-# Correr GroundingDINO
+Image.fromarray(imagem_source)
 
-imagem = "/content/caminho/imagem.png"
+```
 
-TEXT_PROMPT = "dog" # prompt utilizado para a deteção
-BOX_TRESHOLD = 0.3 # similaridade de cada deteção
-TEXT_TRESHOLD = 0.25 # similaridade do texto em relação ao que foi detetado
+##### Imagem com deteções
 
-image_source, image = load_image(item)
+```bash
 
-# a predição retorna todas as bounding boxes, logits (confiança) e a palavra/frase que deu origem à deteção
-boxes, logits, phrases = predict(
-    model = groundingdino_model,
-    image = image,
-    caption = TEXT_PROMPT,
-    box_threshold = BOX_TRESHOLD,
-    text_threshold = TEXT_TRESHOLD
-)
+annotated_frame = annotate(image_source = imagem_source, boxes = boxes, logits = logits, phrases = phrases)
+
+Image.fromarray(annotated_frame)
 
 ```
 
@@ -1225,81 +1233,80 @@ boxes, logits, phrases = predict(
 
 </div>
 
+### Utilização do SAM
 
-#### Carregar modelo SAM
-
-```bash
-
-# Carregar modelo Segment Anything Model
-!wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
-
-sam_checkpoint = 'sam_vit_h_4b8939.pth' # pesos
-sam = build_sam(checkpoint = sam_checkpoint)
-sam.to(device = "cpu")
-sam_predictor = SamPredictor(sam)
-
-```
-
-### Aplicar SAM sobre as imagens geradas pelo Grounding Dino
-
-#### Correr SAM sobre a imagem gerada pelo Grounding Dino
-
+#### Bibliotecas do SAM
 
 ```bash
 
-# Correr Segment Anything Model
-sam_predictor.set_image(image_source)
+# Geral
+import argparse
+import os
+import copy
+import supervision as sv
+from PIL import Image, ImageDraw, ImageFont
+import torch
+from imutils import contours # para ordenar contornos
+import cv2
+
+# segment anything
+from segment_anything import build_sam, SamPredictor
+import numpy as np
 
 ```
 
+#### Download do checkpoint do SAM
 
-#### Normalizar as bounding boxes
+```bash
 
+# carregar checkpoint do modelo SAM
+! wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
 
-```bash 
+```
 
-# normalizar as bounding boxes
-H, W, _ = image_source.shape
+#### Inicializar o modelo SAM
+
+#### Aplicar o modelo SAM
+
+#### Normalizar as bounding boxes obtidas pelo Grounding Dino
+
+```bash
+
+# normalizar as bounding boxes obtidas pelo Grounding Dino
+H, W, _ = imagem_source.shape
 boxes_xyxy = box_ops.box_cxcywh_to_xyxy(boxes) * torch.Tensor([W, H, W, H])
 
 ```
 
-
-#### Previsão das máscaras
+#### Calcular as máscaras com base nas bounding boxes do Grounding Dino
 
 ```bash
 
-transformed_boxes = sam_predictor.transform.apply_boxes_torch(boxes_xyxy, image_source.shape[:2]).to("cpu")
+# obter máscaras com base nas bounding boxes
+transformed_boxes = sam_predictor.transform.apply_boxes_torch(boxes_xyxy, imagem_source.shape[:2]).to("cuda")
 
-masks, _, _ = sam_predictor.predict_torch(
-            point_coords = None,
-            point_labels = None,
-            boxes = transformed_boxes,
-            multimask_output = False,
-        )
+masks, _, _ = sam_predictor.predict_torch(colocar parâmetros)
 
 ```
 
-
-#### Obter as máscaras
-
-As máscaras terão fundo preto e o caracter branco.
-
+#### Função que transforma os arrays com a informação das máscaras em imagens
 
 ```bash
 
-# Função que retorna as máscaras
-def get_masks(mask):
+# Obter apenas as máscaras (preto e branco)
+def mask_image(mask):
 
-    color = np.array([255/255, 255/255, 255/255, 1])
+    color = np.array([255/255, 255/255, 255/255, 1]) # cor da máscara -> branca
 
-    h, w = mask.shape[-2:]
+    tensor = torch.Tensor.cpu(mask) # carregar a informação da GPU para a memória
 
-    mask_image = mask.reshape(h, w, 1) * color.reshape(1, 1, -1)
+    h, w = mask.shape[-2:] # obter as dimensões da máscara
 
-    just_mask = Image.fromarray((mask_image.cpu().numpy() * 255).astype(np.uint8)).convert("L")
+    mask_image = tensor.reshape(h, w, 1) * color.reshape(1, 1, -1) # criar uma máscara com base no tensor
 
-    return just_mask
+    mask = Image.fromarray((mask_image.cpu().numpy() * 255).astype(np.uint8)).convert("L") # converter o array para uma imagem
+
+    return mask
 
 ```
 
@@ -1314,66 +1321,35 @@ def get_masks(mask):
 
 </div>
 
+#### Criar uma máscara com todas as máscaras
 
-#### Calcular os contours das máscaras
+##### Obter os contornos presentes na mácara
 
-```bash
+Utilizar a biblioteca cv2.
 
-# Contours da máscara
-cnts, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-bounding_boxes = [cv2.boundingRect(contour) for contour in cnts] # bounding boxes dos contours
+##### Ordenar os contornos da esquerda para a direita
 
-```
+Utilizar a biblioteca imutils.
 
+### Extrair os caracteres
 
-### Extração e classificação dos caracteres
-
-#### Definição da condição que identifica caracteres 
-
-Utilizar o/ou valor/es da bounding box para definir uma condição que permita apenas selecionar os caracteres presentes na máscara.
-
-- **x** - centro da bounding box
-- **y** - centro da bounding box
-- **w** - largura da bounding box
-- **h** - altura da bounding box
+Obter a informação de cada bounding box (cv2.boundingRect(contorno)), gerada pela obtenção dos contornos.
 
 ```bash
 
-  x, y ,w , h = bounding_boxes[0]   # obter as coordenadas da bounding_box
+ep = 3 # padding
+
+crop_num = 0
+
+
+resized_crop = cv2.resize(crop, (20, 20)) # redimensionar a imagem recortada
+
+# gravar imagem
+cv2.imwrite(os.path.join(caminho, f'crop{crop_num}.png'), resized_crop)
 
 ```
 
-Exemplo de condição:
-
-```bash
-
-if w < 60:
-
-```
-
-#### Recorte do caracter
-
-```bash
-
-ep = 3 # padding extra
-
-crop = mask[y - ep: y + h + ep, x - ep: x + w + ep] # recorte do caracter
-crop_redimensionada = cv2.resize(crop, (20, 20)) # redimensionar a imagem recortada 20x20, para ser utilizado no classificador
-
-```
-
-#### Caracteres extraídos
-
-<div align="center">
-
-![](./assets/imagens/crop0.jpg) ![](./assets/imagens/crop1.jpg) ![](./assets/imagens/crop2.jpg) ![](./assets/imagens/crop3.jpg) ![](./assets/imagens/crop4.jpg) ![](./assets/imagens/crop5.jpg)
-
-</div>
-
-
-### Modelo de classificação de caracteres
-
-Um modelo de classificação criado utilizando Keras.
+### Classificação dos caracteres
 
 #### Bibliotecas
 
@@ -1381,21 +1357,23 @@ Um modelo de classificação criado utilizando Keras.
 
 from tensorflow import keras
 from tensorflow.keras import layers
+import tensorflow as tf
 
 ```
 
+#### Carregar o modelo de classificação
+
 ```bash
 
-input_shape = (20, 20, 1) # input que o modelo aceita
+input_shape = (20, 20, 3) # input que o modelo aceita
 num_classes = 34 # número de classes
 classes = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
               'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T',
-              'U', 'V', 'W', 'X', 'Y', 'Z'] # nomes das classes
+              'U', 'V', 'W', 'X', 'Y', 'Z'] # nomes das classes -> não existe classe para a letra "O" e a letra "I"
 
-# modelo de classificação
-model = keras.Sequential(
+modelo = keras.Sequential(
     [
-        layers.Dense(32, input_shape = input_shape),
+        layers.Dense(32, input_shape =input_shape),
         layers.Dense(64, activation = 'relu'),
         layers.Flatten(),
         layers.Dense(num_classes, activation = 'softmax'),
@@ -1404,40 +1382,50 @@ model = keras.Sequential(
 
 ```
 
-#### Carregar pesos pré-treinados do modelo de classificação
+#### Carregar pesos pré-treinados
 
 ```bash
 
-# carregar os pesos
-model.load_weights('/content/caminho/pesos')
+caminho_pesos = "/content/best_weights.h5"
+modelo.load_weights(caminho_pesos)
 
 ```
 
-#### Classificar o caracter
+#### Classificar os caracteres
 
 ```bash
 
-# classificar caracter
-previsao =  model.predict(char)
-classe_prevista = classes[np.argmax(previsao)]
+imagem = cv2.imread('/content/crop0.png')
+
+cv2_imshow(imagem)
+
+imagem = np.expand_dims(imagem, axis = 0) # para garantir que as dimensões são as corretas
+
+previsao = modelo.predict(imagem) # classificação por parte do modelo
+
+classe = classes[np.argmax(previsao)] # classe prevista
+
+print("Classe previsa:", classe)
 
 ```
 
+#### Guardar os resultados
 
-#### Guardar resultados num ficheiro de texto
+Exemplo de como guardar texto num ficheiro.
 
 ```bash
 
-resultados_file = "/caminho/resultados.txt"
+caminho_ficheiro_resultados = "/content/resultados.txt" # caminho onde será guardado o ficheiro
 
-# abrir ficheiro e permitir a adição de novo conteúdo
-resultados_file = open(resultados_dir, "a")
+resultados_f = open(caminho_ficheiro_resultados, "a") # gera o ficheiro caso não exista
 
-resultados_file.write("22XV69" + "\n") # adicionar um parágrafo após cada resultado adicionado
+# adicionar resultado ao ficheiro dos resultados
+resultados_f.write("22XV69" + '\n') # \n adiciona um parágrafo
 
-resultados_file.close()
+resultados_f.close() # fechar o ficheiro
 
-```
+``` 
+
 
 # Módulo 4 - Análise de texto e correção de erros
 
