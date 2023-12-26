@@ -256,8 +256,6 @@ Caso sejam necessárias, as seguintes são as mais pertinentes:
 
 Os valores indicados em cada uma das aumentações podem e devem ser alterados.
 
-Colocar video para cada aumentação
-
 #### Efetuar download do dataset no formato desejado
 
 Efetuar o download do dataset no formato do modelo a utilizar no treino e colocar no Google Drive. Criar conta no [Google Drive](https://www.google.com/drive/) se necessário.
@@ -267,6 +265,8 @@ Efetuar o download do dataset no formato do modelo a utilizar no treino e coloca
 ![](./assets/videos/exportar_dataset.gif)
 
 </div>
+
+# No Google Colab
 
 ## Acesso ao Google Drive
 
@@ -285,27 +285,102 @@ drive.mount('/content/drive/') # nome da diretoria onde serão colocados os fich
 
 YOLOv5 é utilizado como exemplo.
 
-Instalação de bibliotecas:
+
+### Preparação para o treino 
+
+Antes de prosseguir, adicionar o repositório da [YOLOv5](https://github.com/ultralytics).
+
+Relativamente ao dataset exportado do Roboflow:
+
+  1. Descomprimir o dataset;
+  2. Abrir o ficheiro "data.yaml";
+  3. Alterar os camimhos presentes no ficheiro para:
+
+  train: /content/data/train/images
+  val: /content/data/valid/images
+  test: /content/data/test/images
+
+  4. Guardar as alterações;
+  5. Comprimir o dataset;
+  6. Guardar o dataset no Google Drive.
+
+Instalação de dependências do modelo YOLO:
+
+  1. No lado esquerdo, escolher o tab "Ficheiros";
+  2. Abrir as pastas onde se encontram o repositório do YOLOv5;
+  3. Selecionar a pasta do YOLOv5 com o botão direito do rato;
+  4. Escolher a opção "Copiar caminho";
+  5. Na célula abaixo, substituir apenas a palavra "caminho" pelo caminho copiado.
+
+
+### Dependências do modelo YOLO
 
 ```bash
 
 # entrar na diretoria do YOLO
-%cd /content/caminho/yolov5
+%cd caminho
 
 !pip install -qr requirements.txt  # instala as dependências listadas no ficheiro (apenas as que ainda não estão instaladas)
 
 ```
 
-Parâmetros a ter em conta:
+### Unzip do dataset
 
-- **epochs** -> número de iterações do treino
-- **batch** -> o número de imagens utilizadas em cada iteração - este número deve ter em conta o tamanho da imagem e a memória de vídeo da placa gráfica
-- **img** -> tamanho da imagem utilizado como input
-- **patience** -> o número de “epochs” necessárias em que não existe melhoria da loss de validação para parar o treino automaticamente
-- **name** -> o nome da diretoria onde são guardados os resultados do treino
-- **cfg** -> modelo a utilizar, por exemplo, yolov5s.yaml, yolov5m.yaml, yolov5l.yaml, yolov5x.yaml (substituir o número 5, tendo em conta a versão do modelo utilizada)
-- **weights** -> utilizar um modelo pré-treinado ou YOLO (por exemplo, yolov5s.pt, yolov5m.pt, yolov5l.pt, yolov5x.pt - substituir o número 5, tendo em conta a versão do modelo utilizada) ou personalizado (por exemplo, best.pt)
-- **bb_thickness** -> a espessura da linha da bounding box (pré-definido = 3)
+Obter o caminho da diretoria onde se encontra o dataset:
+  1. No lado esquerdo, escolher o tab "Ficheiros";
+  2. Abrir as pastas onde se encontra o dataset;
+  3. Selecionar a pasta do dataset com o botão direito do rato;
+  4. Escolher a opção "Copiar caminho";
+  5. Na célula abaixo, substituir apenas a palavra "caminho" pelo caminho copiado.
+
+```bash
+
+# unzip do dataset
+
+# alterar caminho
+!unzip caminho -d /content/data/
+
+# -d /content/data/ -> cria uma pasta com nome "data" e coloca o que se encontra no zip na mesma
+```
+Variáveis que afetam a performance do modelo.
+
+- img -> dimensão do input - as imagens serão ajustadas tendo em conta o valor definido. Quanto maior for a imagem mais detalhe é possível extrair, mas maior será o valor de memória de vídeo utilizado.
+- batch -> dados de treino utilizados em cada iteração. O valor escolhido deve ter em conta o tamanho do input. Por norma, quanto maior for o input menor será o valor de cada batch;
+- epochs -> número de iterações que o treino vai efetuar;
+- data -> diretoria onde se encotra o ficheiro "data.yaml", presente na pasta do dataset:
+  - Na pasta "Data", selecionar o ficheiro "data.yaml" com o botão direito;
+  - Escolher a opção "Copiar caminho";
+  - Na célula abaixo, substituir apenas as palavras "caminho pesos" pelo caminho copiado;
+- cfg -> modelo a ser utilizado para efetuar o treino:
+  - yolov5n -> n - nano;
+  - yolov5s -> s - small;
+  - yolov5m -> m - medium;
+  - yolov5l -> l - large;
+  - yolov5x -> x - extra large;
+
+  A utilização de modelos maiores requerem mais tempo por cada iteração, mas podem permitir a obtenção de melhores resultados.
+
+  Os modelos encontram-se no repositório do YOLOv5:
+  - Diretoria "models";
+  - Selecionar o modelo pretendido com o botão direito;
+  - Escolher a opção "Copiar caminho";
+  - Na célula abaixo, substituir apenas as palavras "caminho modelo" pelo caminho copiado;
+
+- weights -> pesos pré-treinados, de um dos modelo mencionados acima. O nome do modelo tem de ser colocado entre aspas. A sua utilização é opcional, mas no contexto do problema pode acelerar o treino.
+  - yolov5n.pt
+  - yolov5s.pt
+  - yolov5m.pt
+  - yolov5l.pt
+  - yolov5x.pt
+
+- name -> o nome da diretoria onde serão guardados os resultados. Sempre que for efetuado um treino será incrementado um valor ao nome definido. Se o nome definido for "resultados":
+  - 1º treino -> resultados
+  - 2º treino -> resultados2
+  - 3ª treino -> resutlados3
+
+  Os resultados de cada treino encontram-se na diretoria do repositório do YOLOv5:
+  - runs/train
+
 
 
 ```bash
@@ -315,13 +390,46 @@ Parâmetros a ter em conta:
 
 ```
 
-# Métricas
+### Exemplos de parâmetros
+
+```bash
+
+img = 256 # dimensão do input - as imagens serão ajustadas tendo em conta o valor definido
+batch = 100 # dados de treino utilizados em cada iteração
+epochs = 5 # número de iterações
+data = caminho # -> ficheiro data.yaml -> ficheiro que contém o caminho para as diferentes diretorias
+cfg = caminho modelo # yolov5x, yolov5l, yolov5m, yolov5s -> s - small, m - medium, l -large, x - extra large -> quanto maior for o modelo mais lento será o treino
+weights = "yolov5m.pt" # pesos pré-treinados -> opcional, pode acelerar o treino (melhores resultados mais depressa)
+name = "resultados" # nome da diretoria onde serão guardados os resultados
+
+```
+
+### Treino do modelo
+
+```bash 
+
+# efetuar o treino
+!python train.py --img {img} --batch {batch} --epochs {epochs} --data {data} --cfg {cfg} --weights {weights} --name {name}  --cache
+
+# train.py -> script para efetuar o treino que se encontra na diretoria da YOLO
+
+```
+
+### Métricas
 
 - **Precision (P)** -> A precisão de previsões positivas. Um valor alto de precisão indica que o modelo não gera previsões consideradas falsos positivos, o que siginifica que as previsões são confiáveis;
 - **Recall (R)** -> Também chamada de sensibilidade (sensitivity), mede a proporção de verdadeiros positivos em relação ao total de instâncias positivas. Um valor alto de Recall indica que o modelo consegue identificar corretamente a maior parte das instâncias positivas;
 - **mAP** (mean Average Precision)-> A média da precisão tendo em conta todas as classes do dataset;
   - **mAP50** -> A média da precisão de todas as classes tendo em conta um valor de IoU (Intersection over Union - o valor de interseção entre a bounding box anotada e a bounding box gerada pelo modelo) de 0.5;
   - **mAP50-95** -> A média da precisão de todas as classes, no intervalo entre 0.5 e 0.95 de IoU com um incremento, tipicamente, de 0.05.
+
+Em todas as métricas, quanto mais próximo o valor for de 1, melhores os resultados.
+
+----------------------------------------------------------------------------------------------------------
+
+**Atenção**
+
+**Bons resultados no treino não significa que os resultados, quando utilizadas imagens nunca antes vistas pelo modelo, também sejam bons.**
 
 
 ### Resultados do treino
@@ -354,7 +462,7 @@ Para efetuar de novo a validação, sem o treino:
 # para validar os resultados do treino é necessário utilizar o script val.py
 # basta indicar o caminho para os pesos do treino e o tamanho de input das imagens
 
-!python val.py --data /content/caminho/data.yaml --weights /content/caminho/best.pt--img 640 
+!python val.py --data /content/caminho/data.yaml --weights /content/caminho/best.pt --img 640 
 
 # os resultados da validação são guardados na pasta runs/val
 
@@ -393,25 +501,82 @@ Class     Images  Instances          P          R      mAP50   mAP50-95: 100%|�
 ```
 
 
-## Inferir sobre novas imagens
+## Inferências
 
-A confiança mínima utilizada deve ser de 0.65.
-Utilizar o parâmetro "--save-txt" para guardar ficheiros com as coordenadas das bounding boxes detetadas. Caso não seja detetada nenhuma matrícula, o ficheiro não é gerado, contudo a imagem será guardada sem as anotações efetuadas.
+### Parâmetros das inferências
+
+Variáveis que afetam a performance do modelo.
+
+- img -> dimensão do input - as imagens serão ajustadas tendo em conta o valor definido. Quanto maior for a imagem mais detalhe é possível extrair, mas maior será o valor de memória de vídeo utilizado;
+- conf -> valor mínimo de confiança de cada deteção. Se o valor for menor que o valor definido, apesar de existirem deteções efetuadas pelo modelo estas não serão colocadas na imagem;
+- data -> diretoria onde se encotra o ficheiro "data.yaml", presente na pasta do dataset:
+  - Na pasta "Data", selecionar o ficheiro "data.yaml" com o botão direito;
+  - Escolher a opção "Copiar caminho";
+  - Na célula abaixo, substituir apenas as palavras "caminho pesos" pelo caminho copiado;
+- weights -> pesos do treino efetuado. Os pesos encotram-se na diretoria do repositório do YOLOv5:
+  - runs/train/resultados/weights, sendo resultados o nome da diretoria do último treino efetuado;
+  - Selecionar com o botão direito do rato o ficheiro com o nome "best.pt";
+  - Na célula abaixo, substituir as palavras "caminho pesos" pelo caminho copiado.
+- images -> o caminho para as imagens que irão ser inferidas. Utilizar as imagens de teste do dataset:
+  - Na diretoria "data", selecionar com o botão direito a diretoria "test/images";
+  - Escolher a opção "Copiar caminho";
+  - Na célula abaixo, substituir a palavra "caminho" pelo caminho copiado;
+- inf_name -> o nome da diretoria onde serão guardados os resultados da inferência. Sempre que for efetuado uma inferência será incrementado um valor ao nome definido. Se o nome definido for "resultados_inferencia":
+
+  - 1º treino -> resultados_inferencia
+  - 2º treino -> resultados_inferencia2
+  - 3ª treino -> resultados_inferencia3
+
+  Os resultados de cada inferência encontram-se na diretoria do repositório do YOLOv5:
+  - runs/detect
+
+  Cada diretoria de resutados irá conter uma diretoria chamada "labels" e as imagens utilizadas, que podem ou não estar anotadas.
+  A diretoria "labels" irá conter ficheiro do tipo ".txt" com as coordenadas das deteções.
+
+-------------------------------------------------------------------------------
+  ## **IMPORTANTE**
+  
+  ### **Cada imagem será guardada, tenha ou não deteções.**
+  
+  ### **O ficheiro, para cada imagem, apenas será gerado caso seja feita pelo menos uma deteção.**
+-------------------------------------------------------------------------------
+
+- bb_thickness -> espessura das linhas da bounding box;
+- hide_labels -> esconde as labels da deteção;
+
+Os dois últimos parâmetros são definidos para diminuir o espaço ocupado por cada bounding box.
+
+
+### Exemplos de parâmetros
 
 ```bash
 
-# para inferir é necessário utilizar o script detect.py
-# basta indicar o caminho para os pesos do treino, o tamanho de input das imagens, a confiança mínima, caminho das imagens,
-# o caminho onde são guardadas os resultados e indicar que se pretende guardar as coordenadas das bounding boxes -> --save-txt
-
-!python detect.py --weights /content/drive/MyDrive/Exemplo_Codigo/weights/best.pt --img 512 --conf 0.65 --source /content/drive/MyDrive/Exemplo_Codigo/datasets/inferencias/exemplo_carros --name resultados --save-txt
-
-# na consola encontram-se os resultados das métricas
-
-# os resultados da inferência são guardados na pasta runs/detect com o nome definido (--name)
+# alterar caminhos do treino se necessário
+img = 256 # tamanho da imagem de input
+conf = 0.65 # confiança mínima para que seja detetada uma classe
+weights = caminho pesos # caminho dos weights do treino -> .../yolov5/yolo-master/runs/train/resultados/weights/best.pt
+images = caminho # caminho das imagens -> pode ser uma pasta -> utilizar dados de teste
+inf_name = "resultados_inferencia" # pasta onde ficam guardadas as imagens da inferência e os ficheiros txt
+bb_thickness = 1 # espessura das linhas da bounding box
+hide_labels = True # esconde a label da deteção
 
 ```
 
+### Para efetuar as inferências
+
+```bash
+
+# efetuar inferênciass
+!python detect.py --weights {weights} --img {img} --conf {conf} --source {image} --name {inf_name} --save-txt --line-thickness {bb_thickness} --hide-labels{hide_labels}
+
+# --save-txt -> guarda as anotações efetuadas (ficheiros txt)
+
+# detect.py -> script para efetuar inferências que se encontra na diretoria da YOLO
+
+# os resultados da inferência são guardados no seguinte caminho
+# .../yolov5/yolo-master/runs/detect/resultados_inferencia/
+
+```
 
 ![](./assets/imagens/inferencia.drawio.png)
 
