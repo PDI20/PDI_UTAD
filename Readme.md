@@ -1347,7 +1347,12 @@ def mask_image(mask):
 
 Criar uma máscara com todas as máscaras obtidas do SAM.
 
+<div align="center">
+
   ![](./assets/imagens/mascara_completa.png)
+
+</div>
+
 
 #### **Obter os contornos presentes na máscara**
 
