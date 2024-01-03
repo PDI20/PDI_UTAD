@@ -1345,6 +1345,10 @@ def mask_image(mask):
 
 #### **Criar uma máscara com todas as máscaras**
 
+Criar uma máscara com todas as máscaras obtidas do SAM.
+
+  ![](./assets/imagens/mascara_completa.png)
+
 #### **Obter os contornos presentes na máscara**
 
 Utilizar a biblioteca cv2.
